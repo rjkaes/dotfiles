@@ -15,7 +15,7 @@
   "goyo.vim": { "branch": "master", "commit": "fa0263d456dd43f5926484d1c4c7022dfcb21ba9" },
   "indent-blankline.nvim": { "branch": "master", "commit": "9301e434dd41154ffe5c3d5b8a5c9acd075ebeff" },
   "kanagawa.nvim": { "branch": "master", "commit": "c19b9023842697ec92caf72cd3599f7dd7be4456" },
-  "lazy.nvim": { "branch": "main", "commit": "7613ab2abb1bd99e039ae02030bc2c48b7626925" },
+  "lazy.nvim": { "branch": "main", "commit": "daab5fe2807c55867d5f7cfb6ef0944783361be2" },
   "leap.nvim": { "branch": "main", "commit": "5efe985cf68fac3b6a6dfe7a75fbfaca8db2af9c" },
   "lsp-colors": { "branch": "main", "commit": "2bbe7541747fd339bdd8923fc45631a09bb4f1e5" },
   "lsp-zero.nvim": { "branch": "v2.x", "commit": "589c0a9465b38f69d20c058a7b31788068afa48c" },
