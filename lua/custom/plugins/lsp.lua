@@ -86,6 +86,14 @@ return {
             local rust_tools = require('rust-tools')
             rust_tools.setup({
                 server = {
+                    cargo = {
+                        allFeatures = true,
+                    },
+                    completion = {
+                        postfix = {
+                            enable = false,
+                        },
+                    },
                     on_attach = function(_, bufnr)
                         vim.keymap.set('n', '<leader>ca', rust_tools.hover_actions.hover_actions, { buffer = bufnr })
                     end
