@@ -48,7 +48,7 @@ vim.keymap.set('n', '[x',
     { silent = true })
 
 -- LSP formatting
-vim.keymap.set('n', '<localleader>f', ':Format<cr>', { silent = true })
+vim.keymap.set({'n', 'v'}, '<localleader>f', function() require("conform").format() end, { silent = true })
 
 -- Git
 vim.keymap.set('n', '<leader>gb', ':Git blame<cr>')
