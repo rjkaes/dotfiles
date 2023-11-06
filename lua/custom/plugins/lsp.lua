@@ -75,7 +75,17 @@ return {
 
             -- Configure lua language server for neovim
             lsp_config.lua_ls.setup(lsp.nvim_lua_ls())
-            --
+
+            -- dotnet
+            lsp_config.omnisharp.setup({
+                handlers = {
+                    ["textDocument/definition"] = require('omnisharp_extended').handler,
+                },
+                enable_roslyn_analyzers = true,
+                organize_imports_on_format = true,
+                enable_import_completion = true,
+            })
+
             -- don't initialize this language server
             -- we will use rust-tools to setup rust_analyzer
             lsp.skip_server_setup({ 'rust_analyzer' })
