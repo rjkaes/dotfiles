@@ -51,7 +51,7 @@ vim.opt.winwidth = 83 -- Give enough space for the gutter
 vim.opt.guicursor:append('a:Cursor/lCursor')
 
 vim.opt.rtp:append { '~/.fzf ' }
-vim.opt.tags:append { '.git/tags' }
+vim.opt.tags:append { './.git/tags;' }
 
 -- Turn click-me warnings about swapfiles into discreet little messages
 vim.opt.shortmess:append 'A'
