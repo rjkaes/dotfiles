@@ -11,7 +11,7 @@ return {
             -- Autocompletion
             { 'hrsh7th/nvim-cmp',                    branch = 'main' },
             { 'hrsh7th/cmp-nvim-lsp' },
-            { 'L3MON4D3/LuaSnip' },
+            { 'L3MON4D3/LuaSnip', version = "v2.*" },
 
             { 'hrsh7th/cmp-buffer',                  branch = 'main' },
             { 'hrsh7th/cmp-cmdline',                 branch = 'main' },
@@ -119,7 +119,7 @@ return {
 
             cmp.setup({
                 mapping = {
-                    ['<CR>'] = cmp.mapping.confirm({select = true}),
+                    ['<CR>'] = cmp.mapping.confirm({select = false}),
                     ['<Tab>'] = cmp_action.tab_complete(),
                     ['<S-Tab>'] = cmp_action.select_prev_or_fallback(),
                 },
