@@ -9,8 +9,7 @@ local dependencies = {
 
 return {
     { 'navarasu/onedark.nvim', priority = 1000, dependencies = dependencies },
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000, dependencies = dependencies },
-
+    { 'rebelot/kanagawa.nvim', priority = 1000, dependencies = dependencies },
 
     -- Highlight TODO, NOTE, etc.
     {

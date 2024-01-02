@@ -1,34 +1,41 @@
 local api = vim.api
 
-require("catppuccin").setup({
+require('kanagawa').setup({
+    compile = false,
+    undercurl = true,
+    commentStyle = { italic = true },
+    functionStyle = {},
+    keywordStyle = { italic = true},
+    statementStyle = { bold = true },
+    typeStyle = {},
+    transparent = false,
+    dimInactive = false,
+    terminalColors = true,
+    colors = {
+        palette = {
+            -- Taken from catppuccin latte and lightened by 2%
+            lotusWhite0 = "#B2B5C3", -- #d5cea3, hsl(51.6, 37.31%, 73.73%)
+            lotusWhite1 = "#C2C6D1", -- #dcd5ac, hsl(51.25, 40.68%, 76.86%)
+            lotusWhite2 = "#D3D6DF", -- #e5ddb0, hsl(50.94, 50.48%, 79.41%)
+            lotusWhite3 = "#F6F7F9", -- #f2ecbc, hsl(53.33, 67.5%, 84.31%)
+            lotusWhite4 = "#ECEFF3", -- #e7dba0, hsl(49.86, 59.66%, 76.67%)
+            lotusWhite5 = "#E3E6ED", -- #e4d794, hsl(50.25, 59.7%, 73.73%)
+        },
+        theme = { wave = {}, lotus = {}, dragon = {}, all = {} },
+    },
+    overrides = function(_colors)
+        return {
+            Cursor = { bg = '#52AD70' },
+        }
+    end,
     background = {
-        light = "latte",
-        dark = "mocha",
-    },
-    show_end_of_buffer = true, -- shows the '~' characters after the end of buffers
-    color_overrides = {
-        latte = {
-            base = "#F5F5F5",
-        },
-        mocha = {
-            base = "#1C1B21",
-            mantle = "#1C1B21",
-            crust = "#1C1B21",
-        },
-    },
-    integrations = {
-        alpha = false,
-        cmp = true,
-        fidget = true,
-        gitsigns = true,
-        lsp_trouble= true,
-        nvimtree = true,
-        treesitter = true,
+        dark = "dragon",
+        light = "lotus"
     },
 })
 
 -- setup must be called before loading
-vim.cmd.colorscheme "catppuccin"
+vim.cmd("colorscheme kanagawa")
 
 -- Dull the mail signature
 api.nvim_set_hl(0, 'mailSignature', { link = 'Comment' })
