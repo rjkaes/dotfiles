@@ -5,7 +5,7 @@ return {
         formatters_by_ft = {
             cs = { "csharpier" },
             html = { { "prettierd", "prettier" } },
-            javascript = { { "prettierd", "prettier" } },
+            javascript = { { "biome", "prettierd", "prettier" } },
             ruby = { "standardrb" },
             rust = { "rustfmt" },
             ["_"] = { "trim_whitespace" },

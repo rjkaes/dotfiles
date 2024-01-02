@@ -86,6 +86,9 @@ return {
                 enable_import_completion = true,
             })
 
+            -- biome for javascript
+            lsp_config.biome.setup({})
+
             -- don't initialize this language server
             -- we will use rust-tools to setup rust_analyzer
             lsp.skip_server_setup({ 'rust_analyzer' })
