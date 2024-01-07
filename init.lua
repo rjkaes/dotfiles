@@ -1,42 +1,15 @@
-require "custom.disable_builtin"
-require "custom.globals"
-
--- Start up the package manager
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
-
--- Setup lazy package manager.  Taken from:
--- https://github.com/tjdevries/config_manager/blob/master/xdg_config/nvim/init.lua#L70-L86
-require("lazy").setup("custom.plugins", {
-  ui = {
-    icons = {
-      cmd = "⌘",
-      config = "🛠️",
-      event = "📅",
-      ft = "📂",
-      init = "⚙️",
-      keys = "🗝️",
-      plugin = "🔌",
-      runtime = "💻",
-      source = "📄",
-      start = "🚀",
-      task = "📌",
-    },
-  },
-})
-
-require 'custom.options'
-require 'custom.theme'
+require "disable_builtins"
+require "globals"
+require "keymaps"
+require "plugins.lazy"
+require "plugins.misc"
+require 'options'
+-- require "misc"
+require 'theme'
+require "plugins.telescope"
+require "plugins.treesitter"
+require "plugins.trouble"
+require "plugins.lsp"
 
 vim.cmd[[
 " Toggle the quickfix or loclist windows.

@@ -1,5 +1,33 @@
 local api = vim.api
 
+require('lualine').setup({
+    options = {
+        icons_enabled = true,
+        theme = 'powerline',
+        component_separators = '|',
+        section_separators = '',
+    },
+
+    sections = {
+        lualine_b = {
+            'diff',
+            {
+                'diagnostics',
+                sources = { 'nvim_lsp', 'nvim_diagnostic' },
+                colored = false,
+            },
+        },
+        lualine_c = {
+            {
+                'filename',
+                path = 1,
+                shorten_target = 20,
+            },
+        },
+        lualine_x = { 'encoding', 'filetype' },
+    },
+})
+
 require('kanagawa').setup({
     compile = false,
     undercurl = true,
