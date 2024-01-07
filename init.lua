@@ -6,10 +6,12 @@ require "plugins.misc"
 require 'options'
 -- require "misc"
 require 'theme'
+require "plugins.gitsigns"
+require "plugins.lsp"
+require "plugins.noice"
 require "plugins.telescope"
 require "plugins.treesitter"
 require "plugins.trouble"
-require "plugins.lsp"
 
 vim.cmd[[
 " Toggle the quickfix or loclist windows.
