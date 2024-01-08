@@ -43,6 +43,19 @@ require("lazy").setup({
         },
     },
 
+    -- Tree
+    {
+        "nvim-tree/nvim-tree.lua",
+        version = "*",
+        lazy = false,
+        requires = {
+            "nvim-tree/nvim-web-devicons",
+        },
+        config = function()
+            require("nvim-tree").setup {}
+        end,
+    },
+
     {
         "folke/noice.nvim",
         event = "VeryLazy",
