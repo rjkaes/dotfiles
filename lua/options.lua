@@ -66,3 +66,5 @@ vim.wo.signcolumn = 'yes'
 
 -- Persist the undo tree for each file
 vim.opt.undofile = true
+
+vim.opt.breakindent = true
