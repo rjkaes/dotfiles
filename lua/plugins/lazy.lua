@@ -81,6 +81,7 @@ require("lazy").setup({
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make', enabled = vim.fn.executable 'make' == 1 },
         },
     },
+    'nvim-telescope/telescope-symbols.nvim',
 
     -- Replace matchit.vim and matchparen
     { 'andymass/vim-matchup' },
