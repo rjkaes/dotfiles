@@ -67,3 +67,6 @@ vim.keymap.set('n', '<leader>ss', '<cmd>TestLast<cr>', { silent = true })
 
 -- Undo tree toggle
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
+
+-- Noice
+vim.keymap.set("n", "<leader>nn", ":NoiceDismiss<CR>", { noremap = true, silent = true })
