@@ -1,7 +1,3 @@
--- Make sure <leader> is set *early*
-vim.g.mapleader = " "
-vim.g.maplocalleader = ","
-
 vim.g.cpp_attributes_highlight = 1
 
 -- Configure netrw to behave mostly like NERDTree

@@ -1,3 +1,7 @@
+--  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
+
 -- Write and quit
 vim.keymap.set('n', 'ZZ', ':wq<cr>', { silent = true })
 
@@ -38,15 +42,6 @@ vim.keymap.set('c', '%%', "expand('%:h').'/'", { expr = true })
 --  Copy the visual contents to the system clipboard
 vim.keymap.set('v', '<leader>y', '"+y')
 
--- Trouble
-vim.keymap.set('n', "<leader>x", "<cmd>TroubleToggle<cr>")
-vim.keymap.set('n', ']x',
-    function() require("trouble").next({skip_groups = true, jump = true}) end,
-    { silent = true })
-vim.keymap.set('n', '[x',
-    function() require("trouble").previous({skip_groups = true, jump = true}) end,
-    { silent = true })
-
 -- LSP formatting
 vim.keymap.set({'n', 'v'}, '<localleader>f', function() require("conform").format() end, { silent = true })
 
@@ -63,12 +58,6 @@ vim.keymap.set('n', '<leader>gs', ':Git<cr>')
 vim.keymap.set('n', '<leader>gw', ':Gwrite<cr>')
 vim.keymap.set('n', 'gdh', ':diffget //2<CR>')
 vim.keymap.set('n', 'gdl', ':diffget //3<CR>')
-
--- Telescope
-vim.keymap.set('n', "<leader><leader>", "<cmd>Telescope find_files<cr>")
-vim.keymap.set('n', "<leader>j", "<cmd>Telescope buffers<cr>")
-vim.keymap.set('n', "<leader>f", "<cmd>Telescope live_grep<cr>")
-vim.keymap.set('n', "<leader>t", "<cmd>Telescope tags<cr>")
 
 -- Test runner
 vim.keymap.set('n', '<leader>sf', '<cmd>TestFile<cr>', { silent = true })
