@@ -69,7 +69,7 @@
   "vim-slim": { "branch": "master", "commit": "f0758ea1c585d53b9c239177a8b891d8bbbb6fbb" },
   "vim-surround": { "branch": "master", "commit": "3d188ed2113431cf8dac77be61b842acb64433d9" },
   "vim-tada": { "branch": "main", "commit": "625ad428a818041cbbc63e055049108ef5b436a1" },
-  "vim-test": { "branch": "master", "commit": "7e8583cb994aba0f2f1aebe25fd94af8afd7b291" },
+  "vim-test": { "branch": "master", "commit": "c83d5dffa054ac4663aea1eb7374f638b0462510" },
   "vim-textobj-rubyblock": { "branch": "master", "commit": "2b882e2cc2599078f75e6e88cd268192bf7b27bf" },
   "vim-textobj-user": { "branch": "master", "commit": "41a675ddbeefd6a93664a4dc52f302fe3086a933" },
   "vim-unimpaired": { "branch": "master", "commit": "6d44a6dc2ec34607c41ec78acf81657248580bf1" }
