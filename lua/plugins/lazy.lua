@@ -228,8 +228,8 @@ require("lazy").setup({
         opts = {
             formatters_by_ft = {
                 cs = { "csharpier" },
-                html = { { "prettierd", "prettier" } },
-                javascript = { { "biome", "prettierd", "prettier" } },
+                html = { "prettier" },
+                javascript = { { "biome", "prettier" } },
                 ruby = { "standardrb" },
                 rust = { "rustfmt" },
                 ["_"] = { "trim_whitespace" },
