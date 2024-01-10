@@ -5,8 +5,9 @@ require "plugins.lazy"
 require "plugins.misc"
 require 'options'
 require "misc"
-require 'theme'
+require "theme"
 require "plugins.gitsigns"
+require "plugins.harpoon"
 require "plugins.lsp"
 require "plugins.noice"
 require "plugins.telescope"
