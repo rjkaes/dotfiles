@@ -222,26 +222,7 @@ require("lazy").setup({
     { 'slim-template/vim-slim', ft = 'slim' },
 
     -- Formatters
-    {
-        "stevearc/conform.nvim",
-        -- optional = true,
-        opts = {
-            formatters_by_ft = {
-                cs = { "csharpier" },
-                html = { "prettier" },
-                javascript = { { "biome", "prettier" } },
-                ruby = { "standardrb" },
-                rust = { "rustfmt" },
-                ["_"] = { "trim_whitespace" },
-            },
-            formatters = {
-                csharpier = {
-                    command = "dotnet-csharpier",
-                    args = { "--write-stdout" },
-                },
-            },
-        },
-    },
+    "stevearc/conform.nvim",
 
     -- LSP
     {

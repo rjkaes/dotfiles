@@ -6,6 +6,7 @@ require "plugins.misc"
 require 'options'
 require "misc"
 require "theme"
+require "plugins.conform"
 require "plugins.gitsigns"
 require "plugins.harpoon"
 require "plugins.lsp"
