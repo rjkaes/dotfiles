@@ -11,10 +11,4 @@ conform.setup({
         rust = { "rustfmt" },
         ["_"] = { "trim_whitespace" },
     },
-    formatters = {
-        csharpier = {
-            command = "dotnet-csharpier",
-            args = { "--write-stdout" },
-        },
-    },
 });
