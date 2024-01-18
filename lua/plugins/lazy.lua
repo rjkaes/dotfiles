@@ -76,7 +76,7 @@ require("lazy").setup({
         branch = '0.1.x',
         dependencies = {
             'nvim-lua/plenary.nvim',
-            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make', enabled = vim.fn.executable 'make' == 1 },
+            'nvim-telescope/telescope-fzy-native.nvim',
         },
     },
     'nvim-telescope/telescope-symbols.nvim',
