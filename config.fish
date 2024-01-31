@@ -24,7 +24,7 @@ abbr -a g git
 abbr -a ga 'git add'
 abbr -a gb 'git branch'
 abbr -a gc 'git commit'
-abbr -a gca 'git commit -v -a'
+abbr -a gca 'git record -v -a'
 abbr -a gcm 'git switch main'
 abbr -a gco 'git checkout'
 abbr -a gdc 'git diff --cached'
@@ -36,7 +36,6 @@ abbr -a grm 'git rebase master'
 abbr -a gss 'git ss'
 abbr -a gup 'git pull --rebase'
 abbr -a gw 'git switch'
-abbr -a sfs 'kitty @ set-font-size'
 abbr -a ygg 'sudo yggdrasilctl'
 
 # Source in the various configurations
