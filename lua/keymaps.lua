@@ -70,3 +70,12 @@ vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
 
 -- Noice
 vim.keymap.set("n", "<leader>nn", ":NoiceDismiss<CR>", { noremap = true, silent = true })
+
+-- Jump around between todo style comments
+vim.keymap.set("n", "]t", function()
+    require("todo-comments").jump_next({ keywords = { "TODO", "FIXME" } })
+end, { desc = "Next todo comment" })
+
+vim.keymap.set("n", "[t", function()
+    require("todo-comments").jump_prev({ keywords = { "TODO", "FIXME" } })
+end, { desc = "Previous todo comment" })
