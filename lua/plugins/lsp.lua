@@ -11,7 +11,7 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set('n', 'gr', '<cmd>Telescope lsp_references<cr>', opts)
     vim.keymap.set('n', 'gS', function() vim.lsp.buf.signature_help() end)
     vim.keymap.set('n', '<leader>rn', function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
+    vim.keymap.set({'n', 'v'}, '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
 
     -- reformat buffer using the LSP
     vim.keymap.set({ 'n', 'x' }, 'gq', function()
