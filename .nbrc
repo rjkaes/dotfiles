@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+###############################################################################
+# .nbrc
+#
+# Configuration file for `nb`, a command line note-taking, bookmarking,
+# and knowledge base application with encryption, search, Git-backed syncing,
+# and more in a single portable script.
+#
+# Edit this file manually or manage settings using the `nb settings`
+# subcommand. Configuration options are set as environment variables, eg:
+#   export NB_ENCRYPTION_TOOL=gpg
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
+export NB_COLOR_THEME="${NB_COLOR_THEME:-ocean}" # Set by `nb` • Thu 29 Jul 2021 10:47:40 EDT
+
+export NB_FOOTER="${NB_FOOTER:-0}" # Set by `nb` • Mon  9 Aug 2021 15:02:42 EDT
+
+export NB_SYNTAX_THEME="${NB_SYNTAX_THEME:-OneHalfDark}" # Set by `nb` • Thu 20 Oct 2022 10:35:26 EDT
