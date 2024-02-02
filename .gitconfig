@@ -1,0 +1,116 @@
+[core]
+    pager = delta
+    whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+    excludesfile=~/.gitignore
+
+
+[interactive]
+    diffFilter = delta --color-only
+[add.interactive]
+    useBuiltin = false # required for git 2.37.0
+
+[delta]
+    light = false
+    line-numbers = true
+    navigate = true
+    ; side-by-side = true
+
+[color]
+    branch = auto
+    diff = auto
+    interactive = auto
+    pager = true
+    status = auto
+
+; [color "branch"]
+;         current = yellow reverse
+;         local = yellow
+;         remote = green
+;
+; [color "diff"]
+;         meta = yellow
+;         frag = magenta
+;         old = red
+;         new = green
+;
+; [color "status"]
+;         added = yellow
+;         changed = green
+;         untracked = cyan
+
+[diff]
+    renames = copies
+    compactionHeuristic = true
+    colorMoved = default
+
+[merge]
+    ; conflictStyle = zdiff3
+    conflictstyle = diff3
+
+[status]
+    relativePaths = true
+
+[rerere]
+    enabled = true
+
+[alias]
+    co = checkout
+    ; amend = commit --amend
+    br = branch
+    branch-cleanup = "!bash -c 'git branch -l --merged | grep -v main | while read branch; do git branch -d $branch; done'"
+    catchup = log --patch --reverse --topo-order _ribbon..origin/master
+    cleanup = "!f() { git rbranch-cleanup && git branch-cleanup; }; f"
+    create-branch = !sh -c 'git push origin HEAD:refs/heads/$1 && git fetch origin && git branch --track $1 origin/$1 && cd . && git checkout $1' -
+    dc = diff --cached
+    delete-branch = !sh -c 'git push origin :refs/heads/$1 && git branch -D $1' -
+    delete-merged-branches = "!sh -c 'git branch -r --merged | grep -v origin/master | sed -e \"s/origin\\///\" | while read branch; do git push origin --delete $branch; done'"
+    graph = log --graph --all --decorate --stat --date=iso
+    l = "!. ~/.githelpers && pretty_git_log"
+    la = !git l --all
+    last = log -B -M -C --stat --summary --no-merges -1 HEAD
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit
+    merge-branch = !git checkout master && git merge @{-1}
+    merged = !git branch -r --merged | grep -v 'origin/master' | xargs -L1 git --no-pager log --pretty=tformat:'%Cgreen%d%Creset | %h | %an | %Cblue%ar%Creset' -1 | column -t -s '|'
+    oldest-ancestor = !zsh -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
+    overview = log --all --oneline --no-merges
+    promote-rel = !bash -c '[ "$#" = 1 ] && git checkout master && git pull && git fetch --tags origin && git merge --no-ff $1 && git push origin master && git rbranch -d $1 && git tag REL_`date +%Y-%m-%d`_$1 && git push --tags && exit 0 || echo \"usage: git promote-rel <branch>\" && exit 1' -
+    r = !GIT_NO_PAGER=1 git l -30
+    ra = !git r --all
+    rb = !bash -c '[ "$#" = 0 ] && git branch -r && exit 0 || [ "$#" = 1 ] && git push origin origin:refs/heads/$1 && git fetch --tags origin && git checkout --track -b $1 origin/$1 && exit 0 || [ "$1" = "-d" -o "$1" = "-D" -a "$#" = 2 ] && git checkout master && git branch $1 "$2" && git push origin ":$2" && exit 0 || echo \"usage: git rb (<name>)\" && exit 1' -
+    rbc = !bash -c '[ "$#" = 1 ] && git fetch --tags origin && git checkout --track -b $1 origin/$1 && exit 0 || echo \"usage: git rbc <name>\" && exit 1' -
+    rbranch-cleanup = "!bash -c 'git checkout main && git remote prune origin && remote_branches=`git branch -r | sed \"s/ *origin\\\\\\//::/\" | sed \"s/$/::/\"` && for branch in `git branch -vv | grep -v main | grep \"\\\\[origin/\" | sed \"s/^*//\" | sed \"s/^ *//\" | sed \"s/ .*//\"`; do if [[ $remote_branches != *\"::${branch}::\"* ]]; then echo \"Purging stale remote branch ${branch}\"; git branch -D $branch; fi; done' -"
+    ready = rebase -i @{u}
+	recent = branch --sort=-committerdate --format=\"%(committerdate:relative)%09%(refname:short)\"
+    review = "!f() { for rev in $(git rev-list --reverse \"$@\"); do git show $rev; done; }; f"
+    ribbon = tag --force _ribbon origin/master
+    rlog = log --pretty=format:\"%H %Cblue%cr%Creset %cn %Cgreen%s%Creset\"
+    ss = status -s
+    statlog = log -B -M -C --stat --summary --no-merges
+    ; sw = switch
+    tree = log --pretty=oneline --decorate --graph
+    unmerged = !git branch -r --no-merged | grep -v 'origin/master' | xargs -L1 git --no-pager log --pretty=tformat:'%Cgreen%d%Creset | %h | %an | %Cblue%ar%Creset' -1 | column -t -s '|'
+    update = "!f() { git pull && git submodule update --init; }; f"
+    up = pull --rebase
+    wip = for-each-ref --sort='authordate:iso8601' --format=' %(color:green)%(authordate:relative)%09%(color:white)%(refname:short)' refs/heads
+
+[init]
+	templatedir = ~/.git_template
+	defaultBranch = main
+[apply]
+	whitespace = warn
+[rebase]
+	autosquash = true
+[commit]
+	template = ~/.git_template/commit_msg.txt
+    gpgsign = true
+[pull]
+	rebase = true
+
+[difftool "branchless"]
+  cmd = git-branchless difftool --read-only --dir-diff $LOCAL $REMOTE
+
+[mergetool "branchless"]
+  cmd = git-branchless difftool $LOCAL $REMOTE --base $BASE --output $MERGED
+
+[include]
+    path = ~/.gitconfig.secret
