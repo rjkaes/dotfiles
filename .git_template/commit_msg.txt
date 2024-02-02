@@ -1,0 +1,26 @@
+
+
+# type(scope): subject
+#
+#    build (changes that affect system compilation or is related to external dependencies; other changes that don't modify src or test)
+#    chore (updating grunt tasks etc; no production code change)
+#    ci (changes to CI configuration files and scripts)
+#    docs (changes to the documentation)
+#    feat (new feature for the user, not a new feature for build script)
+#    fix (bug fix for the user, not a fix to a build script)
+#    perf (related to backward-compatible performance improvements)
+#    refactor (a code change that neither fixes a bug nor adds a feature)
+#    style (formatting, missing semi colons, etc; changes that do not affect the meaning of the code)
+#    test (adding missing tests, refactoring tests; no production code change)
+#
+# scope: what part of the code does this commit modifying (api, frontend, etc.)
+#
+# Footer MUST include `BREAKING CHANGE:` if this is a breaking change.
+#
+# See:
+#
+#  * https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
+#  * https://www.conventionalcommits.org/en/v1.0.0/
+#  * https://sparkbox.com/foundry/semantic_commit_messages
+#  * https://karma-runner.github.io/1.0/dev/git-commit-msg.html
+#

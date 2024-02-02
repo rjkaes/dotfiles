@@ -1,0 +1,5 @@
+#! /bin/sh
+
+rm -f .git/tags
+rg --files -g '!spec/**' -g '!tests?/**' -g '!node_modules/' | ctags --tag-relative -Rf.git/tags --exclude=.git --languages=-css,-scss,-rspec -L -
+exit 0
