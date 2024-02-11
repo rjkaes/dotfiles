@@ -97,6 +97,8 @@ cmp.setup({
         ['<CR>'] = cmp.mapping.confirm({select = false}),
         ['<Tab>'] = cmp_action.tab_complete(),
         ['<S-Tab>'] = cmp_action.select_prev_or_fallback(),
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
     },
     formatting = {
         fields = { 'abbr', 'kind', 'menu' },
@@ -106,10 +108,15 @@ cmp.setup({
             ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
         })
     },
-    sources = {
-        { name = 'nvim_lsp' },
-        { name = 'buffer' },
-    },
+    sources = cmp.config.sources(
+        {
+            { name = 'nvim_lsp' },
+            { name = 'buffer' },
+        },
+        {
+            { name = 'path' },
+        }
+    ),
 })
 
 cmp.setup.cmdline('/', {
@@ -127,7 +134,8 @@ cmp.setup.cmdline(':', {
             option = {
                 ignore_cmds = { 'Man', '!' }
             }
-        }
+        },
+        { name = 'path' }
     })
 })
 
