@@ -17,7 +17,7 @@ config.font = wezterm.font_with_fallback {
     -- 'JetBrainsMonoNL NFM',
     'Apple Color Emoji',
 }
-config.font_size = 15
+config.font_size = 18
 config.use_cap_height_to_scale_fallback_fonts = true
 
 -- no ligatures!
