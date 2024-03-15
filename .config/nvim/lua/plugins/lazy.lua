@@ -21,14 +21,13 @@ require("lazy").setup({
     { 'nvim-lua/plenary.nvim' },
     { 'voldikss/vim-floaterm' },
 
-    -- theme
-    { 'rebelot/kanagawa.nvim', priority = 1000, dependencies =
-        -- Hightlight hex colors, etc.
-        { 'NvChad/nvim-colorizer.lua', name = 'colorizer', lazy = false, config = true },
+    -- colorscheme
+    { 'rebelot/kanagawa.nvim', priority = 1000, lazy = false },
 
-        -- Add missing LSP colors
-        { 'folke/lsp-colors.nvim', name = 'lsp-colors', lazy = false, config = true },
-    },
+    -- Hightlight hex colors, etc.
+    { 'NvChad/nvim-colorizer.lua', name = 'colorizer', lazy = false, config = true },
+    -- Add missing LSP colors
+    { 'folke/lsp-colors.nvim', name = 'lsp-colors', lazy = false, config = true },
 
     -- Highlight TODO, NOTE, etc.
     {
@@ -39,6 +38,14 @@ require("lazy").setup({
         opts = {
             keywords = {
                 nocheckin = { icon = " ", color = "error", alt = { "nc" } },
+            },
+            colors = {
+                error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+                warning = { "#FBBF24" },
+                info = { "#2563EB" },
+                hint = { "DiagnosticHint", "#10B981" },
+                default = { "Identifier", "#7C3AED" },
+                test = { "Identifier", "#FF00FF" }
             },
         },
     },
