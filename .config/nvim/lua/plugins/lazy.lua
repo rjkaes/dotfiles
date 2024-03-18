@@ -50,6 +50,20 @@ require("lazy").setup({
         },
     },
 
+    -- github copilot
+    {
+        'github/copilot.vim',
+        lazy = false,
+        init = function()
+            -- replace default `TAB` mapping with `C-J`
+            vim.keymap.set('i', '<C-J>', 'copilot#Accept("\\<CR>")', {
+                expr = true,
+                replace_keycodes = false
+            })
+            vim.g.copilot_no_tab_map = true
+        end
+    },
+
     -- Tree
     {
         "nvim-tree/nvim-tree.lua",
