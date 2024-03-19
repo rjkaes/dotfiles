@@ -55,8 +55,8 @@ require("lazy").setup({
         'github/copilot.vim',
         lazy = false,
         init = function()
-            -- replace default `TAB` mapping with `C-J`
-            vim.keymap.set('i', '<C-J>', 'copilot#Accept("\\<CR>")', {
+            -- replace default `TAB` mapping with `C-F` (which matches fish shell completion)
+            vim.keymap.set('i', '<C-F>', 'copilot#Accept("\\<CR>")', {
                 expr = true,
                 replace_keycodes = false
             })
