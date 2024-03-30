@@ -93,6 +93,7 @@ set -gx PKG_CONFIG_PATH "/opt/homebrew/opt/readline/lib/pkgconfig:/opt/homebrew/
 # set -x PERL_MM_OPT INSTALL_BASE=/home/rjkaes/perl5;
 
 starship init fish | source
+zoxide init fish | source
 
 # Only enable this on MacOS
 if test (uname) = "Darwin"
@@ -100,8 +101,6 @@ if test (uname) = "Darwin"
 
     # Allow way more than 256 open files!
     ulimit -n 12288
-
-    zoxide init fish | source
 end
 
 if test -e $HOME/.config/fish/secret.fish
