@@ -40,7 +40,7 @@ vim.opt.grepprg = "rg --vimgrep $*"
 vim.opt.listchars = { tab = '▸ ', nbsp = '¬', extends = '»', precedes = '«', trail = '•' }
 vim.opt.scrolloff = 20
 vim.opt.shiftwidth = 4
-vim.opt.showbreak = '↪'
+vim.opt.showbreak = '↪ '
 vim.opt.softtabstop = 4
 vim.opt.spelllang = 'en_ca'
 vim.opt.tabstop = 4
