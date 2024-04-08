@@ -67,7 +67,7 @@
   "vim-markdown": { "branch": "master", "commit": "a657e697376909c41475a686eeef7fc7a4972d94" },
   "vim-matchup": { "branch": "master", "commit": "2d660e4aa7c566014c667af2cda0458043527902" },
   "vim-rails": { "branch": "master", "commit": "3a155462d1c346e291595400ca238037d02a357f" },
-  "vim-razor": { "branch": "master", "commit": "09ffb0696c4ad2304e6c40fdcd13ca2efb27d66c" },
+  "vim-razor": { "branch": "master", "commit": "d1db1053f920b23cb1d6026964e4defe525577e3" },
   "vim-repeat": { "branch": "master", "commit": "24afe922e6a05891756ecf331f39a1f6743d3d5a" },
   "vim-rhubarb": { "branch": "master", "commit": "ee69335de176d9325267b0fd2597a22901d927b1" },
   "vim-ruby": { "branch": "master", "commit": "4524f28f318ce4ad1f9d148a7a3558e53b7df0ca" },
