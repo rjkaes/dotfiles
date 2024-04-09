@@ -20,6 +20,7 @@ abbr -a bu 'bundle update'
 abbr -a dn 'dotnet'
 abbr -a dnb 'dotnet build'
 abbr -a dnr 'dotnet run'
+abbr -a dnt 'dotnet test --no-restore'
 abbr -a g git
 abbr -a ga 'git add'
 abbr -a gb 'git branch'
