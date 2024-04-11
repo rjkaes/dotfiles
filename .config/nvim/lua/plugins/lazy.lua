@@ -139,13 +139,6 @@ require("lazy").setup({
     { 'tpope/vim-unimpaired' },
     { 'kassio/neoterm' },
     {
-        'janko-m/vim-test',
-        dependencies = {
-            'radenling/vim-dispatch-neovim',
-            dependencies = { 'tpope/vim-dispatch' },
-        },
-    },
-    {
         'tpope/vim-fugitive',
         dependencies = { 'tpope/vim-rhubarb' },
     },
@@ -186,6 +179,27 @@ require("lazy").setup({
     { 'dewyze/vim-tada' },
 
     { 'ThePrimeagen/harpoon', branch = 'harpoon2', dependencies = { 'nvim-lua/plenary.nvim' } },
+
+    -- Test runner
+    {
+        "nvim-neotest/neotest",
+        dependencies = {
+            "nvim-neotest/nvim-nio",
+            "nvim-lua/plenary.nvim",
+            "antoinemadec/FixCursorHold.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "Issafalcon/neotest-dotnet",
+        },
+        config = function()
+            require("neotest").setup({
+                adapters = {
+                    require("neotest-dotnet")({
+                        discovery_root = "solution"
+                    }),
+                }
+            })
+        end
+    },
 
     -- C++
     { 'bfrg/vim-cpp-modern' },

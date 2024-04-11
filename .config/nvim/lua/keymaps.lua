@@ -65,10 +65,10 @@ vim.keymap.set('n', 'gdh', ':diffget //2<CR>')
 vim.keymap.set('n', 'gdl', ':diffget //3<CR>')
 
 -- Test runner
-vim.keymap.set('n', '<leader>sf', '<cmd>TestFile<cr>', { silent = true })
-vim.keymap.set('n', '<leader>so', '<cmd>TestNearest<cr>', { silent = true })
-vim.keymap.set('n', '<leader>sa', '<cmd>TestSuite<cr>', { silent = true })
-vim.keymap.set('n', '<leader>ss', '<cmd>TestLast<cr>', { silent = true })
+vim.keymap.set('n', '<leader>sf', function() require("neotest").run.run(vim.fn.expand("%")) end, { silent = true })
+vim.keymap.set('n', '<leader>ss', function() require("neotest").run.run() end, { silent = true })
+-- vim.keymap.set('n', '<leader>sa', '<cmd>TestSuite<cr>', { silent = true })
+vim.keymap.set('n', '<leader>sl', function() require("neotest").run.run_last() end, { silent = true })
 
 -- Undo tree toggle
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)

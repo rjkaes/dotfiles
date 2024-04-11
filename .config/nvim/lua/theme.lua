@@ -67,3 +67,8 @@ vim.cmd("colorscheme kanagawa")
 
 -- Dull the mail signature
 api.nvim_set_hl(0, 'mailSignature', { link = 'Comment' })
+
+-- Colour neotest
+api.nvim_set_hl(0, 'NeotestPassed', { link = 'GitSignsAddLn' })
+api.nvim_set_hl(0, 'NeotestFailed', { link = 'GitSignsAddInline' })
+api.nvim_set_hl(0, 'NeotestRunning', { link = 'TroubleSignWarning' })
