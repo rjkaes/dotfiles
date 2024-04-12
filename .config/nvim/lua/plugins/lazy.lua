@@ -22,7 +22,7 @@ require("lazy").setup({
     { 'voldikss/vim-floaterm' },
 
     -- colorscheme
-    { 'rebelot/kanagawa.nvim', priority = 1000, lazy = false },
+    { 'miikanissi/modus-themes.nvim', priority = 1000, lazy = false },
 
     -- Hightlight hex colors, etc.
     { 'NvChad/nvim-colorizer.lua', name = 'colorizer', lazy = false, config = true },
