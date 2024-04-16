@@ -24,13 +24,12 @@ abbr -a dnt 'dotnet test --no-restore'
 abbr -a g git
 abbr -a ga 'git add'
 abbr -a gb 'git branch'
-abbr -a gc 'git record'
+abbr -a gc 'git commit'
 abbr -a gcm 'git switch main'
 abbr -a gco 'git checkout'
 abbr -a gdc 'git diff --cached'
 abbr -a ggp ggpush
 abbr -a glg git lg
-abbr -a gls git sl
 abbr -a grc 'git rebase --continue'
 abbr -a grm 'git rebase master'
 abbr -a gss 'git ss'
