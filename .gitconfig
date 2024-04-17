@@ -55,7 +55,7 @@
 
 [alias]
     co = checkout
-    ; amend = commit --amend
+    amend = commit --amend
     br = branch
     branch-cleanup = "!bash -c 'git branch -l --merged | grep -v main | while read branch; do git branch -d $branch; done'"
     catchup = log --patch --reverse --topo-order _ribbon..origin/master
