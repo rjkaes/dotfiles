@@ -73,9 +73,6 @@ vim.keymap.set('n', '<leader>sl', function() require("neotest").run.run_last() e
 -- Undo tree toggle
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
 
--- Noice
-vim.keymap.set("n", "<leader>nn", ":NoiceDismiss<CR>", { noremap = true, silent = true })
-
 -- Jump around between todo style comments
 vim.keymap.set("n", "]t", function()
     require("todo-comments").jump_next({ keywords = { "TODO", "FIXME" } })
