@@ -1,5 +1,5 @@
 # Installation
 
 ```
-stow -v -t $HOME .
+stow --dotfiles -v -t $HOME .
 ```
