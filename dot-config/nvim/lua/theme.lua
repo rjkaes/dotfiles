@@ -3,7 +3,7 @@ local api = vim.api
 require('lualine').setup({
     options = {
         icons_enabled = true,
-        theme = 'modus',
+        theme = 'zenwritten',
         component_separators = '|',
         section_separators = '',
     },
@@ -28,20 +28,13 @@ require('lualine').setup({
     },
 })
 
-require("modus-themes").setup({
-    style = "auto",
-    styles = {
-        keywords = { italic = true },
-        statements = { bold = true },
-        functions = { bold = true },
-    },
-    on_colors = function(colors)
-        colors.cursor = colors.green_intense
-    end,
-})
+vim.g.zenwritten_lightness = 'bright'
+vim.g.zenwritten_solid_line_nr = true
+vim.g.zenwritten_darken_noncurrent_window = true
+vim.g.zenwritten_colorize_diagnostic_underline_text = true
+vim.cmd("colorscheme zenwritten")
 
--- setup must be called before loading
-vim.cmd("colorscheme modus")
+vim.o.guicursor = 1
 
 -- Dull the mail signature
 api.nvim_set_hl(0, 'mailSignature', { link = 'Comment' })
