@@ -1,14 +1,14 @@
 -- Start up the package manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -25,9 +25,9 @@ require("lazy").setup({
     { 'mcchrish/zenbones.nvim',    dependencies = { 'rktjmp/lush.nvim' }, priority = 1000, lazy = false },
 
     -- Hightlight hex colors, etc.
-    { 'NvChad/nvim-colorizer.lua', name = 'colorizer', lazy = false, config = true },
+    { 'NvChad/nvim-colorizer.lua', name = 'colorizer',                    lazy = false,    config = true },
     -- Add missing LSP colors
-    { 'folke/lsp-colors.nvim', name = 'lsp-colors', lazy = false, config = true },
+    { 'folke/lsp-colors.nvim',     name = 'lsp-colors',                   lazy = false,    config = true },
 
     -- Highlight TODO, NOTE, etc.
     {
@@ -82,11 +82,11 @@ require("lazy").setup({
             },
             -- you can enable a preset for easier configuration
             presets = {
-                bottom_search = false, -- use a classic bottom cmdline for search
-                command_palette = true, -- position the cmdline and popupmenu together
+                bottom_search = false,        -- use a classic bottom cmdline for search
+                command_palette = true,       -- position the cmdline and popupmenu together
                 long_message_to_split = true, -- long messages will be sent to a split
-                inc_rename = false, -- enables an input dialog for inc-rename.nvim
-                lsp_doc_border = false, -- add a border to hover docs and signature help
+                inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+                lsp_doc_border = false,       -- add a border to hover docs and signature help
             },
         }
     },
@@ -138,7 +138,7 @@ require("lazy").setup({
     -- A bunch of Tim Pope plugins to make using vim easier
     { 'tpope/vim-eunuch' },
     { 'tpope/vim-characterize' },
-    { 'tpope/vim-endwise', ft = { 'lua', 'elixir', 'ruby', 'crystal', 'sh', 'bash', 'zsh', 'vim', 'c', 'cpp', 'make' } },
+    { 'tpope/vim-endwise',     ft = { 'lua', 'elixir', 'ruby', 'crystal', 'sh', 'bash', 'zsh', 'vim', 'c', 'cpp', 'make' } },
     { 'tpope/vim-repeat' },
     { 'tpope/vim-abolish' },
     { 'tpope/vim-surround' },
@@ -161,14 +161,14 @@ require("lazy").setup({
     },
 
     -- Make using git nicer
-    { 'NeogitOrg/neogit', config = true },
+    { 'NeogitOrg/neogit',       config = true },
     { 'lewis6991/gitsigns.nvim' },
 
     -- Tabular
-    { 'godlygeek/tabular', cmd = 'Tabularize' },
+    { 'godlygeek/tabular',      cmd = 'Tabularize' },
 
     -- Distraction free writing
-    { 'junegunn/goyo.vim', cmd = 'Goyo' },
+    { 'junegunn/goyo.vim',      cmd = 'Goyo' },
 
     -- Undo tree
     { 'mbbill/undotree' },
@@ -216,13 +216,13 @@ require("lazy").setup({
     { 'tmadsen/vim-compiler-plugin-for-dotnet' },
 
     -- Crystal
-    { 'vim-crystal/vim-crystal', ft = 'crystal' },
+    { 'vim-crystal/vim-crystal',               ft = 'crystal' },
 
     -- HTML
     {
         'AndrewRadev/tagalong.vim',
         init = function()
-            vim.g.tagalong_additional_filetypes = {'razor'}
+            vim.g.tagalong_additional_filetypes = { 'razor' }
         end
     },
     { 'mattn/emmet-vim' },
@@ -246,20 +246,20 @@ require("lazy").setup({
         'simrat39/rust-tools.nvim',
         ft = { 'rust', 'rs' },
         opts = {
-                server = {
-                    settings = {
-                        ['rust-analyzer'] = {
-                            cargo = {
-                                allFeatures = true,
-                            },
-                            completion = {
-                                postfix = {
-                                    enable = false,
-                                },
+            server = {
+                settings = {
+                    ['rust-analyzer'] = {
+                        cargo = {
+                            allFeatures = true,
+                        },
+                        completion = {
+                            postfix = {
+                                enable = false,
                             },
                         },
                     },
                 },
+            },
 
         },
     },
@@ -283,7 +283,7 @@ require("lazy").setup({
             -- Autocompletion
             { 'hrsh7th/nvim-cmp',                    branch = 'main' },
             { 'hrsh7th/cmp-nvim-lsp' },
-            { 'L3MON4D3/LuaSnip', version = "v2.*" },
+            { 'L3MON4D3/LuaSnip',                    version = "v2.*" },
 
             { 'hrsh7th/cmp-buffer',                  branch = 'main' },
             { 'hrsh7th/cmp-cmdline',                 branch = 'main' },
@@ -358,7 +358,7 @@ require("lazy").setup({
                     else
                         chunkText = truncate(chunkText, targetWidth - curWidth)
                         local hlGroup = chunk[2]
-                        table.insert(newVirtText, {chunkText, hlGroup})
+                        table.insert(newVirtText, { chunkText, hlGroup })
                         chunkWidth = vim.fn.strdisplaywidth(chunkText)
                         -- str width returned from truncate() may less than 2nd argument, need padding
                         if curWidth + chunkWidth < targetWidth then
@@ -368,7 +368,7 @@ require("lazy").setup({
                     end
                     curWidth = curWidth + chunkWidth
                 end
-                table.insert(newVirtText, {suffix, 'MoreMsg'})
+                table.insert(newVirtText, { suffix, 'MoreMsg' })
                 return newVirtText
             end,
         },
@@ -383,19 +383,19 @@ require("lazy").setup({
         end,
     },
 }, {
-  ui = {
-    icons = {
-      cmd = "⌘",
-      config = "🛠️",
-      event = "📅",
-      ft = "📂",
-      init = "⚙️",
-      keys = "🗝️",
-      plugin = "🔌",
-      runtime = "💻",
-      source = "📄",
-      start = "🚀",
-      task = "📌",
+    ui = {
+        icons = {
+            cmd = "⌘",
+            config = "🛠️",
+            event = "📅",
+            ft = "📂",
+            init = "⚙️",
+            keys = "🗝️",
+            plugin = "🔌",
+            runtime = "💻",
+            source = "📄",
+            start = "🚀",
+            task = "📌",
+        },
     },
-  },
 })
