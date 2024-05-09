@@ -7,11 +7,14 @@ lsp.on_attach(function(client, bufnr)
 
     local opts = { buffer = bufnr }
 
-    vim.keymap.set('n', 'gd', function() require('omnisharp_extended').telescope_lsp_definitions() end, opts)
-    vim.keymap.set('n', 'gr', '<cmd>Telescope lsp_references<cr>', opts)
+    vim.keymap.set('n', 'gd',
+        function() require('omnisharp_extended').telescope_lsp_definition({ jump_type = "vsplit" }) end, opts)
+    vim.keymap.set('n', 'gr', function() require('omnisharp_extended').telescope_lsp_references() end, opts)
+    vim.keymap.set('n', 'gI', function() require('omnisharp_extended').telescope_lsp_implementation() end, opts)
+    vim.keymap.set('n', 'gt', function() require('omnisharp_extended').telescope_lsp_type_definition() end, opts)
     vim.keymap.set('n', 'gS', function() vim.lsp.buf.signature_help() end)
     vim.keymap.set('n', '<leader>rn', function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set({'n', 'v'}, '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
+    vim.keymap.set({ 'n', 'v' }, '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
 
     -- reformat buffer using the LSP
     vim.keymap.set({ 'n', 'x' }, 'gq', function()
@@ -46,7 +49,7 @@ lsp.set_server_config({
     }
 })
 
-local lsp_config= require("lspconfig")
+local lsp_config = require("lspconfig")
 
 -- Configure lua language server for neovim
 lsp_config.lua_ls.setup(lsp.nvim_lua_ls())
@@ -94,11 +97,9 @@ local cmp_action = require('lsp-zero').cmp_action()
 
 cmp.setup({
     mapping = {
-        ['<CR>'] = cmp.mapping.confirm({select = false}),
+        ['<CR>'] = cmp.mapping.confirm({ select = false }),
         ['<Tab>'] = cmp_action.tab_complete(),
         ['<S-Tab>'] = cmp_action.select_prev_or_fallback(),
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
     },
     formatting = {
         fields = { 'abbr', 'kind', 'menu' },
@@ -141,4 +142,5 @@ cmp.setup.cmdline(':', {
 
 -- Make it clearly visible which argument we're at.
 local marked = vim.api.nvim_get_hl(0, { name = 'PMenu' })
-vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter', { fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true })
+vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter',
+    { fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true })
