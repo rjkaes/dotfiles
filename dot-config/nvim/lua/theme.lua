@@ -36,7 +36,7 @@ vim.g.zenwritten_solid_line_nr = true
 vim.g.zenwritten_vert_split = true
 vim.cmd("colorscheme zenwritten")
 
-vim.o.guicursor = 1
+vim.o.guicursor = ""
 
 -- Dull the mail signature
 api.nvim_set_hl(0, 'mailSignature', { link = 'Comment' })

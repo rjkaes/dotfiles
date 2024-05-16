@@ -161,7 +161,7 @@ require("lazy").setup({
     },
 
     -- Make using git nicer
-    { 'NeogitOrg/neogit',       config = true },
+    { 'NeogitOrg/neogit', branch = "nightly",  config = true },
     { 'lewis6991/gitsigns.nvim' },
 
     -- Tabular
