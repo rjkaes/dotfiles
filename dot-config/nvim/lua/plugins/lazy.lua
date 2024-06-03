@@ -334,7 +334,7 @@ require("lazy").setup({
         opts = {
             mode = 'document_diagnostics',
         },
-        cmd = 'TroubleToggle',
+        cmd = 'Trouble',
     },
 
     {
