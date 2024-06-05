@@ -9,7 +9,7 @@ vim.keymap.set('n', 'ZZ', ':wq<cr>', { silent = true })
 vim.keymap.set('n', 'QA', ':qa!<cr>')
 
 -- switch to using Perl standard regular expressions
-vim.keymap.set({'n','v'}, '/', '/\\v')
+vim.keymap.set({ 'n', 'v' }, '/', '/\\v')
 
 -- Search results centered please
 vim.keymap.set('n', 'n', 'nzz', { silent = true })
@@ -43,12 +43,7 @@ vim.keymap.set('c', '%%', "expand('%:h').'/'", { expr = true })
 vim.keymap.set('v', '<leader>y', '"+y')
 
 -- LSP formatting
-vim.keymap.set({'n', 'v'}, '<localleader>f', function() require("conform").format() end, { silent = true })
-
--- Diagnostics
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set({ 'n', 'v' }, '<localleader>f', function() require("conform").format() end, { silent = true })
 
 -- Git
 vim.keymap.set('n', '<leader>gb', ':Git blame<cr>')
