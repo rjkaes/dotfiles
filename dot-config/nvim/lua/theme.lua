@@ -34,7 +34,7 @@ vim.g.zenwritten_lightness = 'bright'
 vim.g.zenwritten_solid_float_border = true
 vim.g.zenwritten_solid_line_nr = true
 vim.g.zenwritten_vert_split = true
-vim.cmd("colorscheme zenwritten")
+vim.cmd("colorscheme grey")
 
 vim.o.guicursor = ""
 

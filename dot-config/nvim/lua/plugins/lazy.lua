@@ -23,6 +23,7 @@ require("lazy").setup({
 
     -- colorscheme
     { 'mcchrish/zenbones.nvim',    dependencies = { 'rktjmp/lush.nvim' }, priority = 1000, lazy = false },
+    { 'yorickpeterse/nvim-grey',   dependencies = { 'rktjmp/lush.nvim' }, priority = 1000, lazy = false },
 
     -- Hightlight hex colors, etc.
     { 'NvChad/nvim-colorizer.lua', name = 'colorizer',                    lazy = false,    config = true },
