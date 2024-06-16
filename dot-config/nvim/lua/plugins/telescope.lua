@@ -12,12 +12,12 @@ telescope.setup({
         layout_strategy = 'grey',
         layout_config = {
             -- The extension supports both "top" and "bottom" for the prompt.
-            prompt_position = 'top',
+            prompt_position = 'bottom',
 
             -- You can adjust these settings to your liking.
-            width = 0.6,
-            height = 0.5,
-            preview_width = 0.6,
+            width = 0.8,
+            height = 0.8,
+            preview_width = 0.5,
         },
     },
     pickers = {
