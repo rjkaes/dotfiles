@@ -3,9 +3,9 @@ local api = vim.api
 require('lualine').setup({
     options = {
         icons_enabled = true,
-        theme = 'zenwritten',
-        component_separators = '|',
-        section_separators = '',
+        theme = 'newpaper-light',
+        section_separators = { "", "" },
+        component_separators = { "│", "│" }
     },
 
     sections = {
@@ -28,13 +28,11 @@ require('lualine').setup({
     },
 })
 
-vim.g.zenwritten_colorize_diagnostic_underline_text = true
-vim.g.zenwritten_darken_noncurrent_window = true
-vim.g.zenwritten_lightness = 'bright'
-vim.g.zenwritten_solid_float_border = true
-vim.g.zenwritten_solid_line_nr = true
-vim.g.zenwritten_vert_split = true
-vim.cmd("colorscheme grey")
+require("newpaper").setup({
+    style = "light",
+    saturation = -0.2,
+    lightness = 0.1,
+})
 
 vim.o.guicursor = ""
 

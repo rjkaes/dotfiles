@@ -22,13 +22,20 @@ require("lazy").setup({
     { 'voldikss/vim-floaterm' },
 
     -- colorscheme
-    { 'mcchrish/zenbones.nvim',    dependencies = { 'rktjmp/lush.nvim' }, priority = 1000, lazy = false },
-    { 'yorickpeterse/nvim-grey',   dependencies = { 'rktjmp/lush.nvim' }, priority = 1000, lazy = false },
+    {
+        'yorik1984/newpaper.nvim',
+        dependencies = {
+            'yorik1984/lualine-theme.nvim',
+            'nvim-lualine/lualine.nvim',
+        },
+        priority = 1000,
+        lazy = false
+    },
 
     -- Hightlight hex colors, etc.
-    { 'NvChad/nvim-colorizer.lua', name = 'colorizer',                    lazy = false,    config = true },
+    { 'NvChad/nvim-colorizer.lua', name = 'colorizer',  lazy = false, config = true },
     -- Add missing LSP colors
-    { 'folke/lsp-colors.nvim',     name = 'lsp-colors',                   lazy = false,    config = true },
+    { 'folke/lsp-colors.nvim',     name = 'lsp-colors', lazy = false, config = true },
 
     -- Highlight TODO, NOTE, etc.
     {
