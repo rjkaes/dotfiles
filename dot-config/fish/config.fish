@@ -29,7 +29,7 @@ abbr -a gcm 'git switch main'
 abbr -a gco 'git checkout'
 abbr -a gdc 'git diff --cached'
 abbr -a ggp ggpush
-abbr -a glg git lg
+abbr -a glg 'git hist'
 abbr -a grc 'git rebase --continue'
 abbr -a grm 'git rebase master'
 abbr -a gss 'git ss'
