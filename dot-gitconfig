@@ -64,6 +64,9 @@
     delete-branch = !sh -c 'git push origin :refs/heads/$1 && git branch -D $1' -
     delete-merged-branches = "!sh -c 'git branch -r --merged | grep -v origin/master | sed -e \"s/origin\\///\" | while read branch; do git push origin --delete $branch; done'"
     graph = log --graph --all --decorate --stat --date=iso
+    hist = log --graph --abbrev-commit --decorate --date=short \
+        --format=format:'%C(bold cyan)%h%C(reset) %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)%an%C(reset) %C(bold yellow)%d%C(reset)' \
+        --branches --remotes --tags
     l = "!. ~/.githelpers && pretty_git_log"
     la = !git l --all
     last = log -B -M -C --stat --summary --no-merges -1 HEAD
@@ -104,12 +107,8 @@
     gpgsign = true
 [pull]
 	rebase = true
-
-[difftool "branchless"]
-  cmd = git-branchless difftool --read-only --dir-diff $LOCAL $REMOTE
-
-[mergetool "branchless"]
-  cmd = git-branchless difftool $LOCAL $REMOTE --base $BASE --output $MERGED
+[push]
+	autoSetupRemote = true
 
 [include]
     path = ~/.gitconfig.secret
