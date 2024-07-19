@@ -25,7 +25,6 @@ abbr -a g git
 abbr -a ga 'git add'
 abbr -a gb 'git branch'
 abbr -a gc 'git commit -v'
-abbr -a gcm 'git switch main'
 abbr -a gco 'git checkout'
 abbr -a gdc 'git diff --cached'
 abbr -a ggp ggpush
