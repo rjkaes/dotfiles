@@ -20,7 +20,7 @@ if File.exist?(File.join(git_work_tree, "biome.json"))
   execute("biome", "ci", git_work_tree)
 end
 
-if Dir.glob('*.sln').any?
+if Dir.glob('*.{sln,csproj}').any?
   execute("dotnet format --verify-no-changes --no-restore")
   execute("dotnet build -v q --no-restore --nologo")
 end
