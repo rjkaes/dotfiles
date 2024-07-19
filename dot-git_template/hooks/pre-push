@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'open3'
+
+def execute(*cmd)
+  print "Running `#{cmd.join(' ')}`... "
+  output, status = Open3.capture2e(*cmd)
+  if !status.success?
+    puts "fail."
+    exit(1)
+  else
+    puts "done."
+  end
+end
+
+git_work_tree = ENV.fetch("GIT_WORK_TREE")
+
+if File.exist?(File.join(git_work_tree, "biome.json"))
+  execute("biome", "ci", git_work_tree)
+end
+
+if Dir.glob('*.sln').any?
+  execute("dotnet format --verify-no-changes --no-restore")
+  execute("dotnet build -v q --no-restore --nologo")
+end
+
+exit(0)
