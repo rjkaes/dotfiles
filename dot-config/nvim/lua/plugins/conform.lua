@@ -10,8 +10,8 @@ conform.setup({
     formatters_by_ft = {
         cs = { "csharpier" },
         html = { "prettier" },
-        javascript = { { "biome", "prettier" } },
-        json = { { "biome", "prettier" } },
+        javascript = { "biome", "prettier", stop_after_first = true },
+        json = { "biome", "prettier", stop_after_first = true },
         ruby = { "standardrb" },
         rust = { "rustfmt" },
         sql = { "sql_formatter" },
