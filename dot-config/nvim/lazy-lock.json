@@ -30,7 +30,7 @@
   "neoterm": { "branch": "master", "commit": "eca22dc90a9db5e52d8baf91f31991ad540ffe36" },
   "neotest": { "branch": "master", "commit": "32ff2ac21135a372a42b38ae131e531e64833bd3" },
   "neotest-dotnet": { "branch": "main", "commit": "03509791912eaeac9f993f7cf49e170eca06a8bc" },
-  "newpaper.nvim": { "branch": "main", "commit": "eea5df969ed1f0a3c1caa750f82122c92ed074af" },
+  "newpaper.nvim": { "branch": "main", "commit": "0e165baf270e337713ce2a072b13a27059f6952f" },
   "noice.nvim": { "branch": "main", "commit": "aaaef369f6060a5ba137f672c958bcc3b79404da" },
   "nui.nvim": { "branch": "main", "commit": "61574ce6e60c815b0a0c4b5655b8486ba58089a1" },
   "nvim-cmp": { "branch": "main", "commit": "d818fd0624205b34e14888358037fb6f5dc51234" },
