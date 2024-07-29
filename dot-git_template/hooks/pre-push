@@ -2,6 +2,7 @@
 
 require 'fileutils'
 require 'open3'
+require 'pathname'
 
 def execute(*cmd)
   print "Running `#{cmd.join(' ')}`... "
@@ -14,13 +15,16 @@ def execute(*cmd)
   end
 end
 
-git_work_tree = ENV.fetch("GIT_WORK_TREE")
+# Try using `GIT_DIR` but if that doesn't work, use the current working
+# directory and append `.git` to it.
+git_dir = Pathname.new(ENV.fetch('GIT_DIR', Pathname.getwd.join('.git')))
+git_work_tree = Pathname.new(ENV.fetch("GIT_WORK_TREE", git_dir.parent))
 
-if File.exist?(File.join(git_work_tree, "biome.json"))
-  execute("biome", "ci", git_work_tree)
+if git_work_tree.join('biome.json').exist?
+  execute("biome", "ci", git_work_tree.to_s)
 end
 
-if Dir.glob('*.{sln,csproj}').any?
+if git_work_tree.glob('*.{sln,csproj}').any?
   execute("dotnet format --verify-no-changes --no-restore")
   execute("dotnet build -v q --no-restore --nologo")
 end
