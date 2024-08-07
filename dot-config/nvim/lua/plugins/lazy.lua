@@ -58,18 +58,26 @@ require("lazy").setup({
         },
     },
 
-    -- github copilot
     {
-        'github/copilot.vim',
-        lazy = false,
-        init = function()
-            -- replace default `TAB` mapping with `C-F` (which matches fish shell completion)
-            vim.keymap.set('i', '<C-F>', 'copilot#Accept("\\<CR>")', {
-                expr = true,
-                replace_keycodes = false
-            })
-            vim.g.copilot_no_tab_map = true
-        end
+        "zbirenbaum/copilot.lua",
+        cmd = "Copilot",
+        event = "InsertEnter",
+        opts = {
+            suggestion = {
+                enabled = true,
+                auto_trigger = false,
+                hide_during_completion = true,
+                debounce = 75,
+                keymap = {
+                    accept = "<C-F>",
+                    accept_word = false,
+                    accept_line = false,
+                    next = "<M-]>",
+                    prev = "<M-[>",
+                    dismiss = "<C-]>",
+                },
+            },
+        },
     },
 
     {
@@ -141,7 +149,16 @@ require("lazy").setup({
     },
 
     -- Comment stuff in and out with `gc`
-    { 'numToStr/Comment.nvim', config = true },
+    {
+        'numToStr/Comment.nvim',
+        dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
+        opts = {
+            pre_hook = function()
+                return
+                    require("ts_context_commentstring.internal").calculate_commentstring()
+            end
+        },
+    },
 
     -- A bunch of Tim Pope plugins to make using vim easier
     { 'tpope/vim-eunuch' },

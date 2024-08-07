@@ -36,6 +36,8 @@ vim.opt.list = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+vim.opt.inccommand = 'split'
+
 vim.opt.grepprg = "rg --vimgrep $*"
 vim.opt.listchars = { tab = '▸ ', nbsp = '¬', extends = '»', precedes = '«', trail = '•' }
 vim.opt.scrolloff = 20
@@ -58,9 +60,15 @@ vim.opt.shortmess:append 'A'
 
 -- Ignore a bunch of VCS, swap, and backup files.
 vim.opt.wildignore:append { '*.swp', '*.bak' }
-vim.opt.wildignore:append { '.hg' , '.git', '.svn' }
+vim.opt.wildignore:append { '.hg', '.git', '.svn' }
 vim.opt.wildignore:append { '*.spl' }
 vim.opt.wildignore:append { '*.sw?' }
+vim.opt.wildignore:append({ ".javac", "node_modules", "*.pyc" })
+vim.opt.wildignore:append({ ".aux", ".out", ".toc" }) -- LaTeX
+vim.opt.wildignore:append({
+    ".o", ".obj", ".dll", ".exe", ".so", ".a", ".lib", ".pyc", ".pyo", ".pyd",
+    ".swp", ".swo", ".class", ".DS_Store", ".git", ".hg", ".orig"
+})
 
 vim.wo.signcolumn = 'yes'
 
