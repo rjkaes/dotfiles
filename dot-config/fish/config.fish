@@ -33,7 +33,6 @@ abbr -a grc 'git rebase --continue'
 abbr -a grm 'git rebase master'
 abbr -a gss 'git ss'
 abbr -a gst 'git stash'
-abbr -a gup 'git pull --rebase'
 abbr -a gw 'git switch'
 abbr -a ygg 'sudo yggdrasilctl'
 
