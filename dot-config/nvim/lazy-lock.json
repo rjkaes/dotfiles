@@ -8,7 +8,7 @@
   "cmp-nvim-lsp": { "branch": "main", "commit": "39e2eda76828d88b773cc27a3f61d2ad782c922d" },
   "cmp-nvim-lsp-signature-help": { "branch": "main", "commit": "031e6ba70b0ad5eee49fd2120ff7a2e325b17fa7" },
   "colorizer": { "branch": "master", "commit": "194ec600488f7c7229668d0e80bd197f3a2b84ff" },
-  "conform.nvim": { "branch": "master", "commit": "38e5f062f241d89ba44f6d67d16b4bf55d3c477e" },
+  "conform.nvim": { "branch": "master", "commit": "c636af8fb69caea0938e029d161d80a72c15f175" },
   "copilot.lua": { "branch": "master", "commit": "86537b286f18783f8b67bccd78a4ef4345679625" },
   "emmet-vim": { "branch": "master", "commit": "3fb2f63799e1922f7647ed9ff3b32154031a76ee" },
   "fidget.nvim": { "branch": "main", "commit": "0ba1e16d07627532b6cae915cc992ecac249fb97" },
