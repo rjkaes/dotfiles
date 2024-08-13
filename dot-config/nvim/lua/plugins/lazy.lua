@@ -298,7 +298,7 @@ require("lazy").setup({
     -- LSP
     {
         'VonHeikemen/lsp-zero.nvim',
-        branch = 'v2.x',
+        branch = 'v4.x',
         dependencies = {
             -- LSP Support
             { 'neovim/nvim-lspconfig' },
@@ -308,7 +308,7 @@ require("lazy").setup({
             -- Autocompletion
             { 'hrsh7th/nvim-cmp',                    branch = 'main' },
             { 'hrsh7th/cmp-nvim-lsp' },
-            { 'L3MON4D3/LuaSnip',                    version = "v2.*" },
+            { 'L3MON4D3/LuaSnip' },
 
             { 'hrsh7th/cmp-buffer',                  branch = 'main' },
             { 'hrsh7th/cmp-cmdline',                 branch = 'main' },
