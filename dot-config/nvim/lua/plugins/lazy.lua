@@ -27,6 +27,7 @@ require("lazy").setup({
         dependencies = {
             'yorik1984/lualine-theme.nvim',
             'nvim-lualine/lualine.nvim',
+            'HiPhish/rainbow-delimiters.nvim',
         },
         priority = 1000,
         lazy = false

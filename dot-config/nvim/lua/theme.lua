@@ -1,9 +1,10 @@
 local api = vim.api
+local background = vim.opt.background:get()
 
 require('lualine').setup({
     options = {
         icons_enabled = true,
-        theme = 'newpaper-light',
+        theme = 'newpaper-' .. background,
         section_separators = { "", "" },
         component_separators = { "│", "│" }
     },
@@ -28,11 +29,20 @@ require('lualine').setup({
     },
 })
 
-require("newpaper").setup({
-    style = "light",
-    saturation = -0.2,
-    lightness = 0.1,
-})
+local themes = {
+    light = {
+        style = "light",
+        saturation = -0.2,
+        lightness = 0.1,
+    },
+    dark = {
+        style = "dark",
+        saturation = 0.1,
+        lightness = -0.2,
+    },
+}
+
+require("newpaper").setup(themes[background])
 
 vim.o.guicursor = ""
 
