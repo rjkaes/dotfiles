@@ -60,24 +60,35 @@ require("lazy").setup({
     },
 
     {
-        "zbirenbaum/copilot.lua",
-        cmd = "Copilot",
-        event = "InsertEnter",
+        "yetone/avante.nvim",
+        event = "VeryLazy",
+        build = "make",
         opts = {
-            suggestion = {
-                enabled = true,
-                auto_trigger = false,
-                hide_during_completion = true,
-                debounce = 75,
-                keymap = {
-                    accept = "<C-F>",
-                    accept_word = false,
-                    accept_line = false,
-                    next = "<M-]>",
-                    prev = "<M-[>",
-                    dismiss = "<C-]>",
-                },
-            },
+            provider = "copilot",
+        },
+        dependencies = {
+            "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+            "stevearc/dressing.nvim",
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            -- --- The below is optional, make sure to setup it properly if you have lazy=true
+            -- {
+            --     'MeanderingProgrammer/render-markdown.nvim',
+            --     opts = {
+            --         file_types = { "markdown", "Avante" },
+            --     },
+            --     ft = { "markdown", "Avante" },
+            -- },
+            {
+                "OXY2DEV/markview.nvim",
+                lazy = true,
+                ft = { "markdown", "Avante" },
+
+                dependencies = {
+                    "nvim-treesitter/nvim-treesitter",
+                    "nvim-tree/nvim-web-devicons"
+                }
+            }
         },
     },
 
