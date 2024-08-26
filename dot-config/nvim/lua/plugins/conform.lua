@@ -5,6 +5,9 @@ local util = require("conform.util");
 conform.formatters.sql_formatter = {
     prepend_args = { "-l", "tsql", "-c", '{ "tabWidth": 2, "keywordCase": "upper", "dataTypeCase": "upper", "linesBetweenQueries": 2, "dialect": "transactsql" }' },
 }
+conform.formatters.sqlfluff = {
+    args = { "fix", "--dialect=tsql", "--exclude-rules=CP02", "-" },
+}
 
 conform.setup({
     formatters_by_ft = {
@@ -14,7 +17,7 @@ conform.setup({
         json = { "biome", "prettier", stop_after_first = true },
         ruby = { "standardrb" },
         rust = { "rustfmt" },
-        sql = { "sql_formatter" },
+        sql = { "sqlfluff", "sql_formatter", stop_after_first = true },
         ["_"] = { "trim_whitespace" },
     },
     -- If this is set, Conform will run the formatter on save.
