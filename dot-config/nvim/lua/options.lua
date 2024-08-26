@@ -22,6 +22,9 @@ end
 
 vim.opt.background = background_color()
 
+vim.opt.laststatus = 3
+vim.opt.splitkeep = "screen"
+
 vim.opt.number = true
 vim.opt.relativenumber = true
 
