@@ -1,23 +1,30 @@
 local wezterm = require 'wezterm'
 
-local scheme_for_appearance = function(appearance)
-  if appearance:find 'Light' then
-    return 'Catppuccin Latte'
-  else
-    return 'Catppuccin Mocha'
-  end
+local is_dark = function()
+    if wezterm.gui then
+        return wezterm.gui.get_appearance():find('Dark')
+    end
+    return true
+end
+
+local scheme_for_appearance = function()
+    if is_dark() then
+        return 'Catppuccin Mocha'
+    else
+        return 'Catppuccin Latte'
+    end
 end
 
 local config = {}
 
-config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
+config.color_scheme = scheme_for_appearance()
 config.font = wezterm.font_with_fallback {
     -- { family = 'Monaspace Xenon Var', weight = "Light" },
     { family = 'Iosevka Nerd Font Mono', weight = 'Regular' },
     -- 'JetBrainsMonoNL NFM',
     'Apple Color Emoji',
 }
-config.font_size = 18
+config.font_size = 17
 config.use_cap_height_to_scale_fallback_fonts = true
 
 -- no ligatures!
@@ -80,10 +87,10 @@ config.keys = {
     },
     -- open web links on the sceeen
     {
-        key="e",
-        mods="CTRL|ALT",  -- CTRL | OPTION
-        action=wezterm.action{QuickSelectArgs={
-            patterns={
+        key = "e",
+        mods = "CTRL|ALT", -- CTRL | OPTION
+        action = wezterm.action { QuickSelectArgs = {
+            patterns = {
                 "https?://(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)[^()]",
                 -- "http?://[\\S]+",
                 -- "https?://[\\S]+",
@@ -97,5 +104,31 @@ config.keys = {
     },
     { key = 'D', mods = 'SUPER', action = wezterm.action.ShowDebugOverlay },
 }
+
+wezterm.on('update-status', function(window)
+    -- Grab the utf8 character for the "powerline" left facing
+    -- solid arrow.
+    local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
+
+    -- Grab the current window's configuration, and from it the
+    -- palette (this is the combination of your chosen colour scheme
+    -- including any overrides).
+    local color_scheme = window:effective_config().resolved_palette
+    local bg = color_scheme.background
+    local fg = color_scheme.foreground
+
+    local date = wezterm.strftime '%a %b %-d %H:%M '
+
+    window:set_right_status(wezterm.format({
+        -- First, we draw the arrow...
+        { Background = { Color = 'none' } },
+        { Foreground = { Color = bg } },
+        { Text = SOLID_LEFT_ARROW },
+        -- Then we draw our text
+        { Background = { Color = bg } },
+        { Foreground = { Color = fg } },
+        { Text = ' ' .. date .. ' ' },
+    }))
+end)
 
 return config
