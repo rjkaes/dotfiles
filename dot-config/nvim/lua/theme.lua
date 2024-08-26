@@ -24,6 +24,17 @@ require('lualine').setup({
                 path = 1,
                 shorten_target = 20,
             },
+            {
+                function()
+                    local recording_register = vim.fn.reg_recording()
+                    if recording_register == '' then
+                        return ''
+                    else
+                        return 'Recording @' .. recording_register
+                    end
+                end,
+                color = { fg = '#ff9e64', gui = 'bold' },
+            },
         },
         lualine_x = { 'encoding', 'filetype' },
     },
