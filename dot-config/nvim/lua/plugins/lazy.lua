@@ -17,9 +17,9 @@ vim.o.termguicolors = true
 
 -- Setup lazy package manager.
 require("lazy").setup({
-    { 'nvim-lua/popup.nvim' },
+    { 'nvim-lua/popup.nvim',   lazy = true },
     { 'nvim-lua/plenary.nvim', lazy = true },
-    { 'voldikss/vim-floaterm' },
+    { 'voldikss/vim-floaterm', lazy = true },
 
     -- colorscheme
     {
@@ -33,9 +33,9 @@ require("lazy").setup({
     },
 
     -- Hightlight hex colors, etc.
-    { 'NvChad/nvim-colorizer.lua',       name = 'colorizer',  lazy = false, config = true },
+    { 'NvChad/nvim-colorizer.lua',       name = 'colorizer',  event = "VeryLazy", config = true },
     -- Add missing LSP colors
-    { 'folke/lsp-colors.nvim',           name = 'lsp-colors', lazy = false, config = true },
+    { 'folke/lsp-colors.nvim',           name = 'lsp-colors', event = "VeryLazy", config = true },
 
     { 'HiPhish/rainbow-delimiters.nvim', event = "VeryLazy" },
 
@@ -179,19 +179,19 @@ require("lazy").setup({
     },
 
     -- A bunch of Tim Pope plugins to make using vim easier
-    { 'tpope/vim-eunuch' },
+    { 'tpope/vim-eunuch',      event = "VeryLazy" },
     { 'tpope/vim-characterize' },
     { 'tpope/vim-endwise',     ft = { 'lua', 'elixir', 'ruby', 'crystal', 'sh', 'bash', 'zsh', 'vim', 'c', 'cpp', 'make' } },
-    { 'tpope/vim-repeat',      event = "VeryLazy" },
-    { 'tpope/vim-abolish' },
+    { 'tpope/vim-repeat' },
+    { 'tpope/vim-abolish',     cmd = "Abolish" },
     { 'tpope/vim-surround' },
     { 'tpope/vim-unimpaired' },
-    { 'kassio/neoterm' },
     {
         'tpope/vim-fugitive',
+        event = "VeryLazy",
         dependencies = { 'tpope/vim-rhubarb' },
     },
-    { 'tommcdo/vim-fubitive' },
+    { 'tommcdo/vim-fubitive', cmd = "Gbrowse" },
 
     {
         'lukas-reineke/indent-blankline.nvim',
@@ -205,7 +205,7 @@ require("lazy").setup({
     },
 
     -- Make using git nicer
-    { 'NeogitOrg/neogit',    event = "VeryLazy", cmd = "Neogit", branch = "master", config = true },
+    { 'NeogitOrg/neogit',     event = "VeryLazy", cmd = "Neogit", branch = "master", config = true },
     {
         'lewis6991/gitsigns.nvim',
         event = { "BufReadPost", "BufNewFile", "BufWritePre" },
@@ -352,7 +352,7 @@ require("lazy").setup({
     -- Useful status updates for LSP
     {
         'j-hui/fidget.nvim',
-        tag = 'legacy',
+        event = "VeryLazy",
         opts = {
             window = {
                 blend = 0,
@@ -361,7 +361,17 @@ require("lazy").setup({
     },
 
     -- Additional lua configuration, makes nvim stuff amazing
-    { 'folke/neodev.nvim' },
+    {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                -- See the configuration section for more details
+                -- Load luvit types when the `vim.uv` word is found
+                { path = "luvit-meta/library", words = { "vim%.uv" } },
+            },
+        },
+    },
 
     {
         'nvim-lualine/lualine.nvim',
