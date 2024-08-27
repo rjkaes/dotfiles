@@ -18,7 +18,7 @@ vim.o.termguicolors = true
 -- Setup lazy package manager.
 require("lazy").setup({
     { 'nvim-lua/popup.nvim' },
-    { 'nvim-lua/plenary.nvim' },
+    { 'nvim-lua/plenary.nvim', lazy = true },
     { 'voldikss/vim-floaterm' },
 
     -- colorscheme
@@ -27,20 +27,23 @@ require("lazy").setup({
         dependencies = {
             'yorik1984/lualine-theme.nvim',
             'nvim-lualine/lualine.nvim',
-            'HiPhish/rainbow-delimiters.nvim',
         },
         priority = 1000,
         lazy = false
     },
 
     -- Hightlight hex colors, etc.
-    { 'NvChad/nvim-colorizer.lua', name = 'colorizer',  lazy = false, config = true },
+    { 'NvChad/nvim-colorizer.lua',       name = 'colorizer',  lazy = false, config = true },
     -- Add missing LSP colors
-    { 'folke/lsp-colors.nvim',     name = 'lsp-colors', lazy = false, config = true },
+    { 'folke/lsp-colors.nvim',           name = 'lsp-colors', lazy = false, config = true },
+
+    { 'HiPhish/rainbow-delimiters.nvim', event = "VeryLazy" },
 
     -- Highlight TODO, NOTE, etc.
     {
         'folke/todo-comments.nvim',
+        cmd = { "TodoTrouble", "TodoTelescope" },
+        event = { "BufReadPost", "BufNewFile", "BufWritePre" },
         dependencies = {
             'nvim-lua/plenary.nvim'
         },
@@ -123,7 +126,7 @@ require("lazy").setup({
     {
         "nvim-tree/nvim-tree.lua",
         version = "*",
-        lazy = false,
+        event = "VeryLazy",
         dependencies = {
             "nvim-tree/nvim-web-devicons",
         },
@@ -138,6 +141,8 @@ require("lazy").setup({
             'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope-fzy-native.nvim',
         },
+        cmd = "Telescope",
+        event = "VeryLazy",
     },
     'nvim-telescope/telescope-symbols.nvim',
 
@@ -147,6 +152,7 @@ require("lazy").setup({
     -- Toggle multiple terminals
     {
         'akinsho/toggleterm.nvim',
+        event = "VeryLazy",
         opts = {
             size = function(term)
                 if term.direction == "horizontal" then
@@ -176,7 +182,7 @@ require("lazy").setup({
     { 'tpope/vim-eunuch' },
     { 'tpope/vim-characterize' },
     { 'tpope/vim-endwise',     ft = { 'lua', 'elixir', 'ruby', 'crystal', 'sh', 'bash', 'zsh', 'vim', 'c', 'cpp', 'make' } },
-    { 'tpope/vim-repeat' },
+    { 'tpope/vim-repeat',      event = "VeryLazy" },
     { 'tpope/vim-abolish' },
     { 'tpope/vim-surround' },
     { 'tpope/vim-unimpaired' },
@@ -190,6 +196,7 @@ require("lazy").setup({
     {
         'lukas-reineke/indent-blankline.nvim',
         main = 'ibl',
+        event = { "BufReadPost", "BufNewFile", "BufWritePre" },
         opts = {
             indent = {
                 char = '┊',
@@ -198,14 +205,17 @@ require("lazy").setup({
     },
 
     -- Make using git nicer
-    { 'NeogitOrg/neogit',       branch = "master", config = true },
-    { 'lewis6991/gitsigns.nvim' },
+    { 'NeogitOrg/neogit',    event = "VeryLazy", cmd = "Neogit", branch = "master", config = true },
+    {
+        'lewis6991/gitsigns.nvim',
+        event = { "BufReadPost", "BufNewFile", "BufWritePre" },
+    },
 
     -- Tabular
-    { 'godlygeek/tabular',      cmd = 'Tabularize' },
+    { 'godlygeek/tabular', cmd = 'Tabularize', event = "VeryLazy" },
 
     -- Distraction free writing
-    { 'junegunn/goyo.vim',      cmd = 'Goyo' },
+    { 'junegunn/goyo.vim', cmd = 'Goyo',       event = "VeryLazy" },
 
     -- Undo tree
     { 'mbbill/undotree' },
@@ -226,6 +236,7 @@ require("lazy").setup({
     -- Test runner
     {
         "nvim-neotest/neotest",
+        event = "VeryLazy",
         dependencies = {
             "nvim-neotest/nvim-nio",
             "nvim-lua/plenary.nvim",
@@ -265,14 +276,14 @@ require("lazy").setup({
     { 'mattn/emmet-vim' },
 
     -- markdown
-    { 'preservim/vim-markdown' },
+    -- { 'preservim/vim-markdown' },
 
     -- -- Python
     -- Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
 
     -- Ruby
     { 'tpope/vim-rails' },
-    { 'jlcrochet/vim-ruby' },
+    { 'jlcrochet/vim-ruby',             ft = 'ruby' },
     { 'kana/vim-textobj-user' },
     { 'nelstrom/vim-textobj-rubyblock', ft = 'ruby' },
 
@@ -305,12 +316,17 @@ require("lazy").setup({
     { 'slim-template/vim-slim', ft = 'slim' },
 
     -- Formatters
-    "stevearc/conform.nvim",
+    {
+        "stevearc/conform.nvim",
+        lazy = true,
+        cmd = "ConformInfo",
+    },
 
     -- LSP
     {
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v4.x',
+        event = { "BufReadPost", "BufNewFile", "BufWritePre" },
         dependencies = {
             -- LSP Support
             { 'neovim/nvim-lspconfig' },
@@ -349,7 +365,17 @@ require("lazy").setup({
 
     {
         'nvim-lualine/lualine.nvim',
-        lazy = false,
+        event = "VeryLazy",
+        init = function()
+            vim.g.lualine_laststatus = vim.o.laststatus
+            if vim.fn.argc(-1) > 0 then
+                -- set an empty statusline till lualine loads
+                vim.o.statusline = " "
+            else
+                -- hide the statusline on the starter page
+                vim.o.laststatus = 0
+            end
+        end,
         dependencies = { 'nvim-tree/nvim-web-devicons' },
     },
 
@@ -357,6 +383,9 @@ require("lazy").setup({
     {
         -- Highlight, edit, and navigate code
         'nvim-treesitter/nvim-treesitter',
+        event = { "VeryLazy", "BufReadPost", "BufNewFile", "BufWritePre" },
+        lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+        cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
         build = function()
             local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
             ts_update()
@@ -364,7 +393,11 @@ require("lazy").setup({
     },
 
     -- Additional text objects via treesitter
-    { 'nvim-treesitter/nvim-treesitter-textobjects' },
+    {
+        'nvim-treesitter/nvim-treesitter-textobjects',
+        event = "VeryLazy",
+        enabled = true,
+    },
 
     {
         'folke/trouble.nvim',
@@ -376,6 +409,7 @@ require("lazy").setup({
 
     {
         'kevinhwang91/nvim-ufo',
+        event = { "VeryLazy", "BufReadPost", "BufNewFile", "BufWritePre" },
         dependencies = { 'kevinhwang91/promise-async' },
         opts = {
             provider_selector = function(bufnr, filetype, buftype)
