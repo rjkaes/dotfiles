@@ -99,8 +99,8 @@ require("lazy").setup({
         "folke/noice.nvim",
         event = "VeryLazy",
         dependencies = {
-            -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
             "MunifTanjim/nui.nvim",
+            "rcarriga/nvim-notify",
         },
         opts = {
             lsp = {
@@ -121,12 +121,21 @@ require("lazy").setup({
             },
         }
     },
+    {
+        "rcarriga/nvim-notify",
+        lazy = true,
+        opts = {
+            render = "compact",
+            timeout = 500,
+            fps = 10,
+            stages = "static",
+        },
+    },
 
     -- Tree
     {
         "nvim-tree/nvim-tree.lua",
         version = "*",
-        event = "VeryLazy",
         dependencies = {
             "nvim-tree/nvim-web-devicons",
         },
@@ -353,11 +362,6 @@ require("lazy").setup({
     {
         'j-hui/fidget.nvim',
         event = "VeryLazy",
-        opts = {
-            window = {
-                blend = 0,
-            },
-        },
     },
 
     -- Additional lua configuration, makes nvim stuff amazing
