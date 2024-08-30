@@ -12,6 +12,7 @@ conform.formatters.sqlfluff = {
 conform.setup({
     formatters_by_ft = {
         cs = { "csharpier" },
+        csx = { "csharpier" },
         html = { "prettier" },
         javascript = { "biome", "prettier", stop_after_first = true },
         json = { "biome", "prettier", stop_after_first = true },

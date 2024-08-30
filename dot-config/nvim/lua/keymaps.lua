@@ -43,7 +43,14 @@ vim.keymap.set('c', '%%', "expand('%:h').'/'", { expr = true })
 vim.keymap.set('v', '<leader>y', '"+y')
 
 -- LSP formatting
-vim.keymap.set({ 'n', 'v' }, '<localleader>f', function() require("conform").format() end, { silent = true })
+vim.keymap.set({ "n", "v" }, "<localleader>f", function()
+    require('conform').format({
+        lsp_fallback = true,
+        async = false,
+        timeout_ms = 500,
+        silent = true,
+    })
+end, { desc = "Format file or range (in visual mode)" })
 
 -- Git
 vim.keymap.set('n', '<leader>gb', ':Git blame<cr>')
