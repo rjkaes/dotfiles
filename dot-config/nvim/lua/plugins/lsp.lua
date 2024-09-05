@@ -53,7 +53,7 @@ require('mason-lspconfig').setup({
         'lua_ls',
         'omnisharp',
         'standardrb',
-        'tsserver',
+        'ts_ls',
     },
     handlers = {
         -- this first function is the "default handler"
