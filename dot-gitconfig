@@ -109,3 +109,5 @@
 
 [include]
     path = ~/.gitconfig.secret
+[includeIf "gitdir:~/src/work/"]
+    path = ~/src/work/.gitconfig
