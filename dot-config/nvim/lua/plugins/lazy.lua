@@ -74,19 +74,6 @@ require("lazy").setup({
                 opts = {},
             },
         },
-        opts = {
-            strategies = {
-                chat = {
-                    adapter = "copilot",
-                },
-                inline = {
-                    adapter = "copilot",
-                },
-                agent = {
-                    adapter = "copilot",
-                },
-            },
-        },
     },
 
     -- AI powered auto-completion
