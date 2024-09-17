@@ -23,7 +23,7 @@ require("lazy").setup({
 
     -- colorscheme
     {
-        'rjkaes/newpaper.nvim',
+        'yorik1984/newpaper.nvim',
         dependencies = {
             'yorik1984/lualine-theme.nvim',
             'nvim-lualine/lualine.nvim',
