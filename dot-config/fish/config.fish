@@ -25,15 +25,16 @@ abbr -a g git
 abbr -a ga 'git add'
 abbr -a gb 'git branch'
 abbr -a gc 'git commit -v'
+abbr -a gd 'git diff'
 abbr -a gco 'git checkout'
 abbr -a gdc 'git diff --cached'
+abbr -a gl 'git l'
 abbr -a ggp ggpush
 abbr -a glg 'git hist'
 abbr -a grc 'git rebase --continue'
 abbr -a grm 'git rebase master'
 abbr -a gss 'git ss'
-abbr -a gst 'git stash'
-abbr -a gw 'git switch'
+abbr -a gsw 'git switch'
 abbr -a ygg 'sudo yggdrasilctl'
 
 # Source in the various configurations
