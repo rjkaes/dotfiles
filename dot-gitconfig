@@ -99,6 +99,8 @@
 	whitespace = warn
 [rebase]
 	autosquash = true
+    ; https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
+    updateRefs = true
 [commit]
 	template = ~/.git_template/commit_msg.txt
     gpgsign = true
