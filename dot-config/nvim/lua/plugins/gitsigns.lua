@@ -1,4 +1,5 @@
 require('gitsigns').setup({
+    signs_staged_enable = false,
     current_line_blame = false,
     on_attach = function(bufnr)
         local function map(mode, lhs, rhs, opts)
