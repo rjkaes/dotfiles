@@ -17,7 +17,16 @@ end
 -- Read in the current background mode and set the background theme (default to
 -- "light".)  Relies on the environment variable set by `bin/setbg`
 local background_color = function()
-    return read_file(vim.fn.expand("$HOME/CloudStation/current_background_mode")) or 'light'
+    -- Use `current_background_mode` when not on MacOS.
+    if vim.fn.has('mac') ~= 1 then
+        return read_file(vim.fn.expand("$HOME/CloudStation/current_background_mode")) or 'light'
+    end
+
+    local dark_mode = vim.fn.system([[
+        osascript -e 'tell application "System Events" to tell appearance preferences to get dark mode'
+    ]]):gsub('\n', '')
+
+    return dark_mode == 'true' and 'dark' or 'light'
 end
 
 vim.opt.background = background_color()
