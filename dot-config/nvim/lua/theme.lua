@@ -48,8 +48,9 @@ local themes = {
     },
     dark = {
         style = "dark",
+        disable_background = true,
         saturation = 0.1,
-        lightness = -0.2,
+        -- lightness = -0.2,
     },
 }
 
