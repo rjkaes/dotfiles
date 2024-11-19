@@ -37,7 +37,7 @@ abbr -a glg 'git hist'
 abbr -a grc 'git rebase --continue'
 abbr -a grm 'git rebase master'
 abbr -a gss 'git ss'
-abbr -a gsw 'git switch'
+abbr -a gw 'git switch'
 abbr -a ygg 'sudo yggdrasilctl'
 
 # Source in the various configurations
