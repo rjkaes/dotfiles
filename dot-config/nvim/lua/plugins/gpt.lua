@@ -1,10 +1,23 @@
 require("codecompanion").setup({
     adapters = {
-        copilot = function()
-            return require("codecompanion.adapters").extend("copilot", {
+        deepseekr1 = function()
+            return require("codecompanion.adapters").extend("ollama", {
+                name = "deepseekr1",
                 schema = {
                     model = {
-                        default = "claude-3.5-sonnet",
+                        default = "deepseek-coder-v2:latest",
+                    },
+                    num_ctx = {
+                        default = 4096,
+                    },
+                    temperature = {
+                        default = 0.6,
+                    },
+                    -- top_p = {
+                    --     default = 0.95,
+                    -- },
+                    max_tokens = {
+                        default = 8192,
                     },
                 },
             })
@@ -12,13 +25,13 @@ require("codecompanion").setup({
     },
     strategies = {
         chat = {
-            adapter = "copilot",
+            adapter = "deepseekr1",
         },
         inline = {
-            adapter = "copilot",
+            adapter = "deepseekr1",
         },
         agent = {
-            adapter = "copilot",
+            adapter = "deepseekr1",
         },
     },
 })
