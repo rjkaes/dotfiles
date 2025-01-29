@@ -1,14 +1,14 @@
 require("codecompanion").setup({
     adapters = {
-        deepseekr1 = function()
+        coder = function()
             return require("codecompanion.adapters").extend("ollama", {
-                name = "deepseekr1",
+                name = "coder",
                 schema = {
                     model = {
-                        default = "deepseek-coder-v2:latest",
+                        default = "qwen2.5-coder:14b",
                     },
                     num_ctx = {
-                        default = 4096,
+                        default = 8192,
                     },
                     temperature = {
                         default = 0.6,
@@ -25,13 +25,13 @@ require("codecompanion").setup({
     },
     strategies = {
         chat = {
-            adapter = "deepseekr1",
+            adapter = "coder",
         },
         inline = {
-            adapter = "deepseekr1",
+            adapter = "coder",
         },
         agent = {
-            adapter = "deepseekr1",
+            adapter = "coder",
         },
     },
 })
