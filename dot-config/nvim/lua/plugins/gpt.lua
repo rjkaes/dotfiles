@@ -10,9 +10,9 @@ require("codecompanion").setup({
                     num_ctx = {
                         default = 8192,
                     },
-                    temperature = {
-                        default = 0.6,
-                    },
+                    -- temperature = {
+                    --     default = 0.6,
+                    -- },
                     -- top_p = {
                     --     default = 0.95,
                     -- },
