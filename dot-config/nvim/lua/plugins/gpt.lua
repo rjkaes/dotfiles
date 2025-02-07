@@ -35,3 +35,34 @@ require("codecompanion").setup({
         },
     },
 })
+
+require("minuet").setup({
+    provider = 'openai_fim_compatible',
+    n_completions = 1, -- recommend for local model for resource saving
+    context_window = 512,
+    provider_options = {
+        openai_fim_compatible = {
+            api_key = 'TERM',
+            name = 'Ollama',
+            end_point = 'http://localhost:11434/v1/completions',
+            model = 'qwen2.5-coder:7b-base-q6_K',
+            optional = {
+                max_tokens = 256,
+                top_p = 0.9,
+            },
+        },
+    },
+    virtualtext = {
+        auto_trigger_ft = {},
+        keymap = {
+            -- accept whole completion
+            accept = '<C-1>',
+            -- accept one line
+            accept_line = '<C-f>',
+            dismiss = '<C-x>',
+        },
+        show_on_completion_menu = false,
+    },
+})
+
+vim.keymap.set('n', '<leader>C', ':Minuet virtualtext enable<CR>')
