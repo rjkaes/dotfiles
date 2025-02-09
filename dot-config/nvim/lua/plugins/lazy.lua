@@ -29,13 +29,20 @@ require("lazy").setup({
             'nvim-lualine/lualine.nvim',
         },
         priority = 1000,
-        lazy = false
+        lazy = true
     },
+    { 'sainnhe/sonokai',                 lazy = true,                       priority = 1000, },
+    {
+        "aktersnurra/no-clown-fiesta.nvim",
+        priority = 1000,
+        lazy = true,
+    },
+    { "zenbones-theme/zenbones.nvim",    dependencies = "rktjmp/lush.nvim", lazy = true,        priority = 1000, },
 
     -- Hightlight hex colors, etc.
-    { 'NvChad/nvim-colorizer.lua',       name = 'colorizer',  event = "VeryLazy", config = true },
+    { 'NvChad/nvim-colorizer.lua',       name = 'colorizer',                event = "VeryLazy", config = true },
     -- Add missing LSP colors
-    { 'folke/lsp-colors.nvim',           name = 'lsp-colors', event = "VeryLazy", config = true },
+    { 'folke/lsp-colors.nvim',           name = 'lsp-colors',               event = "VeryLazy", config = true },
 
     { 'HiPhish/rainbow-delimiters.nvim', event = "VeryLazy" },
 
