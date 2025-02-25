@@ -30,7 +30,7 @@
   "mason.nvim": { "branch": "main", "commit": "fc98833b6da5de5a9c5b1446ac541577059555be" },
   "minuet-ai.nvim": { "branch": "main", "commit": "64c644f921f20924523b71abafbd033aa5c4f8b2" },
   "neogit": { "branch": "master", "commit": "12f78aaabb37b4946254dd5e47cf7b552904937a" },
-  "neotest": { "branch": "master", "commit": "d66cf4e05a116957f0d3a7755a24291c7d1e1f72" },
+  "neotest": { "branch": "master", "commit": "dddbe8fe358b05b2b7e54fe4faab50563171a76d" },
   "neotest-dotnet": { "branch": "main", "commit": "5a2fa35c3c6a72cfd3fc6a28b3d1af6e68e6c3a8" },
   "newpaper.nvim": { "branch": "main", "commit": "19120c1717b8f5fca11713bdf18255df446ecbad" },
   "no-clown-fiesta.nvim": { "branch": "master", "commit": "2f57d1115e246b62a1a81bba806fe79aaa53b610" },
