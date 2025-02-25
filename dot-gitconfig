@@ -1,17 +1,18 @@
 [core]
+    excludesfile=~/.gitignore
     pager = delta
     whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
-    excludesfile=~/.gitignore
 
 [init]
-	templatedir = ~/.git_template
 	defaultBranch = main
+	templatedir = ~/.git_template
 
 [apply]
 	whitespace = warn
 
 [branch]
 	autosetuprebase = always
+    sort = -committerdate
 
 [color]
     branch = auto
@@ -36,20 +37,33 @@
 ;         changed = green
 ;         untracked = cyan
 
+[column]
+    ui = auto
+
 [commit]
-	template = ~/.git_template/commit_msg.txt
     gpgsign = true
-	verbose = true
+    template = ~/.git_template/commit_msg.txt
+    verbose = true
 
 [diff]
-    renames = copies
+    algorithm = histogram
+    colorMoved = plain
     compactionHeuristic = true
-    colorMoved = default
+    mnemonicPrefix = true
+    renames = true
 
 [delta]
+    detect-dark-light = always
     line-numbers = true
     navigate = true
-    detect-dark-light = always
+
+[fetch]
+    all = true
+    prune = true
+    pruneTags = true
+
+[help]
+    autocorrect = prompt
 
 [interactive]
     diffFilter = delta --color-only
@@ -64,18 +78,25 @@
 	rebase = true
 
 [push]
-	autoSetupRemote = true
+    autoSetupRemote = true
+    default = simple
+    followTags = true
 
 [rebase]
-	autosquash = true
+    autoStash = true
+    autosquash = true
     ; https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
     updateRefs = true
 
 [rerere]
+    autoupdate = true
     enabled = true
 
 [status]
     relativePaths = true
+
+[tag]
+    sort = version:refname
 
 [alias]
     co = checkout
