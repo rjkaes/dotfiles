@@ -22,6 +22,7 @@ abbr -a be 'bundle exec'
 abbr -a bu 'bundle update'
 abbr -a dn 'dotnet'
 abbr -a dnb 'dotnet build'
+abbr -a dnc 'dotnet clean'
 abbr -a dnr 'dotnet run'
 abbr -a dnt 'dotnet test --no-restore'
 abbr -a g git
