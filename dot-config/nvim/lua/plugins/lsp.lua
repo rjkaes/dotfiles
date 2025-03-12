@@ -47,6 +47,13 @@ lsp_zero.extend_lspconfig({
 })
 
 require('mason').setup({})
+require('csharp').setup({
+    lsp = {
+        roslyn = {
+            enable = false,
+        },
+    },
+})
 require('mason-lspconfig').setup({
     automatic_installation = true,
     ensure_installed = {
@@ -67,27 +74,6 @@ require('mason-lspconfig').setup({
                 on_init = function(client)
                     lsp_zero.nvim_lua_settings(client, {})
                 end,
-            })
-        end,
-
-        -- dotnet
-        omnisharp = function()
-            local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-            -- Add textDocument/hover capability
-            capabilities.textDocument.hover.contentFormat = { 'markdown', 'plaintext' }
-
-            lspconfig.omnisharp.setup({
-                handlers = {
-                    ["textDocument/definition"] = require('omnisharp_extended').definition_handler,
-                    ["textDocument/typeDefinition"] = require('omnisharp_extended').type_definition_handler,
-                    ["textDocument/references"] = require('omnisharp_extended').references_handler,
-                    ["textDocument/implementation"] = require('omnisharp_extended').implementation_handler,
-                },
-                enable_roslyn_analyzers = true,
-                organize_imports_on_format = true,
-                enable_import_completion = true,
-                capabilities = capabilities,
             })
         end,
 
@@ -168,3 +154,23 @@ cmp.setup.cmdline(':', {
 -- Make it clearly visible which argument we're at.
 local marked = vim.api.nvim_get_hl(0, { name = 'PMenu' })
 vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter', { fg = marked.fg, bg = marked.bg, bold = true })
+
+-- Listen to LSP Attach
+vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+        local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            group = augroup,
+            buffer = args.buf,
+            callback = function()
+                -- Format the code before you run fix usings
+                vim.lsp.buf.format({ timeout = 1000, async = false })
+
+                -- If the file is C# then run fix usings
+                if vim.bo[0].filetype == "cs" then
+                    require("csharp").fix_usings()
+                end
+            end,
+        })
+    end
+})
