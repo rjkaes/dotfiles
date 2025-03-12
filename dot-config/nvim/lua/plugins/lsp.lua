@@ -48,6 +48,7 @@ lsp_zero.extend_lspconfig({
 
 require('mason').setup({})
 require('mason-lspconfig').setup({
+    automatic_installation = true,
     ensure_installed = {
         'eslint',
         'lua_ls',
