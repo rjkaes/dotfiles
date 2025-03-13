@@ -36,21 +36,6 @@ require("codecompanion").setup({
     },
 })
 
-local function is_on_battery()
-    local handle = io.popen("uname")
-    local os_name = handle:read("*l")
-    handle:close()
-
-    if os_name ~= "Darwin" then
-        return false -- Assume not on battery for non-MacOS systems
-    end
-
-    handle = io.popen("pmset -g batt | grep 'Battery Power'")
-    local result = handle:read("*a")
-    handle:close()
-    return result ~= ""
-end
-
 require("minuet").setup({
     provider = 'openai_fim_compatible',
     n_completions = 1, -- recommend for local model for resource saving
@@ -67,8 +52,7 @@ require("minuet").setup({
             },
         },
     },
-    virtualtext = not is_on_battery() and {
-        auto_trigger_ft = { '*' },
+    virtualtext = {
         auto_trigger_ignore_ft = { 'codecompanion', 'TelescopePrompt' },
         keymap = {
             -- accept whole completion
@@ -78,7 +62,7 @@ require("minuet").setup({
             dismiss = '<C-x>',
         },
         show_on_completion_menu = false,
-    } or nil,
+    },
 })
 
 vim.keymap.set('n', '<leader>C', ':Minuet virtualtext toggle<CR>')
