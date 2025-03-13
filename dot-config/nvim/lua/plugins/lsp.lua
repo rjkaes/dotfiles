@@ -154,23 +154,3 @@ cmp.setup.cmdline(':', {
 -- Make it clearly visible which argument we're at.
 local marked = vim.api.nvim_get_hl(0, { name = 'PMenu' })
 vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter', { fg = marked.fg, bg = marked.bg, bold = true })
-
--- Listen to LSP Attach
-vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(args)
-        local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            group = augroup,
-            buffer = args.buf,
-            callback = function()
-                -- Format the code before you run fix usings
-                vim.lsp.buf.format({ timeout = 1000, async = false })
-
-                -- If the file is C# then run fix usings
-                if vim.bo[0].filetype == "cs" then
-                    require("csharp").fix_usings()
-                end
-            end,
-        })
-    end
-})
