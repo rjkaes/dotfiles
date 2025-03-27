@@ -10,12 +10,9 @@ local lsp_attach = function(client, bufnr)
 
     vim.keymap.set('n', 'gd',
         function() require('omnisharp_extended').telescope_lsp_definition({ jump_type = "vsplit" }) end, opts)
-    vim.keymap.set('n', 'gr', function() require('omnisharp_extended').telescope_lsp_references() end, opts)
-    vim.keymap.set('n', 'gI', function() require('omnisharp_extended').telescope_lsp_implementation() end, opts)
-    vim.keymap.set('n', 'gt', function() require('omnisharp_extended').telescope_lsp_type_definition() end, opts)
-    vim.keymap.set('n', 'gS', function() vim.lsp.buf.signature_help() end)
-    vim.keymap.set('n', '<leader>rn', function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set({ 'n', 'v' }, '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
+    vim.keymap.set('n', 'grr', function() require('omnisharp_extended').telescope_lsp_references() end, opts)
+    vim.keymap.set('n', 'gri', function() require('omnisharp_extended').telescope_lsp_implementation() end, opts)
+    vim.keymap.set('n', 'grt', function() require('omnisharp_extended').telescope_lsp_type_definition() end, opts)
 
     -- reformat buffer using the LSP
     vim.keymap.set({ 'n', 'x' }, 'gq', function()
