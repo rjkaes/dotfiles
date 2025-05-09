@@ -24,7 +24,7 @@ abbr -a dn 'dotnet'
 abbr -a dnb 'dotnet build'
 abbr -a dnc 'dotnet clean'
 abbr -a dnr 'dotnet run'
-abbr -a dnt 'dotnet test --no-restore'
+abbr -a dnt 'dotnet test --no-restore --logger "console;verbosity=detailed"'
 abbr -a g git
 abbr -a ga 'git add'
 abbr -a gb 'git branch'
