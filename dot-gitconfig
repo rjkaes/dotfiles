@@ -1,18 +1,18 @@
 [core]
-    excludesfile=~/.gitignore
     pager = delta
     whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+    excludesfile=~/.gitignore
 
-[init]
-	defaultBranch = main
-	templatedir = ~/.git_template
 
-[apply]
-	whitespace = warn
+[interactive]
+    diffFilter = delta --color-only
+[add.interactive]
+    useBuiltin = false # required for git 2.37.0
 
-[branch]
-	autosetuprebase = always
-    sort = -committerdate
+[delta]
+    line-numbers = true
+    navigate = true
+    detect-dark-light = always
 
 [color]
     branch = auto
@@ -37,66 +37,20 @@
 ;         changed = green
 ;         untracked = cyan
 
-[column]
-    ui = auto
-
-[commit]
-    gpgsign = true
-    template = ~/.git_template/commit_msg.txt
-    verbose = true
-
 [diff]
-    algorithm = histogram
-    colorMoved = plain
+    renames = copies
     compactionHeuristic = true
-    mnemonicPrefix = true
-    renames = true
-
-[delta]
-    detect-dark-light = always
-    line-numbers = true
-    navigate = true
-
-[fetch]
-    all = true
-    prune = true
-    pruneTags = true
-
-[help]
-    autocorrect = prompt
-
-[interactive]
-    diffFilter = delta --color-only
-[add.interactive]
-    useBuiltin = false # required for git 2.37.0
+    colorMoved = default
 
 [merge]
     ; conflictStyle = zdiff3
     conflictstyle = diff3
 
-[pull]
-	rebase = true
-
-[push]
-    autoSetupRemote = true
-    default = simple
-    followTags = true
-
-[rebase]
-    autoStash = true
-    autosquash = true
-    ; https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
-    updateRefs = true
-
-[rerere]
-    autoupdate = true
-    enabled = true
-
 [status]
     relativePaths = true
 
-[tag]
-    sort = version:refname
+[rerere]
+    enabled = true
 
 [alias]
     co = checkout
@@ -137,6 +91,28 @@
     update = "!f() { git pull && git submodule update --init; }; f"
     up = pull --rebase
     wip = for-each-ref --sort='authordate:iso8601' --format=' %(color:green)%(authordate:relative)%09%(color:white)%(refname:short)' refs/heads
+
+[init]
+	templatedir = ~/.git_template
+	defaultBranch = main
+[apply]
+	whitespace = warn
+[rebase]
+	autosquash = true
+    ; https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
+    updateRefs = true
+[commit]
+	template = ~/.git_template/commit_msg.txt
+    gpgsign = true
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true
+[commit]
+	verbose = true
+
+[branch]
+	autosetuprebase = always
 
 [include]
     path = ~/.gitconfig.secret

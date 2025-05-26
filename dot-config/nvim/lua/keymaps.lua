@@ -71,7 +71,6 @@ vim.keymap.set('n', '<leader>sf', function() require("neotest").run.run(vim.fn.e
 vim.keymap.set('n', '<leader>ss', function() require("neotest").run.run() end, { silent = true })
 -- vim.keymap.set('n', '<leader>sa', '<cmd>TestSuite<cr>', { silent = true })
 vim.keymap.set('n', '<leader>sl', function() require("neotest").run.run_last() end, { silent = true })
-vim.keymap.set('n', '<leader>st', function() require("neotest").summary.toggle() end, { silent = true })
 
 -- Undo tree toggle
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)

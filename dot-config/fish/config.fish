@@ -8,9 +8,6 @@ set -gx EDITOR "nvim"
 set -gx DOTNET_CLI_TELEMETRY_OPTOUT "true"
 set -gx FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT "true"
 
-# Make sure we can find dotnet
-set -gx DOTNET_ROOT "/opt/homebrew/opt/dotnet/libexec"
-
 # Simple aliases for common features.
 alias gg rg
 alias mutt "mutt -m maildir -f ~/Maildir/"
@@ -22,9 +19,8 @@ abbr -a be 'bundle exec'
 abbr -a bu 'bundle update'
 abbr -a dn 'dotnet'
 abbr -a dnb 'dotnet build'
-abbr -a dnc 'dotnet clean'
 abbr -a dnr 'dotnet run'
-abbr -a dnt 'dotnet test --no-restore --logger "console;verbosity=detailed"'
+abbr -a dnt 'dotnet test --no-restore'
 abbr -a g git
 abbr -a ga 'git add'
 abbr -a gb 'git branch'
@@ -38,7 +34,7 @@ abbr -a glg 'git hist'
 abbr -a grc 'git rebase --continue'
 abbr -a grm 'git rebase master'
 abbr -a gss 'git ss'
-abbr -a gw 'git switch'
+abbr -a gsw 'git switch'
 abbr -a ygg 'sudo yggdrasilctl'
 
 # Source in the various configurations
@@ -49,7 +45,7 @@ for conf in /opt/homebrew/share/chruby/chruby.fish /usr/local/share/chruby/chrub
 end
 
 # Set the default ruby
-chruby ruby-3.4
+chruby ruby-3.3
 
 # Ensure GPG_TTY is set to the current tty so gpg-agent works as expected.
 set -x GPG_TTY (tty)
@@ -109,7 +105,3 @@ end
 if test -e $HOME/.config/fish/secret.fish
   source $HOME/.config/fish/secret.fish
 end
-
-# Added by OrbStack: command-line tools and integration
-# This won't be added again if you remove it.
-source ~/.orbstack/shell/init.fish 2>/dev/null || :

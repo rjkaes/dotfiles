@@ -29,27 +29,15 @@ require("lazy").setup({
             'nvim-lualine/lualine.nvim',
         },
         priority = 1000,
-        lazy = true
+        lazy = false
     },
-    { 'sainnhe/sonokai',                 lazy = true,                       priority = 1000, },
-    {
-        "aktersnurra/no-clown-fiesta.nvim",
-        priority = 1000,
-        lazy = true,
-    },
-    { "zenbones-theme/zenbones.nvim",    dependencies = "rktjmp/lush.nvim", lazy = true,        priority = 1000, },
 
     -- Hightlight hex colors, etc.
-    { 'NvChad/nvim-colorizer.lua',       name = 'colorizer',                event = "VeryLazy", config = true },
+    { 'NvChad/nvim-colorizer.lua',       name = 'colorizer',  event = "VeryLazy", config = true },
     -- Add missing LSP colors
-    { 'folke/lsp-colors.nvim',           name = 'lsp-colors',               event = "VeryLazy", config = true },
+    { 'folke/lsp-colors.nvim',           name = 'lsp-colors', event = "VeryLazy", config = true },
 
     { 'HiPhish/rainbow-delimiters.nvim', event = "VeryLazy" },
-
-    {
-        "gpanders/editorconfig.nvim",
-        lazy = false,
-    },
 
     -- Highlight TODO, NOTE, etc.
     {
@@ -74,7 +62,6 @@ require("lazy").setup({
         },
     },
 
-    -- AI Chat
     {
         "olimorris/codecompanion.nvim",
         event = "VeryLazy",
@@ -89,8 +76,19 @@ require("lazy").setup({
         },
     },
 
-    -- AI Suggestions
-    { 'milanglacier/minuet-ai.nvim', dependencies = { 'nvim-lua/plenary.nvim' }, },
+    -- AI powered auto-completion
+    {
+        'Exafunction/codeium.vim',
+        event = 'BufEnter',
+        config = function()
+            vim.keymap.set('i', '<C-f>', function() return vim.fn['codeium#Accept']() end, { expr = true, silent = true })
+            vim.keymap.set('i', '<c-;>', function() return vim.fn['codeium#CycleCompletions'](1) end,
+                { expr = true, silent = true })
+            vim.keymap.set('i', '<c-,>', function() return vim.fn['codeium#CycleCompletions'](-1) end,
+                { expr = true, silent = true })
+            vim.keymap.set('i', '<c-x>', function() return vim.fn['codeium#Clear']() end, { expr = true, silent = true })
+        end
+    },
 
     {
         "folke/noice.nvim",
@@ -266,15 +264,6 @@ require("lazy").setup({
     { 'p00f/clangd_extensions.nvim' },
 
     -- C#
-    { 'nickspoons/vim-cs',          ft = 'cs' },
-    {
-        "iabdelkareem/csharp.nvim",
-        dependencies = {
-            "williamboman/mason.nvim",
-            "mfussenegger/nvim-dap",
-            "Tastyep/structlog.nvim",
-        },
-    },
     { 'jlcrochet/vim-razor' },
     { 'tmadsen/vim-compiler-plugin-for-dotnet' },
 
