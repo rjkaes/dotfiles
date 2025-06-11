@@ -8,6 +8,9 @@ set -gx EDITOR "nvim"
 set -gx DOTNET_CLI_TELEMETRY_OPTOUT "true"
 set -gx FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT "true"
 
+# Make sure we can find dotnet
+set -gx DOTNET_ROOT "/opt/homebrew/opt/dotnet/libexec"
+
 # Simple aliases for common features.
 alias gg rg
 alias mutt "mutt -m maildir -f ~/Maildir/"
