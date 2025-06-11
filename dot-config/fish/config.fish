@@ -49,7 +49,7 @@ for conf in /opt/homebrew/share/chruby/chruby.fish /usr/local/share/chruby/chrub
 end
 
 # Set the default ruby
-chruby ruby-3.3
+chruby ruby-3.4
 
 # Ensure GPG_TTY is set to the current tty so gpg-agent works as expected.
 set -x GPG_TTY (tty)
