@@ -8,6 +8,10 @@ conform.formatters.sql_formatter = {
 conform.formatters.sqlfluff = {
     args = { "fix", "--dialect=tsql", "--exclude-rules=CP02", "-" },
 }
+conform.formatters.csharpier = {
+    command = "csharpier",
+    args = { "format", "--write-stdout" },
+}
 
 conform.setup({
     formatters_by_ft = {
