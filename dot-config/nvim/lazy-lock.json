@@ -31,7 +31,7 @@
   "lush.nvim": { "branch": "main", "commit": "45a79ec4acb5af783a6a29673a999ce37f00497e" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "bb30c422329e86fcaa4e4920181f6715d634e516" },
   "mason.nvim": { "branch": "main", "commit": "8024d64e1330b86044fed4c8494ef3dcd483a67c" },
-  "minuet-ai.nvim": { "branch": "main", "commit": "094a23ed3b0c679b73181087d0ad8a3451411e09" },
+  "minuet-ai.nvim": { "branch": "main", "commit": "45228fdb6f2814526e3b779e4b972d0eda632fac" },
   "neogit": { "branch": "master", "commit": "1b4f44374f97d9262caa680e41ecbebcaf1553bd" },
   "neotest": { "branch": "master", "commit": "ef492755730e59e1d8122c461abbd086bee4c76b" },
   "neotest-dotnet": { "branch": "main", "commit": "962af8bcb73622b0f44f1e25a0441f5783fe5665" },
