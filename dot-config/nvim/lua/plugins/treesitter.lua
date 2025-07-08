@@ -1,4 +1,4 @@
-require('nvim-treesitter.configs').setup({
+require('nvim-treesitter').setup({
     auto_install = true,
     disable = { 'markdown' },
     ensure_installed = { 'lua', 'vim', 'ruby', "git_config", "gitcommit", "git_rebase", "gitignore", "gitattributes" },
