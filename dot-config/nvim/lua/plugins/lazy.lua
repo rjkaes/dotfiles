@@ -22,20 +22,16 @@ require("lazy").setup({
     { 'voldikss/vim-floaterm', lazy = true },
 
     -- colorscheme
-    {
-        'yorik1984/newpaper.nvim',
-        dependencies = {
-            'yorik1984/lualine-theme.nvim',
-            'nvim-lualine/lualine.nvim',
-        },
-        priority = 1000,
-        lazy = false
-    },
+    { 'projekt0n/github-nvim-theme', name = 'github-theme', lazy = false, priority = 1000 },
 
-    -- Hightlight hex colors, etc.
-    { 'NvChad/nvim-colorizer.lua',       name = 'colorizer',  event = "VeryLazy", config = true },
-    -- Add missing LSP colors
-    { 'folke/lsp-colors.nvim',           name = 'lsp-colors', event = "VeryLazy", config = true },
+    -- Highlight hex colors, etc.
+    {
+        "catgoose/nvim-colorizer.lua",
+        event = "VeryLazy",
+        opts = {
+            lazy_load = true,
+        },
+    },
 
     { 'HiPhish/rainbow-delimiters.nvim', event = "VeryLazy" },
 

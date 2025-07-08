@@ -1,10 +1,26 @@
 local api = vim.api
 local background = vim.opt.background:get()
 
+if background == "dark" then
+    vim.cmd([[colorscheme claude]])
+else
+    require('github-theme').setup({
+        options = {
+            styles = {
+                comments = 'italic',
+                keywords = 'bold',
+                types = 'italic,bold',
+            },
+        },
+    })
+
+    vim.cmd('colorscheme github_light')
+end
+
 require('lualine').setup({
     options = {
+        theme = "papercolor_" .. background,
         icons_enabled = true,
-        theme = 'newpaper-' .. background,
         section_separators = { "", "" },
         component_separators = { "│", "│" }
     },
@@ -39,21 +55,6 @@ require('lualine').setup({
         lualine_x = { 'encoding', 'filetype' },
     },
 })
-
-local themes = {
-    light = {
-        style = "light",
-        saturation = -0.2,
-        lightness = 0.1,
-    },
-    dark = {
-        style = "dark",
-        saturation = 0.1,
-        lightness = -0.2,
-    },
-}
-
-require("newpaper").setup(themes[background])
 
 vim.o.guicursor = ""
 
