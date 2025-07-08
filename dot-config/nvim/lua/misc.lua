@@ -78,3 +78,8 @@ function! SynGroup()
     echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfun
 ]]
+
+-- Enable virtual text for diagnostics
+vim.diagnostic.config({
+    virtual_text = true,
+})
