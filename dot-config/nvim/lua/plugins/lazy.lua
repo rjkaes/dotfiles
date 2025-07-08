@@ -246,6 +246,15 @@ require("lazy").setup({
     { 'p00f/clangd_extensions.nvim' },
 
     -- C#
+    { 'nickspoons/vim-cs',          ft = 'cs' },
+    {
+        "iabdelkareem/csharp.nvim",
+        dependencies = {
+            "williamboman/mason.nvim",
+            "mfussenegger/nvim-dap",
+            "Tastyep/structlog.nvim",
+        },
+    },
     { 'jlcrochet/vim-razor' },
     { 'tmadsen/vim-compiler-plugin-for-dotnet' },
 
