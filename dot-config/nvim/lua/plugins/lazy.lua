@@ -383,18 +383,19 @@ require("lazy").setup({
     {
         -- Highlight, edit, and navigate code
         'nvim-treesitter/nvim-treesitter',
+        branch = 'main',
         event = { "VeryLazy", "BufReadPost", "BufNewFile", "BufWritePre" },
-        lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+        lazy = false,
         cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
         build = function()
-            local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-            ts_update()
+            require('nvim-treesitter').update()
         end,
     },
 
     -- Additional text objects via treesitter
     {
         'nvim-treesitter/nvim-treesitter-textobjects',
+        branch = 'main',
         event = "VeryLazy",
         enabled = true,
     },
