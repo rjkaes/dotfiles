@@ -33,9 +33,6 @@ vim.opt.background = background_color()
 
 vim.opt.splitkeep = "screen"
 
-vim.opt.number = true
-vim.opt.relativenumber = true
-
 vim.opt.colorcolumn = "+1"
 vim.opt.cursorline = true
 vim.opt.expandtab = true
