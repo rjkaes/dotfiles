@@ -44,6 +44,8 @@ config.window_decorations = 'RESIZE'
 config.macos_window_background_blur = 30
 config.window_background_opacity = 1.0
 
+config.color_scheme = scheme_for_appearance()
+
 config.colors = {
     -- Overrides the cell background color when the current cell is occupied by the
     -- cursor and the cursor style is set to Block
@@ -54,13 +56,14 @@ config.colors = {
     -- or the color of the vertical or horizontal bar when the cursor style is set to
     -- Bar or Underline.
     cursor_border = '#52ad70',
+
+    -- use the theme to determine the background color
+    background = is_dark() and "black" or "white",
 }
 
-config.audible_bell = 'Disabled'
 config.visual_bell = {
     fade_in_duration_ms = 75,
     fade_out_duration_ms = 75,
-    target = 'CursorColor',
 }
 config.window_padding = {
     left = '10px',
