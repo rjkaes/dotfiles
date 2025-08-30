@@ -17,14 +17,11 @@ end
 
 local config = {}
 
-config.color_scheme = scheme_for_appearance()
 config.font = wezterm.font_with_fallback {
-    -- { family = 'Monaspace Xenon Var', weight = "Light" },
-    { family = 'Iosevka Nerd Font Mono', weight = 'Regular' },
-    -- 'JetBrainsMonoNL NFM',
+    { family = 'CommitMono Nerd Font', weight = "Regular" },
     'Apple Color Emoji',
 }
-config.font_size = 17
+config.font_size = 16.5
 config.use_cap_height_to_scale_fallback_fonts = true
 
 -- no ligatures!
