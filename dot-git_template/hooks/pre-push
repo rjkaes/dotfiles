@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 
-require 'fileutils'
-require 'open3'
-require 'pathname'
+require "fileutils"
+require "open3"
+require "pathname"
 
 def execute(*cmd)
-  print "Running `#{cmd.join(' ')}`... "
-  output, status = Open3.capture2e(*cmd)
+  print "Running `#{cmd.join(" ")}`... "
+  _, status = Open3.capture2e(*cmd)
   if !status.success?
     puts "fail."
     exit(1)
@@ -17,16 +17,16 @@ end
 
 # Try using `GIT_DIR` but if that doesn't work, use the current working
 # directory and append `.git` to it.
-git_dir = Pathname.new(ENV.fetch('GIT_DIR', Pathname.getwd.join('.git')))
+git_dir = Pathname.new(ENV.fetch("GIT_DIR", Pathname.getwd.join(".git")))
 git_work_tree = Pathname.new(ENV.fetch("GIT_WORK_TREE", git_dir.parent))
 
-if git_work_tree.join('biome.json').exist?
+if git_work_tree.join("biome.json").exist?
   execute("biome", "ci", git_work_tree.to_s)
 end
 
-if git_work_tree.glob('*.{sln,csproj}').any?
+if git_work_tree.glob("*.{sln,csproj}").any?
+  execute("dotnet build -v q --nologo")
   execute("dotnet format --verify-no-changes --no-restore")
-  execute("dotnet build -v q --no-restore --nologo")
 end
 
 exit(0)
