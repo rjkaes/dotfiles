@@ -217,8 +217,6 @@ require("lazy").setup({
     -- { 'cweagans/vim-taskpaper'
     { 'dewyze/vim-tada' },
 
-    { 'ThePrimeagen/harpoon', branch = 'harpoon2', dependencies = { 'nvim-lua/plenary.nvim' } },
-
     -- Test runner
     {
         "nvim-neotest/neotest",
