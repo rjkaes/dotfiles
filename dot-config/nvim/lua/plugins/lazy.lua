@@ -334,7 +334,8 @@ require("lazy").setup({
             { 'hrsh7th/cmp-nvim-lsp-signature-help', branch = 'main' },
             { 'onsails/lspkind.nvim' },
 
-            { 'Decodetalkers/csharpls-extended-lsp.nvim' },
+            -- omnisharp
+            { 'Hoffs/omnisharp-extended-lsp.nvim' },
         },
     },
 

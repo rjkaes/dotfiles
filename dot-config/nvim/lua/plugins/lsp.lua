@@ -8,6 +8,11 @@ local lsp_attach = function(client, bufnr)
 
     local opts = { buffer = bufnr }
 
+    vim.keymap.set('n', 'gd', function() require('omnisharp_extended').telescope_lsp_definition({ jump_type = "vsplit" }) end, opts)
+    vim.keymap.set('n', 'grr', function() require('omnisharp_extended').telescope_lsp_references() end, opts)
+    vim.keymap.set('n', 'gri', function() require('omnisharp_extended').telescope_lsp_implementation() end, opts)
+    vim.keymap.set('n', 'grt', function() require('omnisharp_extended').telescope_lsp_type_definition() end, opts)
+
     -- reformat buffer using the LSP
     vim.keymap.set({ 'n', 'x' }, 'gq', function()
         vim.lsp.buf.format({ async = false, timeout_ms = 10000 })
@@ -50,9 +55,9 @@ require('csharp').setup({
 require('mason-lspconfig').setup({
     automatic_installation = true,
     ensure_installed = {
-        'csharp_ls',
         'eslint',
         'lua_ls',
+        'omnisharp',
         'standardrb',
     },
     handlers = {
@@ -73,12 +78,6 @@ require('mason-lspconfig').setup({
         -- biome for javascript
         biome = function()
             lspconfig.biome.setup({})
-        end,
-
-        csharp_ls = function()
-            require('lspconfig').csharp_ls.setup()
-            require("csharpls_extended").buf_read_cmd_bind()
-            require("telescope").load_extension("csharpls_definition")
         end,
     },
 })
