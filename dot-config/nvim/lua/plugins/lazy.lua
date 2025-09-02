@@ -48,12 +48,12 @@ require("lazy").setup({
                 nocheckin = { icon = " ", color = "error", alt = { "nc" } },
             },
             colors = {
-                error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-                warning = { "#FBBF24" },
-                info = { "#2563EB" },
-                hint = { "DiagnosticHint", "#10B981" },
-                default = { "Identifier", "#7C3AED" },
-                test = { "Identifier", "#FF00FF" }
+                error = { "DiagnosticError", "ErrorMsg", "#E06C75" },
+                warning = { "#E5C07B" },
+                info = { "#61AFEF" },
+                hint = { "DiagnosticHint", "#8A8A8A" },
+                -- default = { "Identifier", "#7C3AED" },
+                -- test = { "Identifier", "#FF00FF" }
             },
         },
     },
@@ -220,6 +220,7 @@ require("lazy").setup({
     -- Test runner
     {
         "nvim-neotest/neotest",
+        commit = "52fca6717ef972113ddd6ca223e30ad0abb2800c",
         event = "VeryLazy",
         dependencies = {
             "nvim-neotest/nvim-nio",
@@ -267,9 +268,6 @@ require("lazy").setup({
         end
     },
     { 'mattn/emmet-vim' },
-
-    -- markdown
-    -- { 'preservim/vim-markdown' },
 
     -- -- Python
     -- Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
@@ -329,7 +327,6 @@ require("lazy").setup({
             -- Autocompletion
             { 'hrsh7th/nvim-cmp',                    branch = 'main' },
             { 'hrsh7th/cmp-nvim-lsp' },
-            { 'L3MON4D3/LuaSnip' },
 
             { 'hrsh7th/cmp-buffer',                  branch = 'main' },
             { 'hrsh7th/cmp-cmdline',                 branch = 'main' },
@@ -337,8 +334,7 @@ require("lazy").setup({
             { 'hrsh7th/cmp-nvim-lsp-signature-help', branch = 'main' },
             { 'onsails/lspkind.nvim' },
 
-            -- omnisharp
-            { 'Hoffs/omnisharp-extended-lsp.nvim' },
+            { 'Decodetalkers/csharpls-extended-lsp.nvim' },
         },
     },
 
@@ -377,6 +373,19 @@ require("lazy").setup({
         dependencies = { 'nvim-tree/nvim-web-devicons' },
     },
 
+    -- Markdown
+    {
+        "OXY2DEV/markview.nvim",
+        lazy = false,
+        opts = {
+            preview = {
+                filetypes = { "markdown" },
+                ignore_buftypes = {},
+            },
+        },
+        priority = 49,
+    },
+
     -- treesitter
     {
         -- Highlight, edit, and navigate code
@@ -388,6 +397,9 @@ require("lazy").setup({
         build = function()
             require('nvim-treesitter').update()
         end,
+        dependencies = {
+            "OXY2DEV/markview.nvim"
+        },
     },
 
     -- Additional text objects via treesitter
