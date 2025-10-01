@@ -9,7 +9,7 @@ if vim.fn.exists('syntax_on') then
 end
 
 -- Set theme name
-vim.g.colors_name = 'high_contrast_dark'
+vim.g.colors_name = 'claude-dark'
 
 -- Define color palette
 local colors = {

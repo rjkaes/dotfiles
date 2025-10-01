@@ -2,19 +2,9 @@ local api = vim.api
 local background = vim.opt.background:get()
 
 if background == "dark" then
-    vim.cmd([[colorscheme claude]])
+    vim.cmd([[colorscheme claude-dark]])
 else
-    require('github-theme').setup({
-        options = {
-            styles = {
-                comments = 'italic',
-                keywords = 'bold',
-                types = 'italic,bold',
-            },
-        },
-    })
-
-    vim.cmd('colorscheme github_light')
+    vim.cmd([[colorscheme claude-light]])
 end
 
 require('lualine').setup({
