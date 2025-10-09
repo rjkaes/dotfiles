@@ -23,6 +23,7 @@ conform.setup({
         ruby = { "standardrb" },
         rust = { "rustfmt" },
         sql = { "sqlfluff", "sql_formatter", stop_after_first = true },
+        typescript = { "biome", "prettier", stop_after_first = true },
         ["_"] = { "trim_whitespace" },
     },
     -- If this is set, Conform will run the formatter on save.
