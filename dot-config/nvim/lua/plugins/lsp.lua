@@ -1,5 +1,4 @@
 local lsp_zero = require('lsp-zero')
-local lspconfig = require('lspconfig')
 
 local lsp_attach = function(client, bufnr)
     -- see :help lsp-zero-keybindings
@@ -60,44 +59,6 @@ require('mason-lspconfig').setup({
         'omnisharp',
         'standardrb',
     },
-    handlers = {
-        -- this first function is the "default handler"
-        function(server_name)
-            require('lspconfig')[server_name].setup({})
-        end,
-
-        -- lua_ls
-        lua_ls = function()
-            lspconfig.lua_ls.setup({
-                on_init = function(client)
-                    lsp_zero.nvim_lua_settings(client, {})
-                end,
-            })
-        end,
-
-        -- biome for javascript
-        biome = function()
-            lspconfig.biome.setup({})
-        end,
-    },
-})
-
--- initialize rust_analyzer with rust-tools
-local rust_tools = require('rust-tools')
-rust_tools.setup({
-    server = {
-        cargo = {
-            allFeatures = true,
-        },
-        completion = {
-            postfix = {
-                enable = false,
-            },
-        },
-        on_attach = function(_, bufnr)
-            vim.keymap.set('n', '<leader>ca', rust_tools.hover_actions.hover_actions, { buffer = bufnr })
-        end
-    }
 })
 
 local cmp = require('cmp')

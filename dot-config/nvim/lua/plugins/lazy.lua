@@ -282,26 +282,11 @@ require("lazy").setup({
     'rust-lang/rust.vim',
 
     {
-        'simrat39/rust-tools.nvim',
-        ft = { 'rust', 'rs' },
-        opts = {
-            server = {
-                settings = {
-                    ['rust-analyzer'] = {
-                        cargo = {
-                            allFeatures = true,
-                        },
-                        completion = {
-                            postfix = {
-                                enable = false,
-                            },
-                        },
-                    },
-                },
-            },
-
-        },
+        'mrcjkb/rustaceanvim',
+        version = '^6', -- Recommended
+        lazy = false, -- This plugin is already lazy
     },
+
 
     -- -- Slim Templates
     { 'slim-template/vim-slim', ft = 'slim' },
