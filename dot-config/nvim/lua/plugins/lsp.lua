@@ -54,6 +54,7 @@ require('csharp').setup({
 require('mason-lspconfig').setup({
     automatic_installation = true,
     ensure_installed = {
+        'biome',
         'eslint',
         'lua_ls',
         'omnisharp',
