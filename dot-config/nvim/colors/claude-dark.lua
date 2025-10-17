@@ -62,6 +62,9 @@ hi('Normal', { fg = colors.white, bg = colors.black })
 hi('NormalFloat', { fg = colors.white, bg = colors.gray1 })
 hi('NormalNC', { fg = colors.gray10, bg = colors.black })
 
+-- Edge of the buffer when `colorcolumn` is enabled.
+hi('ColorColumn', { bg = colors.gray1 })
+
 -- Cursor
 hi('Cursor', { fg = colors.black, bg = colors.white })
 hi('CursorLine', { bg = colors.gray1 })
