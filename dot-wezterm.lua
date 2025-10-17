@@ -21,7 +21,7 @@ config.font = wezterm.font_with_fallback {
     { family = 'CommitMono Nerd Font', weight = "Regular" },
     'Apple Color Emoji',
 }
-config.font_size = 16.5
+config.font_size = 17.5
 config.use_cap_height_to_scale_fallback_fonts = true
 
 -- no ligatures!
@@ -36,13 +36,16 @@ config.front_end = 'WebGpu'
 config.hide_tab_bar_if_only_one_tab = true
 config.initial_cols = 142
 config.initial_rows = 47
+config.max_fps = 60
 config.scrollback_lines = 5000
 config.tab_bar_at_bottom = true
 config.term = 'wezterm'
 config.use_dead_keys = false
 config.window_decorations = 'RESIZE'
 config.macos_window_background_blur = 30
+config.webgpu_power_preference = 'LowPower'
 config.window_background_opacity = 1.0
+config.underline_thickness = '1.5pt'
 
 config.color_scheme = scheme_for_appearance()
 
