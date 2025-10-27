@@ -254,7 +254,13 @@ require("lazy").setup({
         },
     },
     { 'jlcrochet/vim-razor' },
-    { 'tmadsen/vim-compiler-plugin-for-dotnet' },
+    {
+        "GustavEikaas/easy-dotnet.nvim",
+        dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', },
+        config = function()
+            require("easy-dotnet").setup()
+        end
+    },
 
     -- Crystal
     { 'vim-crystal/vim-crystal',               ft = 'crystal' },
