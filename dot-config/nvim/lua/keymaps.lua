@@ -95,4 +95,4 @@ vim.keymap.set("v", "ga", "<cmd>CodeCompanionAdd<cr>", { noremap = true, silent 
 -- Expand 'cc' into 'CodeCompanion' in the command line
 vim.cmd([[cab cc CodeCompanion]])
 
-vim.keymap.set('n', '<leader>b', function() require("easy-dotnet").build_default_quickfix() end)
+vim.keymap.set('n', '<leader>b', function() require("easy-dotnet").build_quickfix() end)
