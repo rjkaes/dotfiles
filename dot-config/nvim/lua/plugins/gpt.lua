@@ -36,12 +36,12 @@ require("codecompanion").setup({
                         num_ctx = {
                             default = 65536,
                         },
-                        -- temperature = {
-                        --     default = 0.6,
-                        -- },
-                        top_p = {
-                            default = 0.95,
+                        temperature = {
+                            default = 0.2,
                         },
+                        -- top_p = {
+                        --     default = 0.95,
+                        -- },
                         max_tokens = {
                             default = 65536,
                         },
