@@ -333,14 +333,29 @@ require("lazy").setup({
             { 'hrsh7th/nvim-cmp',                    branch = 'main' },
             { 'hrsh7th/cmp-nvim-lsp' },
 
-            { 'hrsh7th/cmp-buffer',                  branch = 'main' },
-            { 'hrsh7th/cmp-cmdline',                 branch = 'main' },
+            -- Snippets
+            { "L3MON4D3/LuaSnip" },
+            { "saadparwaiz1/cmp_luasnip" },
+
             { 'hrsh7th/cmp-nvim-lsp',                branch = 'main' },
             { 'hrsh7th/cmp-nvim-lsp-signature-help', branch = 'main' },
             { 'onsails/lspkind.nvim' },
 
             -- omnisharp
             { 'Hoffs/omnisharp-extended-lsp.nvim' },
+        },
+    },
+
+    {
+        "hrsh7th/nvim-cmp",
+        branch = 'main',
+        dependencies = {
+            "L3MON4D3/LuaSnip",
+            "saadparwaiz1/cmp_luasnip",
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-cmdline",
         },
     },
 

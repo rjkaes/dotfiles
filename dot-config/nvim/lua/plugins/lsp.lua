@@ -1,4 +1,7 @@
 local lsp_zero = require('lsp-zero')
+local luasnip = require("luasnip")
+local cmp = require('cmp')
+local cmp_action = lsp_zero.cmp_action()
 
 local lsp_attach = function(client, bufnr)
     -- see :help lsp-zero-keybindings
@@ -62,14 +65,40 @@ require('mason-lspconfig').setup({
     },
 })
 
-local cmp = require('cmp')
-local cmp_action = require('lsp-zero').cmp_action()
+-- Make sure the snippets are loaded before setting up completion.
+require("luasnip.loaders.from_lua").load({ paths = { "~/.config/nvim/snippets" } })
+luasnip.config.setup({ enable_autosnippets = true })
+
+lsp_zero.extend_cmp()
 
 cmp.setup({
+    snippet = {
+        expand = function(args)
+            luasnip.lsp_expand(args.body)
+        end,
+    },
     mapping = cmp.mapping.preset.insert({
         ['<CR>'] = cmp.mapping.confirm({ select = false }),
-        ['<Tab>'] = cmp_action.tab_complete(),
-        ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = 'select' }),
+                ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+            else
+                -- use lsp-zero tab completion helper
+                cmp_action.tab_complete()(fallback)
+            end
+        end, { "i", "s" }),
+
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item({ behavior = "select" })
+            elseif luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
+            end
+        end, { "i", "s" }),
     }),
     formatting = {
         expandable_indicator = true,
@@ -83,10 +112,11 @@ cmp.setup({
     sources = cmp.config.sources(
         {
             { name = 'nvim_lsp' },
-            { name = 'buffer' },
+            { name = 'luasnip' },
         },
         {
             { name = 'path' },
+            { name = 'buffer' },
         }
     ),
 })
@@ -110,6 +140,8 @@ cmp.setup.cmdline(':', {
         { name = 'path' }
     })
 })
+
+lsp_zero.setup()
 
 -- Make it clearly visible which argument we're at.
 local marked = vim.api.nvim_get_hl(0, { name = 'PMenu' })
