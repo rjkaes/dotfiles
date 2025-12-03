@@ -340,9 +340,6 @@ require("lazy").setup({
             { 'hrsh7th/cmp-nvim-lsp',                branch = 'main' },
             { 'hrsh7th/cmp-nvim-lsp-signature-help', branch = 'main' },
             { 'onsails/lspkind.nvim' },
-
-            -- omnisharp
-            { 'Hoffs/omnisharp-extended-lsp.nvim' },
         },
     },
 
