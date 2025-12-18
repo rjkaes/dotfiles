@@ -13,7 +13,7 @@
   "conform.nvim": { "branch": "master", "commit": "9b8fa5e0b78168f68bee9bf886dc20f287c61e02" },
   "csharp.nvim": { "branch": "main", "commit": "e44e275dabbcfc188ce1a5f504aad778e917c814" },
   "dressing.nvim": { "branch": "master", "commit": "2d7c2db2507fa3c4956142ee607431ddb2828639" },
-  "easy-dotnet.nvim": { "branch": "main", "commit": "8b7d97a61a323816754860dc6614f78400538b89" },
+  "easy-dotnet.nvim": { "branch": "main", "commit": "1615a8823410e439619a0d50c4ad5831d64ebedf" },
   "emmet-vim": { "branch": "master", "commit": "e98397144982d1e75b20d94d55a82de3ec8f648d" },
   "fidget.nvim": { "branch": "main", "commit": "e32b672d8fd343f9d6a76944fedb8c61d7d8111a" },
   "github-theme": { "branch": "main", "commit": "c106c9472154d6b2c74b74565616b877ae8ed31d" },
