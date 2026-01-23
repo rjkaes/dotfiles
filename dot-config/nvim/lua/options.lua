@@ -22,11 +22,8 @@ local background_color = function()
         return read_file(vim.fn.expand("$HOME/CloudStation/current_background_mode")) or 'light'
     end
 
-    local dark_mode = vim.fn.system([[
-        osascript -e 'tell application "System Events" to tell appearance preferences to get dark mode'
-    ]]):gsub('\n', '')
-
-    return dark_mode == 'true' and 'dark' or 'light'
+    local dark_mode = vim.fn.system("defaults read -g AppleInterfaceStyle"):gsub('\n', '')
+    return dark_mode == 'Dark' and 'dark' or 'light'
 end
 
 vim.opt.background = background_color()
