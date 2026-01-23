@@ -72,7 +72,7 @@ return {
     -- Markdown
     {
         "OXY2DEV/markview.nvim",
-        lazy = false,
+        ft = "markdown",
         opts = {
             experimental = {
                 prefer_nvim = true,
@@ -87,7 +87,7 @@ return {
         },
         priority = 49,
     },
-    
+
     -- Tabular
     { 'godlygeek/tabular', cmd = 'Tabularize', event = "VeryLazy" },
 

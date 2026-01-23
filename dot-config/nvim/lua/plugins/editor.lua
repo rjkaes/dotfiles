@@ -18,6 +18,7 @@ return {
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope-fzy-native.nvim',
+            'nvim-telescope/telescope-ui-select.nvim',
         },
         cmd = "Telescope",
         event = "VeryLazy",
@@ -54,11 +55,16 @@ return {
                     fzy_native = {
                         override_generic_sorter = true,
                         override_file_sorter = true,
+                    },
+                    ["ui-select"] = {
+                        require("telescope.themes").get_dropdown {
+                        }
                     }
                 },
             })
 
             pcall(telescope.load_extension('fzy_native'))
+            pcall(telescope.load_extension('ui-select'))
 
             vim.keymap.set('n', "<C-p>", builtin.find_files, { desc = '[S]earch [F]iles' })
             vim.keymap.set('n', "<leader>j", builtin.buffers, { desc = '[ ] Find existing buffers' })

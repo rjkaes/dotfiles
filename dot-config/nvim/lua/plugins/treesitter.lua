@@ -10,7 +10,8 @@ return {
             require('nvim-treesitter').update()
         end,
         dependencies = {
-            "OXY2DEV/markview.nvim"
+            "OXY2DEV/markview.nvim",
+            "RRethy/nvim-treesitter-endwise",
         },
         config = function()
             require('nvim-treesitter').setup({
@@ -26,6 +27,9 @@ return {
                         scope_incremental = "grc",
                         node_decremental = "grm",
                     },
+                },
+                endwise = {
+                    enable = true,
                 },
             })
 
