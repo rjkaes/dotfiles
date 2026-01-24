@@ -12,9 +12,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Fixes Notify opacity issues
-vim.o.termguicolors = true
-
 -- Setup lazy package manager.
 require("lazy").setup({
     { import = "plugins" },
