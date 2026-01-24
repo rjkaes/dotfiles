@@ -13,7 +13,18 @@ return {
                 mode = { "n", "v" },
                 desc = "Format Injected Langs",
             },
+            {
+                "<localleader>f",
+                function()
+                    require("conform").format({ async = false, timeout_ms = 1000, lsp_fallback = true })
+                end,
+                mode = { "n", "v" },
+                desc = "Format file or range",
+            },
         },
+        init = function()
+            vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+        end,
         opts = {
             formatters_by_ft = {
                 cs = { "csharpier" },
@@ -171,9 +182,6 @@ return {
                 -- Dynamic keymaps
                 vim.keymap.set('n', 'gr', '<cmd>Telescope lsp_references<cr>', { buffer = bufnr, desc = "LSP References" })
                 vim.keymap.set('n', 'gd', '<cmd>Telescope lsp_definitions<cr>', { buffer = bufnr, desc = "LSP Definitions" })
-                vim.keymap.set({ 'n', 'x' }, 'gq', function()
-                    vim.lsp.buf.format({ async = false, timeout_ms = 10000 })
-                end, opts)
             end
 
             lsp_zero.extend_lspconfig({

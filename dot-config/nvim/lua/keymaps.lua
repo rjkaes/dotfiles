@@ -42,16 +42,6 @@ vim.keymap.set('c', '%%', "expand('%:h').'/'", { expr = true })
 --  Copy the visual contents to the system clipboard
 vim.keymap.set('v', '<leader>y', '"+y')
 
--- LSP formatting
-vim.keymap.set({ "n", "v" }, "<localleader>f", function()
-    require('conform').format({
-        lsp_fallback = true,
-        async = false,
-        timeout_ms = 500,
-        silent = true,
-    })
-end, { desc = "Format file or range (in visual mode)" })
-
 -- Git
 vim.keymap.set('n', '<leader>gb', ':Git blame<cr>')
 vim.keymap.set('n', '<leader>gci', ':Neogit kind=split_above<cr>')
