@@ -33,7 +33,6 @@ vim.opt.splitkeep = "screen"
 vim.opt.colorcolumn = "+1"
 vim.opt.cursorline = true
 vim.opt.expandtab = true
-vim.opt.hidden = true
 vim.opt.hlsearch = false
 vim.opt.list = true
 
