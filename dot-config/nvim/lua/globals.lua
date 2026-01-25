@@ -18,10 +18,7 @@ vim.g['test#strategy'] = 'dispatch'
 -- Run rspec (with bundle exec) but use the "rails" compiler to parse the output
 vim.g['test#ruby#bundle_exec'] = 1
 
--- TODO: Figure out how to manipulate these tables with lua
-vim.cmd[[
-if !exists('g:dispatch_compilers')
-  let g:dispatch_compilers = {}
-endif
-let g:dispatch_compilers['bundle exec '] = ''
-]]
+vim.g.dispatch_compilers = vim.g.dispatch_compilers or {}
+local compilers = vim.g.dispatch_compilers
+compilers['bundle exec '] = ''
+vim.g.dispatch_compilers = compilers
