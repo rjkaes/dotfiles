@@ -63,15 +63,16 @@ vim.opt.tags:append { './.git/tags;' }
 vim.opt.shortmess:append 'A'
 
 -- Ignore a bunch of VCS, swap, and backup files.
-vim.opt.wildignore:append { '*.swp', '*.bak' }
-vim.opt.wildignore:append { '.hg', '.git', '.svn' }
-vim.opt.wildignore:append { '*.spl' }
-vim.opt.wildignore:append { '*.sw?' }
-vim.opt.wildignore:append({ ".javac", "node_modules", "*.pyc" })
-vim.opt.wildignore:append({ ".aux", ".out", ".toc" }) -- LaTeX
 vim.opt.wildignore:append({
-    ".o", ".obj", ".dll", ".exe", ".so", ".a", ".lib", ".pyc", ".pyo", ".pyd",
-    ".swp", ".swo", ".class", ".DS_Store", ".git", ".hg", ".orig"
+    "*.swp", "*.bak", "*.sw?", "*.swo", "*.orig", -- Swaps / Backups
+    ".hg", ".git", ".svn",                         -- VCS
+    "*.spl",                                       -- Spell
+    "*.pyc", "*.pyo", "*.pyd", "*.class",          -- Language specific
+    ".javac", "node_modules",
+    ".aux", ".out", ".toc",                        -- LaTeX
+    "*.o", "*.obj", "*.dll", "*.exe", "*.so",      -- Binaries
+    "*.a", "*.lib",
+    ".DS_Store",                                   -- OS specific
 })
 
 vim.wo.signcolumn = 'yes'

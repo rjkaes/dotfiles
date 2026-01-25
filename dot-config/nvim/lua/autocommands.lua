@@ -2,9 +2,9 @@
 local function switch_to_razor_page()
     local current_file = vim.fn.expand('%:p')
     if current_file:match('%.cshtml$') then
-        vim.api.nvim_command('edit ' .. current_file:gsub('%.cshtml$', '.cshtml.cs'))
+        vim.cmd.edit(current_file:gsub('%.cshtml$', '.cshtml.cs'))
     elseif current_file:match('%.cshtml%.cs$') then
-        vim.api.nvim_command('edit ' .. current_file:gsub('%.cshtml%.cs$', '.cshtml'))
+        vim.cmd.edit(current_file:gsub('%.cshtml%.cs$', '.cshtml'))
     end
 end
 
