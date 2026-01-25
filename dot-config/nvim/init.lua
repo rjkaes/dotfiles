@@ -1,7 +1,7 @@
 require "disable_builtins"
 require "globals"
 require "keymaps"
-require "config.lazy"
+require "packages"
 require 'options'
 require "misc"
 require "theme"
