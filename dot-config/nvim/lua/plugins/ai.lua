@@ -15,28 +15,6 @@ return {
             require("codecompanion").setup({
                 adapters = {
                     http = {
-                        opts = {
-                            show_defaults = false,
-                        },
-                        deepseek = function()
-                            return require("codecompanion.adapters").extend("ollama", {
-                                name = "deekseek",
-                                schema = {
-                                    model = {
-                                        default = "deepseek-coder-v2:16b",
-                                    },
-                                    num_ctx = {
-                                        default = 65536,
-                                    },
-                                    max_tokens = {
-                                        default = 65536,
-                                    },
-                                    top_p = {
-                                        default = 0.95,
-                                    },
-                                },
-                            })
-                        end,
                         qwencoder = function()
                             return require("codecompanion.adapters").extend("ollama", {
                                 name = "qwencoder",
@@ -48,16 +26,13 @@ return {
                                         default = "qwen3-coder:30b",
                                     },
                                     num_ctx = {
-                                        default = 65536,
+                                        default = 32768,
                                     },
                                     temperature = {
                                         default = 0.2,
                                     },
-                                    -- top_p = {
-                                    --     default = 0.95,
-                                    -- },
-                                    max_tokens = {
-                                        default = 65536,
+                                    num_predict = {
+                                        default = -1,
                                     },
                                     keep_alive = {
                                         default = '5m',
@@ -67,22 +42,17 @@ return {
                         end,
                     },
                 },
-                -- strategies = {
-                --     chat = {
-                --         adapter = "qwencoder",
-                --     },
-                --     inline = {
-                --         adapter = "deepseek",
-                --     },
-                --     agent = {
-                --         adapter = "deepseek",
-                --     },
-                -- },
                 interactions = {
                     chat = {
-                        adapter = "gemini_cli",
-                    }
-                }
+                        adapter = "qwencoder",
+                    },
+                    inline = {
+                        adapter = "qwencoder",
+                    },
+                    agent = {
+                        adapter = "qwencoder",
+                    },
+                },
             })
         end
     },
