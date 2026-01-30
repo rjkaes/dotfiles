@@ -18,7 +18,7 @@ return {
                 auto_install = true,
                 disable = { 'markdown' },
                 ensure_installed = { 'lua', 'vim', 'ruby', "c_sharp", "git_config", "gitcommit", "git_rebase", "gitignore",
-                    "gitattributes" },
+                    "gitattributes", "yaml" },
                 incremental_selection = {
                     enable = true,
                     keymaps = {
