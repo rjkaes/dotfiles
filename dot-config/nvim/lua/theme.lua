@@ -1,11 +1,7 @@
 local api = vim.api
 local background = vim.opt.background:get()
 
-if background == "dark" then
-    vim.cmd([[colorscheme claude-dark]])
-else
-    vim.cmd([[colorscheme claude-light]])
-end
+vim.cmd([[colorscheme wormbytes]])
 
 require('lualine').setup({
     options = {
