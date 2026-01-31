@@ -12,33 +12,41 @@ return {
             },
         },
         config = function()
+            local ai = function(name, model)
+                return
+                {
+                    [name] = name,
+                    opts = {
+                        stream = true,
+                    },
+                    schema = {
+                        [model] = {
+                            default = model,
+                        },
+                        num_ctx = {
+                            default = 32768,
+                        },
+                        temperature = {
+                            default = 0.2,
+                        },
+                        num_predict = {
+                            default = -1,
+                        },
+                        keep_alive = {
+                            default = '10m',
+                        },
+                    }
+            }
+            end
+
             require("codecompanion").setup({
                 adapters = {
                     http = {
                         qwencoder = function()
-                            return require("codecompanion.adapters").extend("ollama", {
-                                name = "qwencoder",
-                                opts = {
-                                    stream = true,
-                                },
-                                schema = {
-                                    model = {
-                                        default = "qwen3-coder:30b",
-                                    },
-                                    num_ctx = {
-                                        default = 32768,
-                                    },
-                                    temperature = {
-                                        default = 0.2,
-                                    },
-                                    num_predict = {
-                                        default = -1,
-                                    },
-                                    keep_alive = {
-                                        default = '5m',
-                                    },
-                                },
-                            })
+                            return require("codecompanion.adapters").extend("ollama", ai("qwencoder", "qwen3-coder:30b"))
+                        end,
+                        devstral = function()
+                            return require("codecompanion.adapters").extend("ollama", ai("devstral", "devstral-small-2:24b"))
                         end,
                     },
                 },
@@ -47,10 +55,10 @@ return {
                         adapter = "qwencoder",
                     },
                     inline = {
-                        adapter = "qwencoder",
+                        adapter = "devstral",
                     },
                     agent = {
-                        adapter = "qwencoder",
+                        adapter = "devstral",
                     },
                 },
             })
