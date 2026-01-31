@@ -62,7 +62,7 @@ return {
         event = "VeryLazy",
         enabled = true,
     },
-    
+
     {
         'kevinhwang91/nvim-ufo',
         event = { "VeryLazy", "BufReadPost", "BufNewFile", "BufWritePre" },
