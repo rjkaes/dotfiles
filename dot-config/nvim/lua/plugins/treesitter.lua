@@ -3,9 +3,8 @@ return {
     {
         -- Highlight, edit, and navigate code
         'nvim-treesitter/nvim-treesitter',
-        branch = 'main',
-        event = { "VeryLazy", "BufReadPost", "BufNewFile", "BufWritePre" },
-        cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
+        branch = 'master',
+        lazy = false,
         build = function()
             require('nvim-treesitter').update()
         end,
@@ -14,11 +13,14 @@ return {
             "RRethy/nvim-treesitter-endwise",
         },
         config = function()
-            require('nvim-treesitter').setup({
+            require('nvim-treesitter.configs').setup({
                 auto_install = true,
-                disable = { 'markdown' },
                 ensure_installed = { 'lua', 'vim', 'ruby', "c_sharp", "git_config", "gitcommit", "git_rebase", "gitignore",
                     "gitattributes", "yaml" },
+                highlight = {
+                    enable = true,
+                    disable = { 'markdown' },
+                },
                 incremental_selection = {
                     enable = true,
                     keymaps = {
