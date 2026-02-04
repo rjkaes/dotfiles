@@ -1,3 +1,6 @@
+-- Enable Lua loader for faster startup (caches bytecode)
+vim.loader.enable()
+
 require "disable_builtins"
 require "globals"
 require "keymaps"

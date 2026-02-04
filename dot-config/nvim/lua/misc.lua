@@ -1,34 +1,22 @@
--- Toggle the quickfix or loclist windows
-local function toggle_quickfix()
+-- Toggle quickfix or location list windows
+local function toggle_window(window_type)
     local windows = vim.fn.getwininfo()
-    local qf_exists = false
+    local is_loclist = window_type == "loclist"
     for _, win in pairs(windows) do
-        if win["quickfix"] == 1 and win["loclist"] == 0 then
-            qf_exists = true
-            break
+        if win["quickfix"] == 1 and (is_loclist == (win["loclist"] == 1)) then
+            vim.cmd(is_loclist and "lclose" or "cclose")
+            return
         end
     end
-    if qf_exists then
-        vim.cmd("cclose")
-    else
-        vim.cmd("copen")
-    end
+    vim.cmd(is_loclist and "lopen" or "copen")
+end
+
+local function toggle_quickfix()
+    toggle_window("quickfix")
 end
 
 local function toggle_loclist()
-    local windows = vim.fn.getwininfo()
-    local loc_exists = false
-    for _, win in pairs(windows) do
-        if win["quickfix"] == 1 and win["loclist"] == 1 then
-            loc_exists = true
-            break
-        end
-    end
-    if loc_exists then
-        vim.cmd("lclose")
-    else
-        vim.cmd("lopen")
-    end
+    toggle_window("loclist")
 end
 
 vim.keymap.set("n", "<leader>q", toggle_quickfix, { silent = true, desc = "Toggle Quickfix" })

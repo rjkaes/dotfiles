@@ -2,7 +2,7 @@
 vim.opt.pumblend = 0
 vim.opt.winblend = 0
 
--- alwaus enable trule colors
+-- always enable true colors
 vim.opt.termguicolors = true
 
 -- figure out background color

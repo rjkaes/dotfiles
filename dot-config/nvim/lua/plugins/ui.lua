@@ -30,8 +30,6 @@ return {
                 warning = { "#E5C07B" },
                 info = { "#61AFEF" },
                 hint = { "DiagnosticHint", "#8A8A8A" },
-                -- default = { "Identifier", "#7C3AED" },
-                -- test = { "Identifier", "#FF00FF" }
             },
         },
     },

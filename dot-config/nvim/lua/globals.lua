@@ -1,6 +1,6 @@
 vim.g.cpp_attributes_highlight = 1
 
--- Disbale netrw in favour for nvim-tree
+-- Disable netrw in favour of nvim-tree
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 

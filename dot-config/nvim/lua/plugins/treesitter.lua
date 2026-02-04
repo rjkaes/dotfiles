@@ -47,7 +47,11 @@ return {
                     -- Check if parser is actually available
                     local has_parser = #vim.api.nvim_get_runtime_file("parser/" .. lang .. ".so", false) > 0
                     if has_parser then
-                        pcall(vim.treesitter.start, args.buf, lang)
+                        local ok, err = pcall(vim.treesitter.start, args.buf, lang)
+                        if not ok then
+                            vim.notify("Treesitter: " .. tostring(err), vim.log.levels.DEBUG)
+                            return
+                        end
 
                         -- Enable folds
                         vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
