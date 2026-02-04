@@ -5,6 +5,7 @@ return {
     {
         "nvim-tree/nvim-tree.lua",
         version = "*",
+        cmd = { "NvimTreeToggle", "NvimTreeFocus", "NvimTreeOpen" },
         dependencies = {
             "nvim-tree/nvim-web-devicons",
         },
@@ -21,7 +22,12 @@ return {
             'nvim-telescope/telescope-ui-select.nvim',
         },
         cmd = "Telescope",
-        event = "VeryLazy",
+        keys = {
+            { "<C-p>", desc = "Find files" },
+            { "<leader>j", desc = "Find buffers" },
+            { "<leader>f", desc = "Live grep" },
+            { "<leader>t", desc = "Tags" },
+        },
         config = function()
             local telescope = require('telescope')
             local telescopeConfig = require("telescope.config")
@@ -72,10 +78,10 @@ return {
             vim.keymap.set('n', "<leader>t", "<cmd>Telescope tags<cr>")
         end
     },
-    'nvim-telescope/telescope-symbols.nvim',
+    { 'nvim-telescope/telescope-symbols.nvim', lazy = true },
 
     -- Replace matchit.vim and matchparen
-    { 'andymass/vim-matchup' },
+    { 'andymass/vim-matchup', event = { "BufReadPost", "BufNewFile" } },
 
     -- Toggle multiple terminals
     {
@@ -95,11 +101,14 @@ return {
     },
     
     -- Undo tree
-    { 'mbbill/undotree' },
+    { 'mbbill/undotree', cmd = "UndotreeToggle" },
 
     {
         url = "https://codeberg.org/andyg/leap.nvim",
-        lazy = false,
+        keys = {
+            { "s", mode = { "n", "x", "o" }, desc = "Leap" },
+            { "S", mode = "n", desc = "Leap from window" },
+        },
         config = function()
             vim.keymap.set({'n', 'x', 'o'}, 's', '<Plug>(leap)')
             vim.keymap.set('n',             'S', '<Plug>(leap-from-window)')

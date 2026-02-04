@@ -1,7 +1,7 @@
 return {
     -- C++
-    { 'bfrg/vim-cpp-modern' },
-    { 'p00f/clangd_extensions.nvim' },
+    { 'bfrg/vim-cpp-modern', ft = { "c", "cpp" } },
+    { 'p00f/clangd_extensions.nvim', ft = { "c", "cpp" } },
 
     -- C#
     { 'nickspoons/vim-cs',          ft = 'cs' },
@@ -22,7 +22,7 @@ return {
             })
         end,
     },
-    { 'jlcrochet/vim-razor' },
+    { 'jlcrochet/vim-razor', ft = { "razor", "cshtml" } },
     {
         "GustavEikaas/easy-dotnet.nvim",
         dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', },
@@ -37,23 +37,24 @@ return {
     -- HTML
     {
         'AndrewRadev/tagalong.vim',
+        ft = { "html", "xml", "razor", "erb", "vue", "cshtml" },
         init = function()
             vim.g.tagalong_additional_filetypes = { 'razor' }
         end
     },
-    { 'mattn/emmet-vim' },
+    { 'mattn/emmet-vim', ft = { "html", "css", "eruby", "razor", "cshtml" } },
 
     -- -- Python
     -- Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
 
     -- Ruby
-    { 'tpope/vim-rails' },
-    { 'jlcrochet/vim-ruby',             ft = 'ruby' },
-    { 'kana/vim-textobj-user' },
+    { 'tpope/vim-rails', ft = "ruby" },
+    { 'jlcrochet/vim-ruby', ft = 'ruby' },
+    { 'kana/vim-textobj-user', lazy = true },
     { 'nelstrom/vim-textobj-rubyblock', ft = 'ruby' },
 
     -- Rust
-    'rust-lang/rust.vim',
+    { 'rust-lang/rust.vim', ft = "rust" },
 
     {
         'mrcjkb/rustaceanvim',

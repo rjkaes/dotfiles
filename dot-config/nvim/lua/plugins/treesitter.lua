@@ -9,7 +9,6 @@ return {
             require('nvim-treesitter').update()
         end,
         dependencies = {
-            "OXY2DEV/markview.nvim",
             "RRethy/nvim-treesitter-endwise",
         },
         config = function()
@@ -71,7 +70,7 @@ return {
 
     {
         'kevinhwang91/nvim-ufo',
-        event = { "VeryLazy", "BufReadPost", "BufNewFile", "BufWritePre" },
+        event = { "BufReadPost", "BufNewFile" },
         dependencies = { 'kevinhwang91/promise-async' },
         opts = {
             provider_selector = function(bufnr, filetype, buftype)
