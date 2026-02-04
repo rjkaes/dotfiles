@@ -12,6 +12,15 @@ return {
             "mfussenegger/nvim-dap",
             "Tastyep/structlog.nvim",
         },
+        config = function()
+            require('csharp').setup({
+                lsp = {
+                    roslyn = {
+                        enable = false,
+                    },
+                },
+            })
+        end,
     },
     { 'jlcrochet/vim-razor' },
     {

@@ -13,8 +13,7 @@ return {
         },
         config = function()
             local ai = function(name, model)
-                return
-                {
+                return {
                     [name] = name,
                     opts = {
                         stream = true,

@@ -29,7 +29,7 @@ return {
                 show_labelDetails = true,
             })
 
-            require('luasnip.loaders.from_lua').load({ paths = { "~/.config/nvim/snippets" } })
+            require('luasnip.loaders.from_lua').load({ paths = { vim.fn.stdpath("config") .. "/snippets" } })
 
             cmp.setup({
                 sources = {
@@ -148,15 +148,6 @@ return {
                         require('lspconfig')[server_name].setup({})
                     end,
                 }
-            })
-
-            -- Setup csharp plugin
-            require('csharp').setup({
-                lsp = {
-                    roslyn = {
-                        enable = false,
-                    },
-                },
             })
         end
     },
