@@ -14,12 +14,12 @@ return {
         config = function()
             local ai = function(name, model)
                 return {
-                    [name] = name,
+                    name = name,
                     opts = {
                         stream = true,
                     },
                     schema = {
-                        [model] = {
+                        model = {
                             default = model,
                         },
                         num_ctx = {
@@ -49,7 +49,7 @@ return {
                         end,
                     },
                 },
-                interactions = {
+                strategies = {
                     chat = {
                         adapter = "qwencoder",
                     },
