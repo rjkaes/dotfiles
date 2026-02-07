@@ -32,10 +32,18 @@ return {
             -- default formatting for filetypes without configured formatters
             -- (e.g. markdown).
             _G.conform_formatexpr = function()
-                if #require("conform").list_formatters() > 0 then
+                local dominated_by_catchall = true
+                for _, f in ipairs(require("conform").list_formatters()) do
+                    if not vim.tbl_contains({"trim_whitespace"}, f.name) then
+                        dominated_by_catchall = false
+                        break
+                    end
+                end
+                if not dominated_by_catchall then
                     return require("conform").formatexpr()
                 end
-                -- No conform formatters available; return 1 to use default gq behavior.
+                -- Only catch-all formatters (e.g. trim_whitespace) are available;
+                -- return 1 so Neovim uses its built-in gq text wrapping.
                 return 1
             end
             vim.o.formatexpr = "v:lua.conform_formatexpr()"
