@@ -105,25 +105,6 @@ return {
         dependencies = { 'nvim-tree/nvim-web-devicons' },
     },
 
-    -- Markdown
-    {
-        "OXY2DEV/markview.nvim",
-        ft = "markdown",
-        opts = {
-            experimental = {
-                prefer_nvim = true,
-            },
-            preview = {
-                filetypes = { "markdown" },
-                ignore_buftypes = {},
-                enable_hybrid_mode = true,
-                linewise_hybrid_mode = false,
-                edit_range = { 1, 1 },
-            },
-        },
-        priority = 49,
-    },
-
     -- Tabular
     { 'godlygeek/tabular', cmd = 'Tabularize', event = "VeryLazy" },
 
