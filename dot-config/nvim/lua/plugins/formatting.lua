@@ -28,7 +28,17 @@ return {
             }
         },
         init = function()
-            vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+            -- Wrap conform's formatexpr so that gq falls back to Neovim's
+            -- default formatting for filetypes without configured formatters
+            -- (e.g. markdown).
+            _G.conform_formatexpr = function()
+                if #require("conform").list_formatters() > 0 then
+                    return require("conform").formatexpr()
+                end
+                -- No conform formatters available; return 1 to use default gq behavior.
+                return 1
+            end
+            vim.o.formatexpr = "v:lua.conform_formatexpr()"
         end,
         opts = {
             formatters_by_ft = {
