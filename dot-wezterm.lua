@@ -132,6 +132,64 @@ wezterm.on('window-config-reloaded', function(window, pane)
     end
 end)
 
+-- Collapse a file path's home prefix to "~".
+local function collapse_home(path)
+    local home = os.getenv('HOME') or ''
+    if home ~= '' and path:sub(1, #home) == home then
+        return '~' .. path:sub(#home + 1)
+    end
+    return path
+end
+
+-- Shorten a path by keeping the first and last components when it has
+-- more than `max_parts` segments: ~/a/b/c/d -> ~/a/…/d
+local function shorten_path(path, max_parts)
+    -- Separate a leading "~/" prefix so it doesn't count as a segment.
+    local prefix, rest = path:match('^(~/)(.+)$')
+    if not prefix then
+        prefix = ''
+        rest = path
+    end
+
+    local parts = {}
+    for part in rest:gmatch('[^/]+') do
+        table.insert(parts, part)
+    end
+
+    if #parts <= max_parts then
+        return path
+    end
+
+    return prefix .. parts[1] .. '/\u{2026}/' .. parts[#parts]
+end
+
+local shells = { fish = true, bash = true, zsh = true, sh = true, nu = true }
+
+-- Show "process cwd" in each tab, but hide the process name when it's
+-- just the user's shell since that's the idle default state.
+wezterm.on('format-tab-title', function(tab)
+    local pane = tab.active_pane
+    local process = (pane.foreground_process_name or ''):match('[^/]+$') or ''
+
+    local cwd = ''
+    if pane.current_working_dir then
+        cwd = shorten_path(collapse_home(pane.current_working_dir.file_path or ''), 3)
+    end
+
+    -- Only show the process name when a real command is running, not the shell.
+    local title
+    if shells[process] then
+        title = (cwd ~= '') and cwd or process
+    else
+        title = process
+        if cwd ~= '' then
+            title = title .. ' ' .. cwd
+        end
+    end
+
+    return ' ' .. title .. ' '
+end)
+
 wezterm.on('update-status', function(window)
     -- Skip when the tab bar is hidden (single tab) since the status
     -- line isn't visible anyway.
@@ -141,9 +199,9 @@ wezterm.on('update-status', function(window)
 
     local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
 
-    local color_scheme = window:effective_config().resolved_palette
-    local bg = color_scheme.background
-    local fg = color_scheme.foreground
+    local palette = window:effective_config().resolved_palette
+    local bg = palette.background
+    local fg = palette.foreground
 
     local date = wezterm.strftime '%a %b %-d %H:%M '
 
