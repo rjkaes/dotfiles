@@ -3,10 +3,17 @@
 local wezterm = require 'wezterm'
 
 local function colors_for_appearance(appearance)
+  local cursor = {
+    cursor_bg = '#52ad70',
+    cursor_fg = 'black',
+    cursor_border = '#52ad70',
+  }
   if appearance:find('Dark') then
-    return 'Catppuccin Mocha', 'black'
+    cursor.background = 'black'
+    return 'Catppuccin Mocha', cursor
   else
-    return 'Catppuccin Latte', 'white'
+    cursor.background = 'white'
+    return 'Catppuccin Latte', cursor
   end
 end
 
@@ -15,7 +22,7 @@ local config = wezterm.config_builder()
 -- Set initial color scheme; also updated dynamically via window-config-reloaded
 -- below so that switching macOS appearance takes effect without restart.
 local initial_appearance = (wezterm.gui and wezterm.gui.get_appearance()) or 'Light'
-local initial_scheme, initial_bg = colors_for_appearance(initial_appearance)
+local initial_scheme, initial_colors = colors_for_appearance(initial_appearance)
 config.color_scheme = initial_scheme
 
 config.font = wezterm.font_with_fallback {
@@ -35,10 +42,9 @@ config.front_end = 'WebGpu'
 config.hide_tab_bar_if_only_one_tab = true
 config.initial_cols = 142
 config.initial_rows = 47
-config.macos_window_background_blur = 30
 config.max_fps = 60
 config.scrollback_lines = 5000
-config.status_update_interval = 10000
+config.status_update_interval = 1000
 config.tab_bar_at_bottom = true
 config.tab_max_width = 32
 config.term = 'wezterm'
@@ -52,21 +58,7 @@ config.window_decorations = 'RESIZE'
 -- config.freetype_load_flags = 'NO_AUTOHINT'
 -- config.freetype_render_target = 'Normal'
 
-config.colors = {
-    -- Overrides the cell background color when the current cell is occupied by the
-    -- cursor and the cursor style is set to Block
-    cursor_bg = '#52ad70',
-    -- Overrides the text color when the current cell is occupied by the cursor
-    cursor_fg = 'black',
-    -- Specifies the border color of the cursor when the cursor style is set to Block,
-    -- or the color of the vertical or horizontal bar when the cursor style is set to
-    -- Bar or Underline.
-    cursor_border = '#52ad70',
-
-    -- Use the theme to determine the background color; also updated dynamically
-    -- via the window-config-reloaded handler.
-    background = initial_bg,
-}
+config.colors = initial_colors
 
 config.visual_bell = {
     fade_in_duration_ms = 75,
@@ -118,16 +110,11 @@ config.keys = {
 -- set_config_overrides -> window-config-reloaded -> set_config_overrides.
 wezterm.on('window-config-reloaded', function(window, pane)
     local overrides = window:get_config_overrides() or {}
-    local scheme, bg = colors_for_appearance(window:get_appearance())
+    local scheme, colors = colors_for_appearance(window:get_appearance())
 
     if overrides.color_scheme ~= scheme then
         overrides.color_scheme = scheme
-        overrides.colors = {
-            cursor_bg = '#52ad70',
-            cursor_fg = 'black',
-            cursor_border = '#52ad70',
-            background = bg,
-        }
+        overrides.colors = colors
         window:set_config_overrides(overrides)
     end
 end)
