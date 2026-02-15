@@ -333,109 +333,129 @@ hi('LspCodeLens',          { link = 'BaseDim' })
 hi('LspCodeLensSeparator', { link = 'BaseDim' })
 
 -- =========================================
--- Treesitter Highlights
+-- Treesitter Highlights (modern captures, nvim-treesitter ≥ Jan 2024)
 -- =========================================
--- Misc
-hi('@annotation', { link = 'BaseType' })
-hi('@attribute',  { link = 'BaseConstant' })
-hi('@comment',    { link = 'BaseComment' })
-hi('@error',      { link = 'Error' })
-hi('@none',       { link = 'BaseFg' })
-hi('@preproc',    { link = 'BasePreProc' })
-hi('@define',     { link = 'BasePreProc' })
-hi('@operator',   { link = 'BaseOperator' })
+-- Captures that fall back correctly through the hierarchy (e.g.
+-- @keyword.conditional → @keyword → Keyword → BaseKeyword) are omitted.
+-- Only captures where the fallback gives the wrong color, or where an
+-- explicit anchor improves clarity, are defined here.
+
+-- Fallback anchors & misc
+hi('@comment',              { link = 'BaseComment' })
+hi('@error',                { link = 'Error' })
+hi('@none',                 { link = 'BaseFg' })
+hi('@operator',             { link = 'BaseOperator' })
 
 -- Punctuation
 hi('@punctuation.delimiter', { link = 'BaseDelimiter' })
 hi('@punctuation.bracket',   { link = 'BaseDelimiter' })
 hi('@punctuation.special',   { link = 'BaseSpecial' })
 
--- Literals
-hi('@string',         { link = 'BaseString' })
-hi('@string.regex',   { link = 'BaseSpecial' })
-hi('@string.escape',  { link = 'BaseSpecial' })
-hi('@string.special', { link = 'BaseSpecial' })
-hi('@character',      { link = 'BaseCharacter' })
-hi('@character.special', { link = 'BaseSpecial' })
-hi('@boolean',        { link = 'BaseBoolean' })
-hi('@number',         { link = 'BaseNumber' })
-hi('@float',          { link = 'BaseFloat' })
+-- Variables & identifiers
+hi('@variable',                  { link = 'BaseIdentifier' })
+hi('@variable.builtin',          { fg = colors.red })
+hi('@variable.parameter',        { link = 'BaseIdentifier' })
+hi('@variable.parameter.builtin', { fg = colors.red })
+hi('@variable.member',           { link = 'BaseProperty' })
+hi('@property',                  { link = 'BaseProperty' })
+
+-- Constants
+hi('@constant',         { link = 'BaseConstant' })
+hi('@constant.builtin', { fg = colors.cyan, bold = true })
+hi('@constant.macro',   { link = 'BasePreProc' })
+hi('@boolean',          { link = 'BaseBoolean' })
 
 -- Functions
-hi('@function',         { link = 'BaseFunction' })
-hi('@function.builtin', { fg = colors.magenta, bold = true })
-hi('@function.call',    { link = 'BaseFunction' })
-hi('@function.macro',   { link = 'BasePreProc' })
-hi('@method',           { link = 'BaseMethod' })
-hi('@method.call',      { link = 'BaseMethod' })
-hi('@constructor',      { link = 'BaseType' })
-hi('@parameter',        { link = 'BaseIdentifier' })
+hi('@function',              { link = 'BaseFunction' })
+hi('@function.builtin',      { fg = colors.magenta, bold = true })
+hi('@function.call',         { link = 'BaseFunction' })
+hi('@function.macro',        { link = 'BasePreProc' })
+hi('@function.method',       { link = 'BaseMethod' })
+hi('@function.method.call',  { link = 'BaseMethod' })
+hi('@constructor',           { link = 'BaseType' })
 
--- Keywords
-hi('@keyword',          { link = 'BaseKeyword' })
-hi('@keyword.function', { link = 'BaseKeyword' })
-hi('@keyword.operator', { link = 'BaseKeyword' })
-hi('@keyword.return',   { link = 'BaseKeyword' })
-hi('@conditional',      { link = 'BaseKeyword' })
-hi('@repeat',           { link = 'BaseKeyword' })
-hi('@debug',            { link = 'Debug' })
-hi('@label',            { link = 'BaseKeyword' })
-hi('@include',          { link = 'BasePreProc' })
-hi('@exception',        { link = 'BaseError' })
+-- Keywords — only those that need a different color than @keyword → BaseKeyword
+hi('@keyword',                 { link = 'BaseKeyword' })
+hi('@keyword.function',        { link = 'BaseKeyword' })
+hi('@keyword.operator',        { link = 'BaseKeyword' })
+hi('@keyword.return',          { link = 'BaseKeyword' })
+hi('@keyword.import',          { link = 'BasePreProc' })
+hi('@keyword.exception',       { link = 'BaseError' })
+hi('@keyword.directive',       { link = 'BasePreProc' })
+hi('@keyword.directive.define', { link = 'BasePreProc' })
+hi('@keyword.storage',         { link = 'BaseType' })
+hi('@keyword.debug',           { link = 'Debug' })
 
--- Types
+-- Types & modules
 hi('@type',            { link = 'BaseType' })
 hi('@type.builtin',    { fg = colors.yellow, bold = true })
 hi('@type.definition', { link = 'BaseType' })
 hi('@type.qualifier',  { link = 'BaseKeyword' })
-hi('@storageclass',    { link = 'BaseType' })
-hi('@field',           { link = 'BaseProperty' })
-hi('@property',        { link = 'BaseProperty' })
+hi('@attribute',       { link = 'BaseConstant' })
+hi('@module',          { link = 'BaseType' })
+hi('@module.builtin',  { link = 'BaseType' })
 
--- Identifiers
-hi('@variable',           { link = 'BaseIdentifier' })
-hi('@variable.builtin',   { fg = colors.red })
-hi('@variable.parameter', { link = 'BaseIdentifier' })
-hi('@constant',           { link = 'BaseConstant' })
-hi('@constant.builtin',   { fg = colors.cyan, bold = true })
-hi('@constant.macro',     { link = 'BasePreProc' })
-hi('@namespace',          { link = 'BaseType' })
-hi('@symbol',             { link = 'BaseConstant' })
+-- Strings & characters
+hi('@string',                { link = 'BaseString' })
+hi('@string.escape',         { link = 'BaseSpecial' })
+hi('@string.special',        { link = 'BaseSpecial' })
+hi('@string.regexp',         { link = 'BaseSpecial' })
+hi('@string.special.symbol', { link = 'BaseConstant' })
+hi('@string.special.url',    { link = 'BaseUrl' })
+hi('@character',             { link = 'BaseCharacter' })
+hi('@character.special',     { link = 'BaseSpecial' })
 
--- Text
-hi('@text',             { link = 'BaseFg' })
-hi('@text.strong',      { bold = true })
-hi('@text.emphasis',    { italic = true })
-hi('@text.underline',   { underline = true })
-hi('@text.strike',      { strikethrough = true })
-hi('@text.title',       { link = 'Title' })
-hi('@text.literal',     { link = 'BaseString' })
-hi('@text.uri',         { link = 'BaseUrl' })
-hi('@text.math',        { link = 'BaseNumber' })
-hi('@text.reference',   { link = 'BaseConstant' })
-hi('@text.environment', { link = 'BasePreProc' })
-hi('@text.environment.name', { link = 'BaseType' })
-hi('@text.note',        { link = 'DiagnosticInfo' })
-hi('@text.warning',     { link = 'DiagnosticWarn' })
-hi('@text.danger',      { link = 'DiagnosticError' })
-hi('@text.todo',        { link = 'Todo' })
+-- Numbers
+hi('@number',       { link = 'BaseNumber' })
+hi('@number.float', { link = 'BaseFloat' })
 
--- Tags
+-- Comment annotations
+hi('@comment.documentation', { link = 'BaseComment' })
+hi('@comment.error',         { link = 'DiagnosticError' })
+hi('@comment.warning',       { link = 'DiagnosticWarn' })
+hi('@comment.todo',          { link = 'Todo' })
+hi('@comment.note',          { link = 'DiagnosticInfo' })
+
+-- Markup (Markdown) — no @markup Vim fallback group, so all need explicit defs
+hi('@markup.heading',        { link = 'Title' })
+hi('@markup.strong',         { bold = true })
+hi('@markup.italic',         { italic = true })
+hi('@markup.strikethrough',  { strikethrough = true })
+hi('@markup.underline',      { underline = true })
+hi('@markup.raw',            { link = 'BaseString' })
+hi('@markup.raw.block',      { link = 'BaseString' })
+hi('@markup.link',           { link = 'BaseConstant' })
+hi('@markup.link.label',     { link = 'BaseConstant' })
+hi('@markup.link.url',       { link = 'BaseUrl' })
+hi('@markup.list',           { link = 'BaseSpecial' })
+hi('@markup.list.checked',   { link = 'BaseSuccess' })
+hi('@markup.list.unchecked', { link = 'BaseDim' })
+hi('@markup.quote',          { fg = colors.gray7, italic = true })
+hi('@markup.math',           { link = 'BaseNumber' })
+
+-- Tags (HTML/JSX/TSX)
 hi('@tag',           { link = 'Tag' })
+hi('@tag.builtin',   { fg = colors.blue, bold = true })
 hi('@tag.attribute', { link = 'BaseType' })
 hi('@tag.delimiter', { link = 'BaseDelimiter' })
 
--- Language Specific
-hi('@attribute.html', { link = 'BaseType' })
-hi('@tag.html', { link = 'BaseKeyword' })
-hi('@tag.builtin.html', { fg = colors.blue, bold = true })
-hi('@property.css', { link = 'BaseConstant' })
-hi('@property.scss', { link = 'BaseConstant' })
-hi('@tag.css', { link = 'BaseKeyword' })
-hi('@tag.scss', { link = 'BaseKeyword' })
-hi('@attribute.css', { link = 'BaseType' })
-hi('@attribute.scss', { link = 'BaseType' })
-hi('@property.json', { link = 'BaseConstant' })
+-- Diff
+hi('@diff.plus',  { link = 'BaseSuccess' })
+hi('@diff.minus', { link = 'BaseError' })
+hi('@diff.delta', { link = 'BaseWarn' })
+
+-- Language-specific overrides
+hi('@attribute.html',     { link = 'BaseType' })
+hi('@tag.html',           { link = 'BaseKeyword' })
+hi('@tag.builtin.html',   { fg = colors.blue, bold = true })
+hi('@property.css',       { link = 'BaseConstant' })
+hi('@property.scss',      { link = 'BaseConstant' })
+hi('@tag.css',            { link = 'BaseKeyword' })
+hi('@tag.scss',           { link = 'BaseKeyword' })
+hi('@attribute.css',      { link = 'BaseType' })
+hi('@attribute.scss',     { link = 'BaseType' })
+hi('@property.json',      { link = 'BaseConstant' })
+hi('@variable.member.json', { link = 'BaseConstant' })
 
 -- =========================================
 -- Plugin Highlights
