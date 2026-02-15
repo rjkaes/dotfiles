@@ -21,9 +21,10 @@ alias vim vi
 abbr -a be 'bundle exec'
 abbr -a bu 'bundle update'
 abbr -a dn 'dotnet'
-abbr -a dnb 'dotnet build'
+abbr -a dnb 'dotnet build --no-restore'
 abbr -a dnc 'dotnet clean'
-abbr -a dnr 'dotnet run'
+abbr -a dnr 'dotnet run --no-restore'
+abbr -a dnrr 'dotnet restore'
 abbr -a dnt 'dotnet test --no-restore'
 abbr -a g git
 abbr -a ga 'git add'
@@ -113,3 +114,7 @@ end
 # Added by OrbStack: command-line tools and integration
 # This won't be added again if you remove it.
 source ~/.orbstack/shell/init.fish 2>/dev/null || :
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH
