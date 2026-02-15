@@ -2,16 +2,21 @@
 
 # type(scope): subject
 #
-#    build (changes that affect system compilation or is related to external dependencies; other changes that don't modify src or test)
-#    chore (updating grunt tasks etc; no production code change)
-#    ci (changes to CI configuration files and scripts)
-#    docs (changes to the documentation)
-#    feat (new feature for the user, not a new feature for build script)
-#    fix (bug fix for the user, not a fix to a build script)
-#    perf (related to backward-compatible performance improvements)
-#    refactor (a code change that neither fixes a bug nor adds a feature)
-#    style (formatting, missing semi colons, etc; changes that do not affect the meaning of the code)
-#    test (adding missing tests, refactoring tests; no production code change)
+# * bugfix - fixing a bug
+# * build - changes that affect system compilation or is related to external
+#           dependencies; other changes that don't modify src or test
+# * chore - updating grunt tasks etc; no production code change
+# * ci - changes to CI configuration files and scripts
+# * docs - changes to the documentation
+# * experiment - experimenting outside of an issue/ticket
+# * feature - adding, refactoring or removing a feature
+# * hotfix - changing code with a temporary solution and/or without following
+#            the usual process (usually because of an emergency)
+# * perf - related to backward-compatible performance improvements
+# * refactor - code/style changes without changing functionality or fixing
+#   bugs
+# * style - formatting, missing semi colons, etc; changes that do not affect the meaning of the code
+# * test - adding missing tests, refactoring tests; no production code change
 #
 # scope: what part of the code does this commit modifying (api, frontend, etc.)
 #
