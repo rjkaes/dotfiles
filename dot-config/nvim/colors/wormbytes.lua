@@ -332,6 +332,66 @@ hi('LspSignatureActiveParameter', { fg = colors.orange, bold = true })
 hi('LspCodeLens',          { link = 'BaseDim' })
 hi('LspCodeLensSeparator', { link = 'BaseDim' })
 
+-- -----------------------------------------
+-- LSP Semantic Token Highlights
+-- -----------------------------------------
+-- When an LSP attaches it provides @lsp.type.* highlights at higher priority
+-- than treesitter captures. Without explicit links these fall back to Neovim's
+-- built-in defaults, which often resolve to different colors than the TS
+-- equivalents (causing a visible "flash" when the LSP finishes loading).
+
+-- Link each semantic token type to its treesitter counterpart so that TS and
+-- LSP agree on colors from the start.
+hi('@lsp.type.class',         { link = 'Structure' })
+hi('@lsp.type.decorator',     { link = '@attribute' })
+hi('@lsp.type.enum',          { link = 'Structure' })
+hi('@lsp.type.enumMember',    { link = '@constant' })
+hi('@lsp.type.event',         { link = 'BaseSpecial' })
+hi('@lsp.type.function',      { link = '@function' })
+hi('@lsp.type.interface',     { link = 'Structure' })
+hi('@lsp.type.method',        { link = '@function.method' })
+hi('@lsp.type.modifier',      { link = '@keyword' })
+hi('@lsp.type.namespace',     { link = '@module' })
+hi('@lsp.type.number',        { link = '@number' })
+hi('@lsp.type.operator',      { link = '@operator' })
+hi('@lsp.type.parameter',     { link = '@variable.parameter' })
+hi('@lsp.type.property',      { link = '@property' })
+hi('@lsp.type.regexp',        { link = '@string.regexp' })
+hi('@lsp.type.string',        { link = '@string' })
+hi('@lsp.type.struct',        { link = 'Structure' })
+hi('@lsp.type.type',          { link = '@type' })
+hi('@lsp.type.typeParameter', { link = '@type' })
+hi('@lsp.type.variable',      { link = '@variable' })
+hi('@lsp.type.macro',         { link = '@function.macro' })
+
+-- Clear groups where treesitter sub-groups are more specific than the LSP
+-- token. An empty table removes the highlight so TS captures like
+-- @comment.todo, @keyword.import, @keyword.exception etc. win.
+hi('@lsp.type.comment', {})
+hi('@lsp.type.keyword', {})
+
+-- Builtin and deprecated overrides — the LSP "defaultLibrary" modifier marks
+-- stdlib/builtin symbols which treesitter captures as @*.builtin with distinct
+-- styling (bold, different color). Without these the builtin styling is lost.
+hi('@lsp.typemod.variable.defaultLibrary', { link = '@variable.builtin' })
+hi('@lsp.typemod.function.defaultLibrary', { link = '@function.builtin' })
+hi('@lsp.typemod.type.defaultLibrary',     { link = '@type.builtin' })
+hi('@lsp.typemod.constant.defaultLibrary', { link = '@constant.builtin' })
+hi('@lsp.typemod.method.defaultLibrary',     { link = '@function.builtin' })
+hi('@lsp.typemod.class.defaultLibrary',      { link = '@type.builtin' })
+hi('@lsp.typemod.struct.defaultLibrary',     { link = '@type.builtin' })
+hi('@lsp.typemod.enum.defaultLibrary',       { link = '@type.builtin' })
+hi('@lsp.typemod.interface.defaultLibrary',  { link = '@type.builtin' })
+hi('@lsp.typemod.enumMember.defaultLibrary', { link = '@constant.builtin' })
+hi('@lsp.typemod.namespace.defaultLibrary',  { link = '@module.builtin' })
+hi('@lsp.mod.deprecated',                  { strikethrough = true })
+
+-- Standard modifier styling — these provide visual cues the LSP exclusively
+-- knows about. They stack additively on top of the base @lsp.type.* color.
+hi('@lsp.mod.readonly', { italic = true })
+hi('@lsp.mod.static',   { italic = true })
+hi('@lsp.mod.abstract', { italic = true })
+
 -- =========================================
 -- Treesitter Highlights (modern captures, nvim-treesitter ≥ Jan 2024)
 -- =========================================
