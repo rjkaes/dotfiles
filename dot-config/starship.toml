@@ -1,14 +1,33 @@
-command_timeout = 50
+command_timeout = 500
 
 add_newline = false
 # A minimal left prompt
 format = """$directory$character"""
 palette = "catppuccin_mocha"
 # move the rest of the prompt to the right
-right_format = """$all"""
+right_format = """$git_branch$git_status$dotnet$ruby$cmd_duration"""
 
-[docker_context]
-disabled = true
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+
+[directory]
+style = "bold lavender"
+
+[git_branch]
+style = "bold mauve"
+
+[git_status]
+style = "bold maroon"
+
+[dotnet]
+style = "bold blue"
+
+[ruby]
+style = "bold red"
+
+[cmd_duration]
+style = "bold yellow"
 
 [palettes.catppuccin_mocha]
 rosewater = "#f5e0dc"
@@ -37,13 +56,3 @@ surface0 = "#313244"
 base = "#1e1e2e"
 mantle = "#181825"
 crust = "#11111b"
-
-# Disable the package module, hiding it from the prompt completely
-[package]
-disabled = true
-
-[nodejs]
-disabled = true
-
-[php]
-disabled = true
