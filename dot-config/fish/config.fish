@@ -4,7 +4,7 @@ set -gx FZF_DEFAULT_OPTS "--no-color"
 
 set -gx EDITOR "nvim"
 
-# Disable telemtry
+# Disable telemetry
 set -gx DOTNET_CLI_TELEMETRY_OPTOUT "true"
 set -gx FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT "true"
 
@@ -37,7 +37,7 @@ abbr -a gl 'git l'
 abbr -a ggp ggpush
 abbr -a glg 'git hist'
 abbr -a grc 'git rebase --continue'
-abbr -a grm 'git rebase master'
+abbr -a grm 'git rebase main'
 abbr -a gss 'git ss'
 abbr -a gw 'git switch'
 abbr -a ygg 'sudo yggdrasilctl'
@@ -55,46 +55,15 @@ chruby 4.0.1
 # Ensure GPG_TTY is set to the current tty so gpg-agent works as expected.
 set -x GPG_TTY (tty)
 
-# if test -f /usr/local/opt/node@8/bin/node
-#     set -g fish_user_paths "/usr/local/opt/node@8/bin" $fish_user_paths
-# end
-
-contains $HOME/bin $fish_user_paths; or set -gp fish_user_paths $HOME/bin
-
-## Force the path to ensure the ePublishing gems and the old version of Ruby is
-## first in the path.  Vim does not inherit this path changes when `gem_home`
-## and `chruby` are used.
-##fish_add_path $HOME/src/epublishing/rails/.gem/ruby/2.6.7/bin $HOME/.gem/ruby/2.6.7/bin
-#
-#contains $HOME/.gem/ruby/2.6.7/bin $fish_user_paths; or set -gp fish_user_paths $HOME/.gem/ruby/2.6.7/bin
-#contains $HOME/src/epublishing/rails/.gems/ruby/2.6.7/bin $fish_user_paths; or set -gp fish_user_paths $HOME/src/epublishing/rails/.gems/ruby/2.6.7/bin
-#
-##set -gx PATH $HOME/src/epublishing/rails/.gem/ruby/2.6.7/bin $HOME/.gem/ruby/2.6.7/bin $PATH
-
-#fish_add_path "/usr/local/opt/node@12/bin" "/usr/local/sbin"
-#set -gx PATH "/usr/local/opt/node@12/bin" "/usr/local/sbin" $PATH
-contains /opt/homebrew/bin $fish_user_paths; or set -ga fish_user_paths /opt/homebrew/bin
-contains /opt/homebrew/sbin $fish_user_paths; or set -ga fish_user_paths /opt/homebrew/sbin
-
+fish_add_path $HOME/bin
+fish_add_path /opt/homebrew/bin /opt/homebrew/sbin
 fish_add_path ~/.dotnet/tools/
-
-# set -gx RUBY_CONFIGURE_OPTS "--with-openssl-dir=(brew --prefix openssl@1.1)"
-
-# Load up rust
-contains $HOME/.cargo/bin; or set -ga fish_user_paths $HOME/.cargo/bin
+fish_add_path $HOME/.cargo/bin
 
 # Required for ruby
 set -gx LDFLAGS "$LDFLAGS -L/opt/homebrew/opt/bison/lib -L/opt/homebrew/opt/libffi/lib -L/opt/homebrew/opt/readline/lib"
 set -gx CPPFLAGS "$CPPFLAGS -I/opt/homebrew/opt/readline/include -I/opt/homebrew/opt/libffi/include"
 set -gx PKG_CONFIG_PATH "/opt/homebrew/opt/readline/lib/pkgconfig:/opt/homebrew/opt/libffi/lib/pkgconfig"
-
-# set -x PATH /home/rjkaes/perl5/bin $PATH;
-# set -q PERL5LIB; and set -x PERL5LIB /home/rjkaes/perl5/lib/perl5:$PERL5LIB;
-# set -q PERL5LIB; or set -x PERL5LIB /home/rjkaes/perl5/lib/perl5;
-# set -q PERL_LOCAL_LIB_ROOT; and set -x PERL_LOCAL_LIB_ROOT /home/rjkaes/perl5:$PERL_LOCAL_LIB_ROOT;
-# set -q PERL_LOCAL_LIB_ROOT; or set -x PERL_LOCAL_LIB_ROOT /home/rjkaes/perl5;
-# set -x PERL_MB_OPT --install_base\ \"/home/rjkaes/perl5\";
-# set -x PERL_MM_OPT INSTALL_BASE=/home/rjkaes/perl5;
 
 starship init fish | source
 zoxide init fish | source
@@ -117,4 +86,4 @@ source ~/.orbstack/shell/init.fish 2>/dev/null || :
 
 # bun
 set --export BUN_INSTALL "$HOME/.bun"
-set --export PATH $BUN_INSTALL/bin $PATH
+fish_add_path $BUN_INSTALL/bin
