@@ -1,4 +1,4 @@
-fish_config theme choose catppuccin-frappe
+fish_config theme choose wormbytes
 
 # Set the default for ripgrep
 set -gx FZF_DEFAULT_COMMAND "rg --files --hidden --follow --glob '!.git/*'"
