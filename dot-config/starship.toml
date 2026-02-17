@@ -3,7 +3,7 @@ command_timeout = 500
 add_newline = false
 # A minimal left prompt
 format = """$directory$character"""
-palette = "catppuccin_mocha"
+palette = "wormbytes"
 # move the rest of the prompt to the right
 right_format = """$git_branch$git_status$dotnet$ruby$cmd_duration"""
 
@@ -12,13 +12,13 @@ success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
 
 [directory]
-style = "bold lavender"
+style = "bold blue"
 
 [git_branch]
-style = "bold mauve"
+style = "bold magenta"
 
 [git_status]
-style = "bold maroon"
+style = "bold orange"
 
 [dotnet]
 style = "bold blue"
@@ -29,30 +29,14 @@ style = "bold red"
 [cmd_duration]
 style = "bold yellow"
 
-[palettes.catppuccin_mocha]
-rosewater = "#f5e0dc"
-flamingo = "#f2cdcd"
-pink = "#f5c2e7"
-mauve = "#cba6f7"
-red = "#f38ba8"
-maroon = "#eba0ac"
-peach = "#fab387"
-yellow = "#f9e2af"
-green = "#a6e3a1"
-teal = "#94e2d5"
-sky = "#89dceb"
-sapphire = "#74c7ec"
-blue = "#89b4fa"
-lavender = "#b4befe"
-text = "#cdd6f4"
-subtext1 = "#bac2de"
-subtext0 = "#a6adc8"
-overlay2 = "#9399b2"
-overlay1 = "#7f849c"
-overlay0 = "#6c7086"
-surface2 = "#585b70"
-surface1 = "#45475a"
-surface0 = "#313244"
-base = "#1e1e2e"
-mantle = "#181825"
-crust = "#11111b"
+[palettes.wormbytes]
+red = "#C7254E"
+green = "#27761B"
+yellow = "#A56C00"
+blue = "#0366D6"
+magenta = "#8250DF"
+cyan = "#0884A8"
+orange = "#C25D00"
+fg = "#1C1C1C"
+dim = "#858585"
+comment = "#6B6B6B"
