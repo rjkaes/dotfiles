@@ -13,8 +13,6 @@ sufficient. **Do not write your accomplishments into this file.**
 
 ## Git workflow
 
-**IMPORTANT!** - **NEVER** use `-C /path` when issuing `git` commands.
-
 Make sure you use git mv to move any files that are already checked into
 git.
 
