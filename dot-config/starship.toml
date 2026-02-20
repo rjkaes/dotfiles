@@ -2,7 +2,7 @@ command_timeout = 500
 
 add_newline = false
 # A minimal left prompt
-format = """$directory$character"""
+format = """${custom.parent_dir}$directory$character"""
 palette = "wormbytes"
 # move the rest of the prompt to the right
 right_format = """$git_branch$git_status$dotnet$ruby$cmd_duration"""
@@ -12,6 +12,8 @@ success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
 
 [directory]
+truncation_length = 1
+truncate_to_repo = false
 style = "bold blue"
 
 [git_branch]
@@ -28,6 +30,11 @@ style = "bold red"
 
 [cmd_duration]
 style = "bold yellow"
+
+[custom.parent_dir]
+command = "basename \"$(dirname \"$PWD\")\""
+when = true
+format = "\\[[$output](dimmed)\\] "
 
 [palettes.wormbytes]
 red = "#C7254E"
