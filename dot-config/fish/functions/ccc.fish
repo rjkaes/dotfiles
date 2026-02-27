@@ -6,5 +6,11 @@ function ccc
     end
     jq --arg t $theme '.theme = $t' ~/.claude.json >~/.claude.json.tmp
     and mv ~/.claude.json.tmp ~/.claude.json
-    claude $argv
+
+    if set -l idx (contains -i -- --quick $argv)
+        set -e argv[$idx]
+        claude --model sonnet $argv
+    else
+        claude $argv
+    end
 end
