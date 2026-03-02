@@ -9,7 +9,7 @@ function ccc
 
     if set -l idx (contains -i -- --quick $argv)
         set -e argv[$idx]
-        claude --model sonnet $argv
+        claude --model haiku $argv
     else
         claude $argv
     end
