@@ -13,6 +13,14 @@ sufficient. **Do not write your accomplishments into this file.**
 
 ## Git workflow
 
+<git-directory-handling>
+When running git commands against a repository that is not the current
+working directory, use `git -C /path/to/repo` rather than
+`cd /path/to/repo && git ...`. The `-C` flag changes git's working
+directory without affecting the shell's, which avoids side effects on
+subsequent commands.
+</git-directory-handling>
+
 Make sure you use git mv to move any files that are already checked into
 git.
 
