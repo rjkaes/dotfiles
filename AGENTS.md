@@ -93,12 +93,30 @@ strings, config values) where LSP doesn't help.
 After writing or editing code, check LSP diagnostics before
 moving on. Fix any type errors or missing imports immediately.
 
+### Tool efficiency
+
+<tool-efficiency>
+When multiple independent tool calls are needed (e.g., reading several
+files, running unrelated searches), make them all in parallel rather
+than sequentially.
+
+Use subagents only when tasks can genuinely run in parallel, require
+isolated context, or involve independent workstreams. For simple
+lookups, single-file edits, or tasks that need shared context across
+steps, work directly rather than delegating.
+</tool-efficiency>
+
 ## Debugging
 
-When debugging production issues, ALWAYS read the actual code and
-configuration files before proposing a fix. Never assume auth flows, API
-patterns, or infrastructure config based on env var names or conventions.
-Trace the actual code path first.
+<investigate-before-answering>
+Never speculate about code you have not opened. If a file is
+referenced, read it before answering. Investigate and read relevant
+files BEFORE answering questions about the codebase.
+</investigate-before-answering>
+
+When debugging production issues, trace the actual code path first.
+Never assume auth flows, API patterns, or infrastructure config based
+on env var names or conventions.
 
 ## Code style preferences
 
@@ -173,6 +191,8 @@ These bias toward caution over speed. For trivial tasks, use judgment.
 - State assumptions explicitly. If uncertain, ask.
 - If multiple interpretations exist, present them — don't pick silently.
 - If a simpler approach exists, say so. Push back when warranted.
+- Once you choose an approach, commit to it. Don't revisit unless new
+  information directly contradicts your reasoning.
 
 ### Simplicity first
 - No features, abstractions, or error handling beyond what was asked.
@@ -184,7 +204,15 @@ These bias toward caution over speed. For trivial tasks, use judgment.
 - If you notice unrelated dead code, mention it — don't delete it.
 - Remove imports/variables/functions that YOUR changes made unused.
 - Every changed line should trace directly to the user's request.
+- Clean up any temporary files or scripts created during iteration.
+
+### General solutions over test-gaming
+- Implement logic that works for all valid inputs, not just test cases.
+- Never hard-code values to make specific tests pass.
+- If a test seems wrong, flag it rather than working around it.
 
 ### Goal-driven execution
 - Transform tasks into verifiable goals before implementing.
 - For multi-step tasks, state a brief plan with verification checks.
+- Before claiming work is done, verify the result against the original
+  goal. Run tests, check types, and confirm the change works.
