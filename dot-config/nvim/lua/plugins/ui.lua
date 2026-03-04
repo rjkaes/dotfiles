@@ -8,6 +8,7 @@ return {
         event = "VeryLazy",
         opts = {
             lazy_load = true,
+            options = {},
         },
     },
 
