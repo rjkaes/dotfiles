@@ -14,8 +14,11 @@ sufficient. **Do not write your accomplishments into this file.**
 ## Git workflow
 
 <git-directory-handling>
-When running git commands against a repository that is not the current
-working directory, use `git -C /path/to/repo` rather than
+If you are already in the target repository's working tree, run plain
+`git` with no directory flags — e.g. `git status`, `git add`, `git commit`.
+
+Use `git -C /path/to/repo` **only** when targeting a repository that is
+not the current working directory, as a replacement for
 `cd /path/to/repo && git ...`. The `-C` flag changes git's working
 directory without affecting the shell's, which avoids side effects on
 subsequent commands.
@@ -36,6 +39,10 @@ backticks. When you have a full line of code or more than one line of
 code, put them in indented code blocks.
 
 ### Creating commits
+
+<important>
+Do not add Co-Authored-By lines to commit messages.
+</important>
 
 To commit, follow these steps as **separate tool calls**:
 
