@@ -174,6 +174,10 @@ understand the real problem before helping with the proposed approach.
 
 ## Check the Whole Stack
 
+When the project has these layers, check them. Not all projects do —
+for a dotfiles repo or a CLI tool, "the whole stack" is different than
+for a web app. Adapt accordingly.
+
 After implementing any feature, verify completeness by checking:
 
 - database constraints/migrations.
@@ -204,6 +208,8 @@ These bias toward caution over speed. For trivial tasks, use judgment.
 ### Simplicity first
 - No features, abstractions, or error handling beyond what was asked.
 - If you write 200 lines and it could be 50, rewrite it.
+- Prefer editing existing files over creating new ones.
+- Don't create helper scripts, utility files, or abstractions for one-off tasks.
 
 ### Surgical changes
 - Don't "improve" adjacent code, comments, or formatting.
@@ -212,6 +218,16 @@ These bias toward caution over speed. For trivial tasks, use judgment.
 - Remove imports/variables/functions that YOUR changes made unused.
 - Every changed line should trace directly to the user's request.
 - Clean up any temporary files or scripts created during iteration.
+
+### Confirm before acting on shared state
+- Before destructive operations (deleting files/branches, dropping tables,
+  `rm -rf`, overwriting uncommitted changes), confirm with the user.
+- Before hard-to-reverse operations (`git push --force`, `git reset --hard`,
+  amending published commits), confirm with the user.
+- Before externally visible actions (pushing code, commenting on PRs/issues,
+  sending messages), confirm with the user.
+- Local, reversible actions (editing files, running tests) are fine without
+  confirmation.
 
 ### General solutions over test-gaming
 - Implement logic that works for all valid inputs, not just test cases.
@@ -223,3 +239,9 @@ These bias toward caution over speed. For trivial tasks, use judgment.
 - For multi-step tasks, state a brief plan with verification checks.
 - Before claiming work is done, verify the result against the original
   goal. Run tests, check types, and confirm the change works.
+
+### Bias toward action
+- Implement changes directly — don't just describe or suggest them
+  unless asked for a review or opinion.
+- When told to fix or change something, do it; don't ask "would you
+  like me to make this change?" unless genuinely ambiguous.
