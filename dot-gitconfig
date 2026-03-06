@@ -149,6 +149,7 @@
     update = "!f() { git pull && git submodule update --init; }; f"
     up = pull --rebase
     wip = for-each-ref --sort='authordate:iso8601' --format=' %(color:green)%(authordate:relative)%09%(color:white)%(refname:short)' refs/heads
+    sync = !git checkout main && git fetch upstream main && git merge upstream/main
 
 [include]
     path = ~/.gitconfig.secret
