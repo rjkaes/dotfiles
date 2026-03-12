@@ -15,7 +15,7 @@ vim.g.colors_name = 'wormbytes'
 local palettes = {
   dark = {
     -- Base colors
-    bg = '#000000',      -- black
+    bg = '#1a1b26',      -- dark blue-gray (Tokyo Night)
     fg = '#E8E8E8',      -- white
 
     -- Grays (Dark to Light)
@@ -64,7 +64,7 @@ local palettes = {
   },
   light = {
     -- Base colors
-    bg = '#FFFFFF',      -- white
+    bg = '#FAFAF8',      -- warm white
     fg = '#1C1C1C',      -- black
 
     -- Grays (Light to Dark)

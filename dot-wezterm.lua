@@ -2,28 +2,83 @@
 
 local wezterm = require 'wezterm'
 
-local function colors_for_appearance(appearance)
-  local cursor = {
+-- Wormbytes palette, matching the Neovim colorscheme in
+-- dot-config/nvim/colors/wormbytes.lua
+local wormbytes = {
+  dark = {
+    foreground = '#E8E8E8',
+    background = '#1a1b26',
     cursor_bg = '#52ad70',
-    cursor_fg = 'black',
+    cursor_fg = '#1a1b26',
     cursor_border = '#52ad70',
-  }
+    selection_bg = '#3A3A3A',
+    selection_fg = '#E8E8E8',
+    ansi = {
+      '#1a1b26',  -- black  (bg)
+      '#E06C75',  -- red
+      '#98C379',  -- green
+      '#E5C07B',  -- yellow
+      '#61AFEF',  -- blue
+      '#C678DD',  -- magenta
+      '#56B6C2',  -- cyan
+      '#E8E8E8',  -- white  (fg)
+    },
+    brights = {
+      '#4E4E4E',  -- bright black  (gray4)
+      '#FF6B6B',  -- bright red
+      '#A8E6A1',  -- bright green
+      '#FFD93D',  -- bright yellow
+      '#74C0FC',  -- bright blue
+      '#DA70D6',  -- bright magenta
+      '#66D9EF',  -- bright cyan
+      '#E8E8E8',  -- bright white  (fg)
+    },
+  },
+  light = {
+    foreground = '#1C1C1C',
+    background = '#FAFAF8',
+    cursor_bg = '#52ad70',
+    cursor_fg = '#FFFFFF',
+    cursor_border = '#52ad70',
+    selection_bg = '#D4D4D4',
+    selection_fg = '#1C1C1C',
+    ansi = {
+      '#FAFAF8',  -- black  (bg)
+      '#C7254E',  -- red
+      '#27761B',  -- green
+      '#A56C00',  -- yellow
+      '#0366D6',  -- blue
+      '#8250DF',  -- magenta
+      '#0884A8',  -- cyan
+      '#1C1C1C',  -- white  (fg)
+    },
+    brights = {
+      '#9E9E9E',  -- bright black  (gray5)
+      '#D73A49',  -- bright red
+      '#22863A',  -- bright green
+      '#B58900',  -- bright yellow
+      '#005CC5',  -- bright blue
+      '#6F42C1',  -- bright magenta
+      '#0598BC',  -- bright cyan
+      '#1C1C1C',  -- bright white  (fg)
+    },
+  },
+}
+
+local function colors_for_appearance(appearance)
   if appearance:find('Dark') then
-    cursor.background = 'black'
-    return 'Catppuccin Mocha', cursor
+    return wormbytes.dark
   else
-    cursor.background = 'white'
-    return 'Catppuccin Latte', cursor
+    return wormbytes.light
   end
 end
 
 local config = wezterm.config_builder()
 
--- Set initial color scheme; also updated dynamically via window-config-reloaded
+-- Set initial colors; also updated dynamically via window-config-reloaded
 -- below so that switching macOS appearance takes effect without restart.
 local initial_appearance = (wezterm.gui and wezterm.gui.get_appearance()) or 'Light'
-local initial_scheme, initial_colors = colors_for_appearance(initial_appearance)
-config.color_scheme = initial_scheme
+local initial_colors = colors_for_appearance(initial_appearance)
 
 config.font = wezterm.font_with_fallback {
     { family = 'Maple Mono Normal NL NF', weight = "Regular" },
@@ -105,15 +160,15 @@ config.keys = {
     { key = 'D', mods = 'SUPER', action = wezterm.action.ShowDebugOverlay },
 }
 
--- Dynamically switch color scheme and background when macOS appearance changes.
--- The guard against the current scheme prevents an infinite loop of
+-- Dynamically switch colors when macOS appearance changes.
+-- The guard against the current background prevents an infinite loop of
 -- set_config_overrides -> window-config-reloaded -> set_config_overrides.
 wezterm.on('window-config-reloaded', function(window, pane)
     local overrides = window:get_config_overrides() or {}
-    local scheme, colors = colors_for_appearance(window:get_appearance())
+    local colors = colors_for_appearance(window:get_appearance())
 
-    if overrides.color_scheme ~= scheme then
-        overrides.color_scheme = scheme
+    if not overrides.colors or overrides.colors.background ~= colors.background then
+        overrides.color_scheme = nil
         overrides.colors = colors
         window:set_config_overrides(overrides)
     end
