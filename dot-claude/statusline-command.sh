@@ -3,10 +3,6 @@ input=$(cat)
 
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd')
 model=$(echo "$input" | jq -r '.model.display_name // ""')
-used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
-input_tokens=$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // empty')
-cache_create=$(echo "$input" | jq -r '.context_window.current_usage.cache_creation_input_tokens // empty')
-cache_read=$(echo "$input" | jq -r '.context_window.current_usage.cache_read_input_tokens // empty')
 
 # Detect macOS dark mode
 if defaults read -g AppleInterfaceStyle &>/dev/null; then
@@ -91,22 +87,6 @@ if git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
     [ -n "$parts" ] && git_part="${git_part} ${BOLD}${ORANGE}[${parts}]${RESET}"
 fi
 
-# Context usage
-ctx_part=""
-if [ -n "$used_pct" ]; then
-    used_int=${used_pct%.*}
-    ctx_part="${DIM}${used_int}%${RESET}"
-    if [ -n "$input_tokens" ]; then
-        total=0
-        [ -n "$input_tokens" ] && total=$((total + input_tokens))
-        [ -n "$cache_create" ] && total=$((total + cache_create))
-        [ -n "$cache_read" ] && total=$((total + cache_read))
-        # Format as K tokens
-        total_k=$((total / 1000))
-        ctx_part="${DIM}${used_int}% (${total_k}k)${RESET}"
-    fi
-fi
-
 # Model
 model_part=""
 [ -n "$model" ] && model_part="${BOLD}${YELLOW}${model}${RESET}"
@@ -118,6 +98,5 @@ short_cwd="${cwd##*/}"
 # Build output, only adding separators between non-empty sections
 output="${BOLD}${BLUE}${short_cwd}${RESET}${git_part}"
 [ -n "$model_part" ] && output="${output} ${SEP} ${model_part}"
-[ -n "$ctx_part" ]   && output="${output} ${SEP} ${ctx_part}"
 
 echo -e "$output"
