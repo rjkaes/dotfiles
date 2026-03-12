@@ -1,21 +1,12 @@
 ## General best practices
 
-- Run shell scripts through shellcheck.
-
-### SESSION.md
-
-While working, if you come across any bugs, missing features, or other
-oddities about the implementation, structure, or workflow, **add a
-concise description of them to SESSION.md** to defer solving such
-incidental tasks until later. You do not need to fix them all straight
-away unless they block your progress; writing them down is often
-sufficient. **Do not write your accomplishments into this file.**
+- Lint shell scripts with shellcheck before committing.
 
 ## Git workflow
 
 <git-directory-handling>
 If you are already in the target repository's working tree, run plain
-`git` with no directory flags — e.g. `git status`, `git add`, `git commit`.
+`git` with no directory flags, e.g. `git status`, `git add`, `git commit`.
 
 Use `git -C /path/to/repo` **only** when targeting a repository that is
 not the current working directory, as a replacement for
@@ -30,9 +21,9 @@ git.
 When writing commit messages, ensure that you explain any non-obvious
 trade-offs we've made in the design or implementation.
 
-Wrap any prose (but not code) in the commit message to match git commit
-conventions, including the title. Also, follow semantic commit
-conventions for the commit title.
+Word-wrap prose (but not code) in commit messages at 72 characters.
+Keep the title under 50 characters. Follow conventional commit format
+for the title.
 
 When you refer to types or very short code snippets, place them in
 backticks. When you have a full line of code or more than one line of
@@ -40,9 +31,7 @@ code, put them in indented code blocks.
 
 ### Creating commits
 
-<important>
-Do not add Co-Authored-By lines to commit messages.
-</important>
+**IMPORTANT: Never add `Co-Authored-By` or `Co-authored-by` lines to commit messages.**
 
 To commit, follow these steps as **separate tool calls**:
 
@@ -68,20 +57,20 @@ To commit, follow these steps as **separate tool calls**:
 
 | Type | Description |
 |------|-------------|
-| bugfix | fixing a bug |
+| fix | fixing a bug |
 | build | changes that affect system compilation or is related to external dependencies; other changes that don't modify src or test |
 | chore | updating grunt tasks etc; no production code change |
 | ci | changes to CI configuration files and scripts |
 | docs | changes to the documentation |
 | experiment | experimenting outside of an issue/ticket |
-| feature | adding, refactoring or removing a feature |
+| feat | adding, refactoring or removing a feature |
 | hotfix | changing code with a temporary solution and/or without following the usual process (usually because of an emergency) |
 | perf | related to backward-compatible performance improvements |
 | refactor | code/style changes without changing functionality or fixing bugs |
 | style | formatting, missing semi colons, etc; changes that do not affect the meaning of the code |
 | test | adding missing tests, refactoring tests; no production code change |
 
-### Code Intelligence
+## Code Intelligence
 
 Prefer LSP over Grep/Glob/Read for code navigation:
 - `goToDefinition` / `goToImplementation` to jump to source
@@ -100,7 +89,7 @@ strings, config values) where LSP doesn't help.
 After writing or editing code, check LSP diagnostics before
 moving on. Fix any type errors or missing imports immediately.
 
-### Tool efficiency
+## Tool efficiency
 
 <tool-efficiency>
 When multiple independent tool calls are needed (e.g., reading several
@@ -127,7 +116,7 @@ on env var names or conventions.
 
 ## Code style preferences
 
-- Use realistic names in documentation examples.
+- Use realistic names (not `foo`/`bar`) in documentation examples.
 
 Document when you have intentionally omitted code that the reader might
 otherwise expect to be present.
@@ -138,12 +127,19 @@ to add, support, or implement right away.
 CQS (Command Query Separation) by default but carve out exceptions for atomics
 and fluent interfaces.
 
-"Parse, Don't Validate": parse unstructured input into a structured type.  Be
-wary of bare `string`, `int`, etc.  Don't go overboard though.
+"Parse, Don't Validate": parse unstructured input into a structured type. Be
+wary of bare `string`, `int`, etc. No need to newtype a local loop counter,
+but prefer typed wrappers at API and module boundaries.
+
+### Writing style
+
+Do not use emdashes in prose. Use commas, semicolons, colons, or
+parentheses instead. Reserve emdashes for cases where no other
+punctuation can express the idea clearly.
 
 ### Literate Programming
 
-Apply literate programming principles — structure code to read top-down
+Apply literate programming principles: structure code to read top-down
 like a narrative, with comments explaining **why** (business logic, design
 decisions) rather than **what** the code obviously does.
 
@@ -174,7 +170,7 @@ understand the real problem before helping with the proposed approach.
 
 ## Check the Whole Stack
 
-When the project has these layers, check them. Not all projects do —
+When the project has these layers, check them. Not all projects do;
 for a dotfiles repo or a CLI tool, "the whole stack" is different than
 for a web app. Adapt accordingly.
 
@@ -200,7 +196,7 @@ These bias toward caution over speed. For trivial tasks, use judgment.
 
 ### Think before coding
 - State assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them — don't pick silently.
+- If multiple interpretations exist, present them; don't pick silently.
 - If a simpler approach exists, say so. Push back when warranted.
 - Once you choose an approach, commit to it. Don't revisit unless new
   information directly contradicts your reasoning.
@@ -214,7 +210,7 @@ These bias toward caution over speed. For trivial tasks, use judgment.
 ### Surgical changes
 - Don't "improve" adjacent code, comments, or formatting.
 - Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it — don't delete it.
+- If you notice unrelated dead code, mention it; don't delete it.
 - Remove imports/variables/functions that YOUR changes made unused.
 - Every changed line should trace directly to the user's request.
 - Clean up any temporary files or scripts created during iteration.
@@ -241,7 +237,39 @@ These bias toward caution over speed. For trivial tasks, use judgment.
   goal. Run tests, check types, and confirm the change works.
 
 ### Bias toward action
-- Implement changes directly — don't just describe or suggest them
+- Implement changes directly; don't just describe or suggest them
   unless asked for a review or opinion.
 - When told to fix or change something, do it; don't ask "would you
   like me to make this change?" unless genuinely ambiguous.
+- Ask when the *goal* is unclear; act when the goal is clear but the
+  *approach* has options.
+
+## Working journal
+
+Use [bd](https://github.com/steveyegge/beads) memories as a working
+journal throughout each session. Write entries as you go, not at the
+end. **Do not write accomplishments.**
+
+**At the start of every session**, run `bd memories` to load prior
+context. Review the output before starting work.
+
+Prefix each memory's `--key` with a category so `bd memories` output
+stays scannable:
+
+| Prefix | Use for |
+|--------|---------|
+| `defer/` | Bugs, missing features, or oddities you noticed but chose not to fix right now. |
+| `dead-end/` | Approaches you tried that didn't work, and why. |
+| `worked/` | Techniques, tools, or patterns that proved effective for this codebase. |
+| `question/` | Uncertainties you couldn't resolve; things needing user input or deeper investigation. |
+
+Examples:
+```bash
+bd remember "tried lazy-loading wezterm config via \
+  wezterm.plugin but it broke hot-reload" \
+  --key dead-end/wezterm-lazy-load
+
+bd remember "unclear whether conform.nvim trim_whitespace \
+  should apply to markdown files" \
+  --key question/conform-trim-md
+```
