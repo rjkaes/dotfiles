@@ -108,7 +108,7 @@ local palettes = {
 
     -- UI Specifics
     line_nr = '#9E9E9E',      -- gray5
-    pmenu_sel_bg = '#0366D6', -- blue
+    pmenu_sel_bg = '#D4A017', -- gold
     search_fg = '#FFFFFF',    -- white (bg)
     selection = '#D4D4D4',    -- gray3
 
