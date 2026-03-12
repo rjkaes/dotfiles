@@ -38,7 +38,7 @@ local palettes = {
     blue = '#61AFEF',       -- Cool blue for keywords/types
     magenta = '#C678DD',    -- Purple for functions/special
     cyan = '#56B6C2',       -- Teal for constants/preprocessor
-    orange = '#CC7A3E',     -- Red-orange for operators/special chars
+    orange = '#D4884A',     -- Red-orange for operators/special chars
 
     -- Brighter variants for emphasis
     bright_red = '#FF6B6B',
@@ -104,12 +104,12 @@ local palettes = {
     error = '#C7254E',
     warning = '#A56C00',
     info = '#0366D6',
-    hint = '#6B6B6B',
+    hint = '#5C5C5C',
 
     -- UI Specifics
     line_nr = '#9E9E9E',      -- gray5
     pmenu_sel_bg = '#D4A017', -- gold
-    search_fg = '#FFFFFF',    -- white (bg)
+    search_fg = '#1C1C1C',    -- black (fg)
     selection = '#D4D4D4',    -- gray3
 
     -- CodeCompanion
@@ -213,7 +213,7 @@ hi('Search',       { fg = colors.search_fg, bg = colors.yellow })
 hi('IncSearch',    { fg = colors.search_fg, bg = colors.orange })
 hi('CurSearch',    { fg = colors.search_fg, bg = colors.bright_yellow })
 
-hi('MatchParen',   { fg = colors.cyan, bg = colors.gray2, bold = true })
+hi('MatchParen',   { fg = colors.cyan, bg = colors.gray3, bold = true })
 
 hi('VertSplit',    { fg = colors.gray4, bg = colors.bg })
 hi('WinSeparator', { fg = colors.gray4, bg = colors.bg })
@@ -301,7 +301,7 @@ hi('Debug',        { fg = colors.red })
 hi('Underlined',   { fg = colors.blue, underline = true })
 hi('Ignore',       { fg = colors.gray5 })
 hi('Error',        { fg = colors.red, bg = colors.bg, bold = true })
-hi('Todo',         { fg = colors.bg, bg = colors.yellow, bold = true })
+hi('Todo',         { fg = colors.search_fg, bg = colors.yellow, bold = true })
 
 -- =========================================
 -- LSP Highlights
