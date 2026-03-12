@@ -1,0 +1,15 @@
+backups/
+cache/
+context-mode/
+debug/
+file-history/
+history.jsonl
+mcp-needs-auth-cache.json
+paste-cache/
+plans/
+plugins/
+policy-limits.json
+projects/
+security_warnings_state_*.json
+tasks/
+telemetry/
