@@ -10,19 +10,19 @@ cache_read=$(echo "$input" | jq -r '.context_window.current_usage.cache_read_inp
 
 # Detect macOS dark mode
 if defaults read -g AppleInterfaceStyle &>/dev/null; then
-    # Dark mode: brighter colors for dark backgrounds
-    BLUE='\033[38;2;88;166;255m'
-    MAGENTA='\033[38;2;163;131;237m'
-    ORANGE='\033[38;2;219;135;51m'
-    YELLOW='\033[38;2;210;160;50m'
-    DIM='\033[38;2;140;140;140m'
+    # Dark mode: matches wormbytes dark palette
+    BLUE='\033[38;2;97;175;239m'
+    MAGENTA='\033[38;2;198;120;221m'
+    ORANGE='\033[38;2;204;122;62m'
+    YELLOW='\033[38;2;229;192;123m'
+    DIM='\033[38;2;138;138;138m'
 else
     # Light mode: deeper colors for light backgrounds
     BLUE='\033[38;2;3;102;214m'
     MAGENTA='\033[38;2;130;80;223m'
     ORANGE='\033[38;2;194;93;0m'
     YELLOW='\033[38;2;165;108;0m'
-    DIM='\033[38;2;110;110;110m'
+    DIM='\033[38;2;92;92;92m'
 fi
 BOLD='\033[1m'
 RESET='\033[0m'

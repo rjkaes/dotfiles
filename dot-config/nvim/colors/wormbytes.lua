@@ -38,15 +38,16 @@ local palettes = {
     blue = '#61AFEF',       -- Cool blue for keywords/types
     magenta = '#C678DD',    -- Purple for functions/special
     cyan = '#56B6C2',       -- Teal for constants/preprocessor
-    orange = '#D19A66',     -- Orange for operators/special chars
+    orange = '#CC7A3E',     -- Red-orange for operators/special chars
 
     -- Brighter variants for emphasis
     bright_red = '#FF6B6B',
     bright_green = '#A8E6A1',
     bright_yellow = '#FFD93D',
     bright_blue = '#74C0FC',
-    bright_magenta = '#DA70D6',
+    bright_magenta = '#E8A0E8',
     bright_cyan = '#66D9EF',
+    bright_fg = '#FFFFFF',
 
     -- Special colors
     error = '#E06C75',
@@ -58,6 +59,7 @@ local palettes = {
     line_nr = '#767676',      -- gray6
     pmenu_sel_bg = '#E5C07B', -- yellow
     search_fg = '#000000',    -- black (bg)
+    selection = '#2A2D3D',    -- tinted dark blue-gray
 
     -- CodeCompanion
     chat_header = '#E8E8E8',  -- white (fg)
@@ -68,13 +70,13 @@ local palettes = {
     fg = '#1C1C1C',      -- black
 
     -- Grays (Light to Dark)
-    gray1 = '#F5F5F5',
+    gray1 = '#EEEEE8',
     gray2 = '#E8E8E8',
     gray3 = '#D4D4D4',
     gray4 = '#B8B8B8',
     gray5 = '#9E9E9E',
     gray6 = '#858585',
-    gray7 = '#6B6B6B',
+    gray7 = '#5C5C5C',
     gray8 = '#525252',
     gray9 = '#3A3A3A',
     gray10 = '#2A2A2A',
@@ -96,6 +98,7 @@ local palettes = {
     bright_blue = '#005CC5',
     bright_magenta = '#6F42C1',
     bright_cyan = '#0598BC',
+    bright_fg = '#1C1C1C',
 
     -- Special colors
     error = '#C7254E',
@@ -107,6 +110,7 @@ local palettes = {
     line_nr = '#9E9E9E',      -- gray5
     pmenu_sel_bg = '#0366D6', -- blue
     search_fg = '#FFFFFF',    -- white (bg)
+    selection = '#D4D4D4',    -- gray3
 
     -- CodeCompanion
     chat_header = '#1C1C1C',  -- black (fg)
@@ -132,7 +136,7 @@ vim.g.terminal_color_11 = colors.bright_yellow
 vim.g.terminal_color_12 = colors.bright_blue
 vim.g.terminal_color_13 = colors.bright_magenta
 vim.g.terminal_color_14 = colors.bright_cyan
-vim.g.terminal_color_15 = colors.fg
+vim.g.terminal_color_15 = colors.bright_fg
 
 -- Helper function to set highlights
 local function hi(group, opts)
@@ -181,7 +185,7 @@ hi('BaseSubtext',   { fg = colors.gray7 })
 hi('BaseDim',       { fg = colors.gray6 })
 hi('BaseBorder',    { fg = colors.gray4 })
 hi('BasePanel',     { bg = colors.gray1 })
-hi('BaseSelection', { bg = colors.gray3 })
+hi('BaseSelection', { bg = colors.selection })
 
 -- =========================================
 -- Editor Highlights
