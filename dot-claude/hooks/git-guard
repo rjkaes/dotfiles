@@ -1,0 +1,35 @@
+#!/opt/homebrew/bin/dash
+
+# PreToolUse hook for Bash tool calls.
+#
+# For git commands, decides whether to auto-approve or prompt the user.
+# Non-git commands fall through to normal permission rules (no output).
+#
+# Destructive git operations get "ask" so the user sees a confirmation
+# prompt. Safe git operations get "allow" so they auto-approve without
+# any prompt, replacing the old `Bash(git *)` permission rule.
+#
+# Destructive patterns: the `.*` after `git\b` lets global flags like
+# `-C <path>` appear between `git` and the subcommand without bypassing
+# detection.
+#
+# Safe commands like `commit` are matched early so that destructive
+# patterns (e.g. `git.*\bclean\b`) cannot false-positive on words
+# inside a commit message.
+
+exec /opt/homebrew/bin/jq -c '
+  .tool_input.command // empty |
+  if test("^\\s*git\\s") | not then null
+  elif test("git.*\\bcommit\\b")                    then "allow"
+  elif test("git.*\\bpush\\b.*(-f\\b|--force)")     then "ask"
+  elif test("git.*\\breset\\b.*--hard")             then "ask"
+  elif test("git.*\\bclean\\b")                     then "ask"
+  elif test("git.*\\bcheckout\\b\\s+\\.")           then "ask"
+  elif test("git.*\\bcheckout\\b\\s+--\\s")         then "ask"
+  elif test("git.*\\brestore\\b\\s+\\.")            then "ask"
+  elif test("git.*\\bstash\\b\\s+(drop|clear)")     then "ask"
+  elif test("git.*\\bbranch\\b.*\\s-D\\b")          then "ask"
+  else "allow"
+  end // empty |
+  {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:.}}
+'
