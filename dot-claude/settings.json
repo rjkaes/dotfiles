@@ -10,25 +10,21 @@
   "includeGitInstructions": false,
   "permissions": {
     "allow": [
-      "Bash(tree:*)",
-      "Bash(find:*)",
-      "Bash(ls:*)",
-      "Bash(shellcheck:*)",
-      "Bash(which:*)",
-      "Bash(wc:*)",
-      "Bash(file:*)",
-      "Bash(pwd:*)",
-      "Bash(dirname:*)",
-      "Bash(basename:*)",
-      "Bash(trueline *)",
-      "Bash(bd *)",
+      "Bash(*)",
+      "Read(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
+      "mcp__plugin_context-mode_context-mode__ctx_execute_file",
+      "mcp__plugin_context-mode_context-mode__ctx_execute",
       "mcp__plugin_context-mode_context-mode__ctx_fetch_and_index",
       "mcp__plugin_context-mode_context-mode__ctx_search",
       "mcp__plugin_context-mode_context-mode__ctx_stats",
+      "mcp__plugin_trueline-mcp_mcp__trueline_edit",
+      "mcp__plugin_trueline-mcp_mcp__trueline_outline",
       "mcp__plugin_trueline-mcp_mcp__trueline_read",
       "mcp__plugin_trueline-mcp_mcp__trueline_search",
-      "mcp__plugin_trueline-mcp_mcp__trueline_edit",
-      "mcp__plugin_trueline-mcp_mcp__trueline_outline"
+      "mcp__plugin_trueline-mcp_mcp__trueline_stats"
     ],
     "deny": [
       "Bash(rm -rf /*)",
@@ -92,13 +88,15 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "bash $HOME/.claude/statusline-command.sh"
+  },
   "enabledPlugins": {
     "claude-md-management@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,
-    "csharp-lsp@claude-plugins-official": false,
-    "csharp-lsp@local": true,
     "feature-dev@claude-plugins-official": true,
     "hookify@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
@@ -108,8 +106,9 @@
     "security-guidance@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "vtsls@claude-code-lsps": true,
-    "beads@beads-marketplace": true
+    "beads@beads-marketplace": true,
+    "ast-grep@ast-grep-marketplace": true,
+    "csharp-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -123,11 +122,13 @@
         "source": "github",
         "repo": "steveyegge/beads"
       }
+    },
+    "ast-grep-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "ast-grep/agent-skill"
+      }
     }
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "bash $HOME/.claude/statusline-command.sh"
   },
   "effortLevel": "medium",
   "skipDangerousModePermissionPrompt": true
