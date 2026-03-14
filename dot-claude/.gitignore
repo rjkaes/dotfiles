@@ -15,3 +15,4 @@ security_warnings_state_*.json
 tasks/
 telemetry/
 shell-snapshots
+sessions/
