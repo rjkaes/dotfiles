@@ -46,10 +46,10 @@ local wormbytes = {
       '#FAFAF8',  -- black  (bg)
       '#C7254E',  -- red
       '#27761B',  -- green
-      '#A56C00',  -- yellow
+      '#8F5E00',  -- yellow
       '#0366D6',  -- blue
       '#8250DF',  -- magenta
-      '#0884A8',  -- cyan
+      '#07738F',  -- cyan
       '#1C1C1C',  -- white  (fg)
     },
     brights = {
