@@ -8,7 +8,7 @@ mcp-needs-auth-cache.json
 paste-cache/
 plans/
 plugins/*
-!plugins/local/
+!plugins/local-marketplace/
 policy-limits.json
 projects/
 security_warnings_state_*.json

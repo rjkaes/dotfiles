@@ -1,0 +1,14 @@
+{
+  "name": "rjk-local",
+  "owner": {
+    "name": "rjk"
+  },
+  "plugins": [
+    {
+      "name": "csharp-lsp",
+      "source": "./plugins/csharp-lsp",
+      "description": "C# Language Server Protocol support",
+      "version": "1.0.0"
+    }
+  ]
+}
