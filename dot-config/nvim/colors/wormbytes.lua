@@ -1,7 +1,5 @@
 -- Adaptive Theme for Neovim
 
-local M = {}
-
 -- Clear existing highlights
 vim.cmd('highlight clear')
 if vim.fn.exists('syntax_on') then
@@ -57,6 +55,7 @@ local palettes = {
 
     -- UI Specifics
     line_nr = '#767676',      -- gray6
+    pmenu_sel_fg = '#1a1b26', -- bg (dark on yellow)
     pmenu_sel_bg = '#E5C07B', -- yellow
     search_fg = '#000000',    -- black (bg)
     selection = '#2A2D3D',    -- tinted dark blue-gray
@@ -85,11 +84,11 @@ local palettes = {
     -- Meaningful accent colors (adjusted for light background)
     red = '#C7254E',        -- Deep red for errors/deletion
     green = '#27761B',      -- Rich green for strings/addition
-    yellow = '#A56C00',     -- Deep yellow for warnings/numbers
+    yellow = '#8F5E00',     -- Deep yellow for warnings/numbers
     blue = '#0366D6',       -- Strong blue for keywords/types
     magenta = '#8250DF',    -- Purple for functions/special
-    cyan = '#0884A8',       -- Teal for constants/preprocessor
-    orange = '#C25D00',     -- Orange for operators/special chars
+    cyan = '#07738F',       -- Teal for constants/preprocessor
+    orange = '#A74F00',     -- Orange for operators/special chars
 
     -- Brighter variants for emphasis
     bright_red = '#D73A49',
@@ -102,12 +101,13 @@ local palettes = {
 
     -- Special colors
     error = '#C7254E',
-    warning = '#A56C00',
+    warning = '#8F5E00',
     info = '#0366D6',
     hint = '#5C5C5C',
 
     -- UI Specifics
-    line_nr = '#9E9E9E',      -- gray5
+    line_nr = '#858585',      -- gray6 (was gray5, too dim)
+    pmenu_sel_fg = '#1C1C1C', -- fg (dark on gold)
     pmenu_sel_bg = '#D4A017', -- gold
     search_fg = '#1C1C1C',    -- black (fg)
     selection = '#D4D4D4',    -- gray3
@@ -228,7 +228,7 @@ hi('TabLineFill',  { fg = colors.gray6, bg = colors.gray1 })
 hi('TabLineSel',   { fg = colors.fg, bg = colors.gray3, bold = true })
 
 hi('Pmenu',        { fg = colors.fg, bg = colors.gray2 })
-hi('PmenuSel',     { fg = colors.bg, bg = colors.pmenu_sel_bg })
+hi('PmenuSel',     { fg = colors.pmenu_sel_fg, bg = colors.pmenu_sel_bg })
 hi('PmenuSbar',    { bg = colors.gray3 })
 hi('PmenuThumb',   { bg = colors.gray5 })
 
@@ -616,7 +616,7 @@ hi('MarkviewPalette6Fg', { fg = colors.orange })
 hi('MarkviewPalette6Bg', { bg = colors.gray2 })
 hi('MarkviewPalette6Sign', { fg = colors.orange, bg = colors.gray2 })
 
-hi('MarkviewCode', { fg = colors.fg, bg = colors.bg })
+hi('MarkviewCode', { fg = colors.fg, bg = colors.gray1 })
 hi('MarkviewCodeInfo', { fg = colors.gray7, bg = colors.bg })
 hi('MarkviewCodeFg', { fg = colors.fg })
 hi('MarkviewInlineCode', { fg = colors.green, bg = colors.bg })
@@ -660,4 +660,3 @@ hi('WhichKeySeperator', { link = 'BaseDim' })
 hi('WhichKeyFloat',     { link = 'NormalFloat' })
 hi('WhichKeyBorder',    { link = 'FloatBorder' })
 
-return M
