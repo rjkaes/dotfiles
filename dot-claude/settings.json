@@ -128,6 +128,12 @@
         "source": "github",
         "repo": "ast-grep/agent-skill"
       }
+    },
+    "rjk-local": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/rjk/SynologyDrive/Drive/dotfiles/dot-claude/plugins/local-marketplace"
+      }
     }
   },
   "effortLevel": "medium",
