@@ -7,9 +7,11 @@ history.jsonl
 mcp-needs-auth-cache.json
 paste-cache/
 plans/
-plugins/
+plugins/*
+!plugins/local/
 policy-limits.json
 projects/
 security_warnings_state_*.json
 tasks/
 telemetry/
+shell-snapshots

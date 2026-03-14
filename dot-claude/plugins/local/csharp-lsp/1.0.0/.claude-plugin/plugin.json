@@ -1,0 +1,7 @@
+{
+  "name": "csharp-lsp",
+  "description": "C# Language Server Protocol support",
+  "version": "1.0.0",
+  "author": "Claude Code",
+  "license": "MIT"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "csharp",
+  "language": ["csharp"],
+  "filePatterns": ["**/*.cs"],
+  "command": ["csharp-language-server"]
+}
