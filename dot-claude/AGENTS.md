@@ -273,3 +273,8 @@ bd remember "unclear whether conform.nvim trim_whitespace \
   should apply to markdown files" \
   --key question/conform-trim-md
 ```
+
+## Ground Knowledge with Search
+
+Use WebSearch to ground your knowledge if you're unsure about something.
+Don't guess or make something up: search for the truth.
