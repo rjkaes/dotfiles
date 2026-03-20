@@ -250,9 +250,6 @@ Use [bd](https://github.com/steveyegge/beads) memories as a working
 journal throughout each session. Write entries as you go, not at the
 end. **Do not write accomplishments.**
 
-**At the start of every session**, run `bd memories` to load prior
-context. Review the output before starting work.
-
 Prefix each memory's `--key` with a category so `bd memories` output
 stays scannable:
 
