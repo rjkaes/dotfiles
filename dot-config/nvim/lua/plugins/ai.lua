@@ -70,7 +70,7 @@ return {
         },
         config = function()
             require("claude-code").setup({
-                command = "claude --no-chrome --plugin-dir /Users/rjk/src/opensource/trueline-mcp --plugin-dir /Users/rjk/src/opensource/context-mode/main --plugin-dir /Users/rjk/src/opensource/shush",
+                command = "ccc",
                 window = {
                     position = "float",
                     float = {
