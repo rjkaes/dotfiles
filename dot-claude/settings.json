@@ -9,11 +9,14 @@
   },
   "includeGitInstructions": false,
   "permissions": {
+    "defaultMode": "acceptEdits",
     "allow": [
       "Bash(*)",
       "Read(*)",
       "Glob(*)",
       "Grep(*)",
+      "Write(*)",
+      "Edit(*)",
       "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
       "mcp__plugin_context-mode_context-mode__ctx_execute_file",
       "mcp__plugin_context-mode_context-mode__ctx_execute",
@@ -136,6 +139,5 @@
       }
     }
   },
-  "effortLevel": "high",
-  "skipDangerousModePermissionPrompt": true
+  "effortLevel": "medium"
 }
