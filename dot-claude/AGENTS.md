@@ -244,33 +244,6 @@ These bias toward caution over speed. For trivial tasks, use judgment.
 - Ask when the *goal* is unclear; act when the goal is clear but the
   *approach* has options.
 
-## Working journal
-
-Use [bd](https://github.com/steveyegge/beads) memories as a working
-journal throughout each session. Write entries as you go, not at the
-end. **Do not write accomplishments.**
-
-Prefix each memory's `--key` with a category so `bd memories` output
-stays scannable:
-
-| Prefix | Use for |
-|--------|---------|
-| `defer/` | Bugs, missing features, or oddities you noticed but chose not to fix right now. |
-| `dead-end/` | Approaches you tried that didn't work, and why. |
-| `worked/` | Techniques, tools, or patterns that proved effective for this codebase. |
-| `question/` | Uncertainties you couldn't resolve; things needing user input or deeper investigation. |
-
-Examples:
-```bash
-bd remember "tried lazy-loading wezterm config via \
-  wezterm.plugin but it broke hot-reload" \
-  --key dead-end/wezterm-lazy-load
-
-bd remember "unclear whether conform.nvim trim_whitespace \
-  should apply to markdown files" \
-  --key question/conform-trim-md
-```
-
 ## Ground Knowledge with Search
 
 Use WebSearch to ground your knowledge if you're unsure about something.
