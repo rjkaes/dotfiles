@@ -1,6 +1,6 @@
 [core]
     excludesfile=~/.gitignore
-    pager = delta
+    pager = DELTA_FEATURES=$(test "$TERM_BACKGROUND_COLOR" = light && echo wormbytes-light || echo wormbytes-dark) delta
     whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
 
 [init]
@@ -46,9 +46,40 @@
     verbose = true
 
 [delta]
-    detect-dark-light = always
     line-numbers = true
     navigate = true
+
+[delta "wormbytes-dark"]
+    dark = true
+    syntax-theme = none
+    file-style = "#61AFEF" bold                  ; blue
+    file-decoration-style = "#61AFEF" ul         ; blue underline
+    hunk-header-style = "#8A8A8A" italic         ; gray7
+    hunk-header-decoration-style = "#3A3A3A" box ; gray3
+    line-numbers-minus-style = "#E06C75"         ; red
+    line-numbers-plus-style = "#98C379"          ; green
+    line-numbers-zero-style = "#767676"          ; gray6
+    minus-style = syntax "#3A1520"               ; dark red-tinted bg
+    minus-emph-style = syntax "#5C2030"          ; brighter red-tinted bg
+    plus-style = syntax "#1A3020"                ; dark green-tinted bg
+    plus-emph-style = syntax "#2A4A30"           ; brighter green-tinted bg
+    blame-palette = "#1a1b26" "#1C1C1C" "#262626" "#3A3A3A"
+
+[delta "wormbytes-light"]
+    light = true
+    syntax-theme = none
+    file-style = "#0366D6" bold                  ; blue
+    file-decoration-style = "#0366D6" ul         ; blue underline
+    hunk-header-style = "#5C5C5C" italic         ; gray7
+    hunk-header-decoration-style = "#D4D4D4" box ; gray3
+    line-numbers-minus-style = "#C7254E"         ; red
+    line-numbers-plus-style = "#27761B"          ; green
+    line-numbers-zero-style = "#858585"          ; gray6
+    minus-style = syntax "#FFE0E0"               ; light red-tinted bg
+    minus-emph-style = syntax "#FFC0C0"          ; stronger red-tinted bg
+    plus-style = syntax "#DAFFD8"                ; light green-tinted bg
+    plus-emph-style = syntax "#B0F0B0"           ; stronger green-tinted bg
+    blame-palette = "#FAFAF8" "#EEEEE8" "#E8E8E8" "#D4D4D4"
 
 [diff]
     algorithm = histogram
