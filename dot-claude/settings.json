@@ -17,17 +17,13 @@
       "Grep(*)",
       "Write(*)",
       "Edit(*)",
-      "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
-      "mcp__plugin_context-mode_context-mode__ctx_execute_file",
-      "mcp__plugin_context-mode_context-mode__ctx_execute",
-      "mcp__plugin_context-mode_context-mode__ctx_fetch_and_index",
-      "mcp__plugin_context-mode_context-mode__ctx_search",
-      "mcp__plugin_context-mode_context-mode__ctx_stats",
+      "mcp__plugin_context-mode_context-mode__*",
       "mcp__plugin_trueline-mcp_mcp__trueline_edit",
       "mcp__plugin_trueline-mcp_mcp__trueline_outline",
       "mcp__plugin_trueline-mcp_mcp__trueline_read",
       "mcp__plugin_trueline-mcp_mcp__trueline_search",
-      "mcp__plugin_trueline-mcp_mcp__trueline_stats"
+      "mcp__plugin_trueline-mcp_mcp__trueline_stats",
+      "mcp__plugin_trueline-mcp_mcp__trueline_changes"
     ],
     "deny": [
       "Bash(rm -rf /*)",
@@ -57,17 +53,6 @@
         ]
       }
     ],
-    "PreCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bd prime"
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
@@ -75,17 +60,6 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/git-guard"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bd prime"
           }
         ]
       }
@@ -109,7 +83,6 @@
     "security-guidance@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "beads@beads-marketplace": true,
     "ast-grep@ast-grep-marketplace": true,
     "csharp-lsp@claude-plugins-official": true
   },
@@ -118,12 +91,6 @@
       "source": {
         "source": "github",
         "repo": "anthropics/claude-plugins-official"
-      }
-    },
-    "beads-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "steveyegge/beads"
       }
     },
     "ast-grep-marketplace": {
