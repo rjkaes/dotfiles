@@ -69,7 +69,13 @@ return {
             vim.api.nvim_create_autocmd('LspAttach', {
                 group = vim.api.nvim_create_augroup('user_lsp_attach', { clear = true }),
                 callback = function(args)
+                    local client = vim.lsp.get_client_by_id(args.data.client_id)
                     local buf = args.buf
+
+                    -- Disable code lens (references/implementations shown inline)
+                    if client then
+                        client.server_capabilities.codeLensProvider = nil
+                    end
 
                     -- Override built-in LSP mappings to use snacks.picker
                     vim.keymap.set('n', 'gr', function() Snacks.picker.lsp_references() end,
