@@ -58,6 +58,10 @@ local palettes = {
     pmenu_sel_fg = '#1a1b26', -- bg (dark on yellow)
     pmenu_sel_bg = '#E5C07B', -- yellow
     search_fg = '#000000',    -- black (bg)
+    search_bg = '#E5C07B',    -- yellow (same as accent, already light)
+    incsearch_bg = '#D4884A', -- orange
+    cursearch_bg = '#FFD93D',  -- bright yellow
+    todo_bg = '#E5C07B',      -- yellow
     selection = '#2A2D3D',    -- tinted dark blue-gray
 
     -- CodeCompanion
@@ -110,6 +114,10 @@ local palettes = {
     pmenu_sel_fg = '#1C1C1C', -- fg (dark on gold)
     pmenu_sel_bg = '#D4A017', -- gold
     search_fg = '#1C1C1C',    -- black (fg)
+    search_bg = '#F5E6A3',    -- light warm yellow
+    incsearch_bg = '#F5CFA3', -- light warm orange
+    cursearch_bg = '#FFDF5E',  -- vivid yellow
+    todo_bg = '#F5E6A3',      -- light warm yellow
     selection = '#D4D4D4',    -- gray3
 
     -- CodeCompanion
@@ -209,9 +217,9 @@ hi('SignColumn',   { fg = colors.line_nr, bg = colors.bg })
 hi('Visual',       { link = 'BaseSelection' })
 hi('VisualNOS',    { link = 'BaseSelection' })
 
-hi('Search',       { fg = colors.search_fg, bg = colors.yellow })
-hi('IncSearch',    { fg = colors.search_fg, bg = colors.orange })
-hi('CurSearch',    { fg = colors.search_fg, bg = colors.bright_yellow })
+hi('Search',       { fg = colors.search_fg, bg = colors.search_bg })
+hi('IncSearch',    { fg = colors.search_fg, bg = colors.incsearch_bg })
+hi('CurSearch',    { fg = colors.search_fg, bg = colors.cursearch_bg })
 
 hi('MatchParen',   { fg = colors.cyan, bg = colors.gray3, bold = true })
 
@@ -301,7 +309,7 @@ hi('Debug',        { fg = colors.red })
 hi('Underlined',   { fg = colors.blue, underline = true })
 hi('Ignore',       { fg = colors.gray5 })
 hi('Error',        { fg = colors.red, bg = colors.bg, bold = true })
-hi('Todo',         { fg = colors.search_fg, bg = colors.yellow, bold = true })
+hi('Todo',         { fg = colors.search_fg, bg = colors.todo_bg, bold = true })
 
 -- =========================================
 -- LSP Highlights
