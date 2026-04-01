@@ -25,7 +25,7 @@ return {
     { 'jlcrochet/vim-razor', ft = { "razor", "cshtml" } },
     {
         "GustavEikaas/easy-dotnet.nvim",
-        dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', },
+        dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
             require("easy-dotnet").setup()
         end
