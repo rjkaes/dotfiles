@@ -6,11 +6,16 @@
 
 ## Git workflow
 
-Use plain `git` in the current working tree. Use `git -C /path` only for other repos (avoids `cd` side effects). Use `git mv` for tracked files.
+Use plain `git` in the current working tree. Use `git -C /path` only for other
+repos (avoids `cd` side effects). Use `git mv` for tracked files.
 
-Commit messages: conventional commit title (<50 chars), body wrapped at 72 chars (prose only). Explain non-obvious trade-offs. Use backticks for inline types; indented code blocks for multi-line code.
+Commit messages: conventional commit title (<50 chars), body wrapped at 72
+chars (prose only). Explain non-obvious trade-offs. Use backticks for inline
+types; indented code blocks for multi-line code.
 
-**Never add `Co-Authored-By` lines to commit messages.**
+**NEVER include `Co-Authored-By` lines or any other attribution.**
+
+Write commit messages as a human developer would.
 
 Commit as **separate tool calls**: `git add`, then `git commit` with heredoc, then `git status`.
 ```bash
