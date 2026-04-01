@@ -1,5 +1,7 @@
 fish_config theme choose wormbytes
 
+set -gx DELTA_FEATURES "diff-so-fancy"
+
 # Set the default for ripgrep
 set -gx FZF_DEFAULT_COMMAND "rg --files --hidden --follow --glob '!.git/*'"
 set -gx FZF_DEFAULT_OPTS "--no-color"
