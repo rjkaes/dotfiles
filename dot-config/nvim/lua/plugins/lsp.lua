@@ -117,6 +117,9 @@ return {
 
                 lsp_zero.default_keymaps(opts)
 
+                vim.lsp.codelens.enable(false, { bufnr = bufnr })
+                client.server_capabilities.codeLensProvider = nil
+
                 -- Dynamic keymaps
                 vim.keymap.set('n', 'gr', '<cmd>Telescope lsp_references<cr>', { buffer = bufnr, desc = "LSP References" })
                 vim.keymap.set('n', 'gd', '<cmd>Telescope lsp_definitions<cr>', { buffer = bufnr, desc = "LSP Definitions" })
