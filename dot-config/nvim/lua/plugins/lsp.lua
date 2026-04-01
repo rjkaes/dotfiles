@@ -1,161 +1,111 @@
 return {
-    -- LSP Zero (Base)
+    -- Completion
     {
-        'VonHeikemen/lsp-zero.nvim',
-        branch = 'v4.x',
-        lazy = true,
-        config = false,
-    },
-
-    -- Autocompletion
-    {
-        'hrsh7th/nvim-cmp',
-        event = 'InsertEnter',
+        'saghen/blink.cmp',
+        version = '1.*',
         dependencies = {
-            { 'L3MON4D3/LuaSnip' },
-            { 'onsails/lspkind.nvim' },
-            { 'hrsh7th/cmp-nvim-lsp' },
-            { 'hrsh7th/cmp-buffer' },
-            { 'hrsh7th/cmp-path' },
-            { 'hrsh7th/cmp-cmdline' },
-            { 'saadparwaiz1/cmp_luasnip' },
+            { 'L3MON4D3/LuaSnip', version = 'v2.*' },
         },
-        config = function()
-            local cmp = require('cmp')
-            local cmp_format = require('lspkind').cmp_format({
-                mode = 'symbol_text',
-                maxwidth = 50,
-                ellipsis_char = '...',
-                show_labelDetails = true,
+        event = 'InsertEnter',
+        ---@module 'blink.cmp'
+        ---@type blink.cmp.Config
+        opts = {
+            snippets = { preset = 'luasnip' },
+            keymap = {
+                preset = 'none',
+                ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
+                ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+                ['<CR>'] = { 'accept', 'fallback' },
+                ['<C-Space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+                ['<C-e>'] = { 'hide', 'fallback' },
+                ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
+                ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
+            },
+            appearance = {
+                nerd_font_variant = 'mono',
+            },
+            sources = {
+                default = { 'lsp', 'path', 'snippets', 'buffer' },
+            },
+            cmdline = {
+                enabled = true,
+            },
+            fuzzy = { implementation = "prefer_rust_with_warning" },
+        },
+        config = function(_, opts)
+            require('luasnip.loaders.from_lua').load({
+                paths = { vim.fn.stdpath("config") .. "/snippets" }
             })
-
-            require('luasnip.loaders.from_lua').load({ paths = { vim.fn.stdpath("config") .. "/snippets" } })
-
-            cmp.setup({
-                sources = {
-                    { name = 'nvim_lsp' },
-                    { name = 'luasnip' },
-                    { name = 'buffer' },
-                    { name = 'path' },
-                },
-                mapping = cmp.mapping.preset.insert({
-                    ['<CR>'] = cmp.mapping.confirm({ select = false }),
-                    ['<Tab>'] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.select_next_item()
-                        elseif require('luasnip').expand_or_jumpable() then
-                            require('luasnip').expand_or_jump()
-                        else
-                            fallback()
-                        end
-                    end, { "i", "s" }),
-                    ['<S-Tab>'] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.select_prev_item()
-                        elseif require('luasnip').jumpable(-1) then
-                            require('luasnip').jump(-1)
-                        else
-                            fallback()
-                        end
-                    end, { "i", "s" }),
-                    ['<C-Space>'] = cmp.mapping.complete(),
-                }),
-                snippet = {
-                    expand = function(args)
-                        require('luasnip').lsp_expand(args.body)
-                    end,
-                },
-                formatting = {
-                    fields = { 'abbr', 'kind', 'menu' },
-                    format = cmp_format,
-                },
-            })
-            
-            cmp.setup.cmdline('/', {
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = {
-                    { name = 'buffer' }
-                }
-            })
-
-            cmp.setup.cmdline(':', {
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = cmp.config.sources({
-                    {
-                        name = 'cmdline',
-                        option = {
-                            ignore_cmds = { 'Man', '!' }
-                        }
-                    },
-                    { name = 'path' }
-                })
-            })
-
-            -- Make it clearly visible which argument we're at.
-            local marked = vim.api.nvim_get_hl(0, { name = 'PMenu' })
-            vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter', { fg = marked.fg, bg = marked.bg, bold = true })
-        end
+            require('blink.cmp').setup(opts)
+        end,
     },
 
-    -- LSP Config
+    -- Mason (server installer only, no config bridge needed)
+    {
+        'williamboman/mason.nvim',
+        cmd = 'Mason',
+        opts = {},
+    },
+
+    -- Native LSP configuration
     {
         'neovim/nvim-lspconfig',
-        cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
         event = { 'BufReadPre', 'BufNewFile' },
-        dependencies = {
-            { 'hrsh7th/cmp-nvim-lsp' },
-            { 'williamboman/mason.nvim' },
-            { 'williamboman/mason-lspconfig.nvim' },
-        },
         config = function()
-            local lsp_zero = require('lsp-zero')
-
-            -- lsp_attach is where you enable features that only work
-            -- if there is a language server active in the file
-            local lsp_attach = function(client, bufnr)
-                local opts = { buffer = bufnr }
-
-                lsp_zero.default_keymaps(opts)
-
-                vim.lsp.codelens.enable(false, { bufnr = bufnr })
-                client.server_capabilities.codeLensProvider = nil
-
-                -- Dynamic keymaps
-                vim.keymap.set('n', 'gr', '<cmd>Telescope lsp_references<cr>', { buffer = bufnr, desc = "LSP References" })
-                vim.keymap.set('n', 'gd', '<cmd>Telescope lsp_definitions<cr>', { buffer = bufnr, desc = "LSP Definitions" })
-            end
-
-            lsp_zero.extend_lspconfig({
-                sign_text = {
-                    error = '',
-                    warn = '',
-                    hint = '',
-                    info = '',
-                },
-                lsp_attach = lsp_attach,
-                float_border = 'rounded',
-                capabilities = require('cmp_nvim_lsp').default_capabilities(),
+            -- Global LSP defaults
+            vim.lsp.config('*', {
+                capabilities = require('blink.cmp').get_lsp_capabilities(),
             })
 
-            require('mason').setup({})
-            require('mason-lspconfig').setup({
-                automatic_installation = true,
-                ensure_installed = {
-                    'biome',
-                    'eslint',
-                    'lua_ls',
-                    'standardrb',
+            -- Enable servers (configs live in lsp/*.lua)
+            vim.lsp.enable({
+                'biome',
+                'eslint',
+                'lua_ls',
+                'standardrb',
+            })
+
+            -- LSP keymaps (set on attach)
+            vim.api.nvim_create_autocmd('LspAttach', {
+                group = vim.api.nvim_create_augroup('user_lsp_attach', { clear = true }),
+                callback = function(args)
+                    local buf = args.buf
+
+                    -- Override built-in LSP mappings to use snacks.picker
+                    vim.keymap.set('n', 'gr', function() Snacks.picker.lsp_references() end,
+                        { buffer = buf, desc = "LSP References" })
+                    vim.keymap.set('n', 'gd', function() Snacks.picker.lsp_definitions() end,
+                        { buffer = buf, desc = "LSP Definitions" })
+                    vim.keymap.set('n', 'gi', function() Snacks.picker.lsp_implementations() end,
+                        { buffer = buf, desc = "LSP Implementations" })
+                    vim.keymap.set('n', 'gy', function() Snacks.picker.lsp_type_definitions() end,
+                        { buffer = buf, desc = "LSP Type Definitions" })
+                    vim.keymap.set('n', '<leader>ds', function() Snacks.picker.lsp_symbols() end,
+                        { buffer = buf, desc = "Document Symbols" })
+                end,
+            })
+
+            -- Diagnostic configuration (replaces legacy sign_define)
+            vim.diagnostic.config({
+                virtual_text = true,
+                severity_sort = true,
+                signs = {
+                    text = {
+                        [vim.diagnostic.severity.ERROR] = '',
+                        [vim.diagnostic.severity.WARN] = '',
+                        [vim.diagnostic.severity.INFO] = '',
+                        [vim.diagnostic.severity.HINT] = '',
+                    },
                 },
-                handlers = {
-                    function(server_name)
-                        require('lspconfig')[server_name].setup({})
-                    end,
-                }
+                float = {
+                    border = 'rounded',
+                    source = true,
+                },
             })
         end
     },
 
-    -- Additional lua configuration
+    -- Lua development (lazydev provides vim API completions)
     {
         "folke/lazydev.nvim",
         ft = "lua",
@@ -166,29 +116,15 @@ return {
         },
     },
 
+    -- Diagnostics list
     {
         'folke/trouble.nvim',
-        opts = {
-            mode = 'document_diagnostics',
-        },
+        opts = {},
         cmd = 'Trouble',
         keys = {
             { "<leader>x", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>" },
             { "]x",        function() require("trouble").next({ skip_groups = true, jump = true }) end },
             { "[x",        function() require("trouble").previous({ skip_groups = true, jump = true }) end },
         },
-        config = function(_, opts)
-             require("trouble").setup(opts)
-             local signs = {
-                 Error = '',
-                 Warn = '',
-                 Hint = '',
-                 Info = '',
-             }
-             for type, icon in pairs(signs) do
-                 local hl = "DiagnosticSign" .. type
-                 vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-             end
-        end
     },
 }
