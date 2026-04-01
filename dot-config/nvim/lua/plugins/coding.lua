@@ -4,19 +4,7 @@ return {
         'echasnovski/mini.surround',
         version = '*',
         event = 'VeryLazy',
-        opts = {
-            -- Use vim-surround compatible mappings to avoid conflict with leap.nvim's `s`
-            mappings = {
-                add = 'ys',
-                delete = 'ds',
-                find = '',
-                find_left = '',
-                highlight = '',
-                replace = 'cs',
-                suffix_last = '',
-                suffix_next = '',
-            },
-        },
+        opts = {},
     },
 
     -- Tim Pope essentials
