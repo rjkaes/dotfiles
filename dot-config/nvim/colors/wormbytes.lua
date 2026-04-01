@@ -97,10 +97,10 @@ local palettes = {
     -- Brighter variants for emphasis
     bright_red = '#D73A49',
     bright_green = '#22863A',
-    bright_yellow = '#B58900',
+    bright_yellow = '#946D00',
     bright_blue = '#005CC5',
     bright_magenta = '#6F42C1',
-    bright_cyan = '#0598BC',
+    bright_cyan = '#047A9A',
     bright_fg = '#1C1C1C',
 
     -- Special colors
@@ -118,7 +118,7 @@ local palettes = {
     incsearch_bg = '#F5CFA3', -- light warm orange
     cursearch_bg = '#FFDF5E',  -- vivid yellow
     todo_bg = '#F5E6A3',      -- light warm yellow
-    selection = '#D4D4D4',    -- gray3
+    selection = '#C0BDB6',    -- warm mid-gray (darkened for accent contrast)
 
     -- CodeCompanion
     chat_header = '#1C1C1C',  -- black (fg)
@@ -190,7 +190,7 @@ hi('BaseUrl',       { fg = colors.cyan, underline = true })
 hi('BaseBg',        { bg = colors.bg })
 hi('BaseFg',        { fg = colors.fg })
 hi('BaseSubtext',   { fg = colors.gray7 })
-hi('BaseDim',       { fg = colors.gray6 })
+hi('BaseDim',       { fg = colors.gray7 })
 hi('BaseBorder',    { fg = colors.gray4 })
 hi('BasePanel',     { bg = colors.gray1 })
 hi('BaseSelection', { bg = colors.selection })
@@ -232,7 +232,7 @@ hi('WinBar',       { fg = colors.fg, bg = colors.bg })
 hi('WinBarNC',     { fg = colors.gray7, bg = colors.bg })
 
 hi('TabLine',      { fg = colors.gray8, bg = colors.gray1 })
-hi('TabLineFill',  { fg = colors.gray6, bg = colors.gray1 })
+hi('TabLineFill',  { fg = colors.gray7, bg = colors.gray1 })
 hi('TabLineSel',   { fg = colors.fg, bg = colors.gray3, bold = true })
 
 hi('Pmenu',        { fg = colors.fg, bg = colors.gray2 })
