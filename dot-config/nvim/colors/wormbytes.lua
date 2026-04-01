@@ -633,17 +633,6 @@ hi('MarkviewInlineCode', { fg = colors.green, bg = colors.bg })
 hi('GitSignsAdd',    { link = 'BaseSuccess' })
 hi('GitSignsChange', { link = 'BaseWarn' })
 hi('GitSignsDelete', { link = 'BaseError' })
-
--- Telescope
-hi('TelescopeNormal',        { link = 'Normal' })
-hi('TelescopeBorder',        { link = 'FloatBorder' })
-hi('TelescopePromptBorder',  { link = 'FloatBorder' })
-hi('TelescopeResultsBorder', { link = 'FloatBorder' })
-hi('TelescopePreviewBorder', { link = 'FloatBorder' })
-hi('TelescopeSelection',     { link = 'PmenuSel' })
-hi('TelescopeSelectionCaret',{ fg = colors.orange, bg = colors.pmenu_sel_bg })
-hi('TelescopeMatching',      { fg = colors.orange, bold = true })
-
 -- NvimTree
 hi('NvimTreeNormal',          { link = 'Normal' })
 hi('NvimTreeFolderName',      { link = 'Directory' })
