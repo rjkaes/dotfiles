@@ -2,9 +2,6 @@
 vim.opt.pumblend = 0
 vim.opt.winblend = 0
 
--- always enable true colors
-vim.opt.termguicolors = true
-
 -- figure out background color
 local read_file = function(path)
     local file = io.open(path, "r")
@@ -31,7 +28,6 @@ vim.opt.splitkeep = "screen"
 vim.opt.colorcolumn = "+1"
 vim.opt.cursorline = true
 vim.opt.expandtab = true
-vim.opt.hlsearch = false
 vim.opt.list = true
 
 -- make searches case-sensitive only if they contain upper-case characters
@@ -54,7 +50,7 @@ vim.opt.winwidth = 83 -- Give enough space for the gutter
 -- Enable Cursor highlighting
 vim.opt.guicursor:append('a:Cursor/lCursor')
 
-vim.opt.rtp:append { '~/.fzf ' }
+vim.opt.rtp:append { '~/.fzf' }
 vim.opt.tags:append { './.git/tags;' }
 
 -- Turn click-me warnings about swapfiles into discreet little messages

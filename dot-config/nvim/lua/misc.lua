@@ -125,7 +125,13 @@ vim.api.nvim_create_user_command("SynGroup", function()
     print(vim.fn.synIDattr(s, "name") .. " -> " .. vim.fn.synIDattr(vim.fn.synIDtrans(s), "name"))
 end, {})
 
--- Enable virtual text for diagnostics
-vim.diagnostic.config({
-    virtual_text = true,
+-- Auto-clear search highlighting when cursor moves away from matches
+local search_hl_group = vim.api.nvim_create_augroup("auto_hlsearch", { clear = true })
+vim.api.nvim_create_autocmd("CursorMoved", {
+    group = search_hl_group,
+    callback = function()
+        if vim.v.hlsearch == 1 and vim.fn.searchcount({ maxcount = 0 }).exact_match == 0 then
+            vim.schedule(function() vim.cmd.nohlsearch() end)
+        end
+    end,
 })
