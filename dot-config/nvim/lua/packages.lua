@@ -31,4 +31,21 @@ require("lazy").setup({
             task = "📌",
         },
     },
+    performance = {
+        rtp = {
+            disabled_plugins = {
+                "2html_plugin",
+                "getscript",
+                "getscriptPlugin",
+                "logiPat",
+                "matchit",
+                "matchparen",
+                "netrwPlugin",
+                "rrhelper",
+                "tutor",
+                "vimball",
+                "vimballPlugin",
+            },
+        },
+    },
 })
