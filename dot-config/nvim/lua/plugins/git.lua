@@ -6,44 +6,57 @@ return {
     },
     { 'tommcdo/vim-fubitive', cmd = "Gbrowse" },
 
-    -- Make using git nicer
-    { 'NeogitOrg/neogit',     event = "VeryLazy", cmd = "Neogit", branch = "master", config = true },
+    {
+        'NeogitOrg/neogit',
+        event = "VeryLazy",
+        cmd = "Neogit",
+        branch = "master",
+        config = true,
+    },
+
     {
         'lewis6991/gitsigns.nvim',
         event = { "BufReadPost", "BufNewFile", "BufWritePre" },
-        config = function()
-            require('gitsigns').setup({
-                current_line_blame = false,
-                on_attach = function(bufnr)
-                    local function map(mode, lhs, rhs, opts)
-                        opts = vim.tbl_extend('force', { noremap = true, silent = true, buffer = bufnr }, opts or {})
-                        vim.keymap.set(mode, lhs, rhs, opts)
+        opts = {
+            current_line_blame = false,
+            on_attach = function(bufnr)
+                local gs = require('gitsigns')
+                local function map(mode, lhs, rhs, desc)
+                    vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+                end
+
+                -- Navigation
+                map('n', ']c', function()
+                    if vim.wo.diff then
+                        vim.cmd.normal({ ']c', bang = true })
+                    else
+                        gs.next_hunk()
                     end
+                end, "Next hunk")
+                map('n', '[c', function()
+                    if vim.wo.diff then
+                        vim.cmd.normal({ '[c', bang = true })
+                    else
+                        gs.prev_hunk()
+                    end
+                end, "Previous hunk")
 
-                    -- Navigation
-                    map('n', ']c', "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", { expr = true })
-                    map('n', '[c', "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", { expr = true })
+                -- Actions
+                map({ 'n', 'v' }, '<leader>hs', function() gs.stage_hunk() end, "Stage hunk")
+                map({ 'n', 'v' }, '<leader>hr', function() gs.reset_hunk() end, "Reset hunk")
+                map('n', '<leader>hS', function() gs.stage_buffer() end, "Stage buffer")
+                map('n', '<leader>hu', function() gs.undo_stage_hunk() end, "Undo stage hunk")
+                map('n', '<leader>hR', function() gs.reset_buffer() end, "Reset buffer")
+                map('n', '<leader>hp', function() gs.preview_hunk() end, "Preview hunk")
+                map('n', '<leader>hb', function() gs.blame_line({ full = true }) end, "Blame line")
+                map('n', '<leader>htb', function() gs.toggle_current_line_blame() end, "Toggle line blame")
+                map('n', '<leader>hd', function() gs.diffthis() end, "Diff this")
+                map('n', '<leader>hD', function() gs.diffthis('~') end, "Diff this (~)")
+                map('n', '<leader>htd', function() gs.toggle_deleted() end, "Toggle deleted")
 
-                    -- Actions
-                    map('n', '<leader>hs', ':Gitsigns stage_hunk<CR>')
-                    map('v', '<leader>hs', ':Gitsigns stage_hunk<CR>')
-                    map('n', '<leader>hr', ':Gitsigns reset_hunk<CR>')
-                    map('v', '<leader>hr', ':Gitsigns reset_hunk<CR>')
-                    map('n', '<leader>hS', '<cmd>Gitsigns stage_buffer<CR>')
-                    map('n', '<leader>hu', '<cmd>Gitsigns undo_stage_hunk<CR>')
-                    map('n', '<leader>hR', '<cmd>Gitsigns reset_buffer<CR>')
-                    map('n', '<leader>hp', '<cmd>Gitsigns preview_hunk<CR>')
-                    map('n', '<leader>hb', '<cmd>lua require"gitsigns".blame_line{full=true}<CR>')
-                    map('n', '<leader>htb', '<cmd>Gitsigns toggle_current_line_blame<CR>')
-                    map('n', '<leader>hd', '<cmd>Gitsigns diffthis<CR>')
-                    map('n', '<leader>hD', '<cmd>lua require"gitsigns".diffthis("~")<CR>')
-                    map('n', '<leader>htd', '<cmd>Gitsigns toggle_deleted<CR>')
-
-                    -- Text object
-                    map('o', 'ih', ':<C-U>Gitsigns select_hunk<CR>')
-                    map('x', 'ih', ':<C-U>Gitsigns select_hunk<CR>')
-                end,
-            })
-        end
+                -- Text object
+                map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', "Select hunk")
+            end,
+        },
     },
 }
