@@ -33,8 +33,6 @@ vim.keymap.set("t", "<C-v><Esc>", "<Esc>", { desc = "Send Escape" })
 -- Change the default color for the terminal cursor to red
 vim.api.nvim_set_hl(0, "TermCursor", { ctermfg = "red", fg = "red" })
 
-vim.opt.inccommand = "nosplit"
-
 -- Autocommands
 local ft_fugitive_group = vim.api.nvim_create_augroup("ft_fugitive", { clear = true })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {

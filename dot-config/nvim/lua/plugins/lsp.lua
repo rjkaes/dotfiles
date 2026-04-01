@@ -40,11 +40,20 @@ return {
         end,
     },
 
-    -- Mason (server installer only, no config bridge needed)
+    -- Mason (server installer with automatic installation)
+    { 'williamboman/mason.nvim', opts = {} },
     {
-        'williamboman/mason.nvim',
-        cmd = 'Mason',
-        opts = {},
+        'williamboman/mason-lspconfig.nvim',
+        dependencies = { 'williamboman/mason.nvim' },
+        opts = {
+            automatic_installation = true,
+            ensure_installed = {
+                'biome',
+                'eslint',
+                'lua_ls',
+                'standardrb',
+            },
+        },
     },
 
     -- Native LSP configuration
@@ -56,6 +65,12 @@ return {
             vim.lsp.config('*', {
                 capabilities = require('blink.cmp').get_lsp_capabilities(),
             })
+
+            -- Rounded borders on hover and signature help
+            vim.lsp.handlers['textDocument/hover'] =
+                vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+            vim.lsp.handlers['textDocument/signatureHelp'] =
+                vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
 
             -- Enable servers (configs live in lsp/*.lua)
             vim.lsp.enable({
@@ -90,6 +105,11 @@ return {
                         { buffer = buf, desc = "Document Symbols" })
                 end,
             })
+
+            -- Make the active signature parameter visually distinct
+            local pmenu = vim.api.nvim_get_hl(0, { name = 'PMenu' })
+            vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter',
+                { fg = pmenu.fg, bg = pmenu.bg, bold = true })
 
             -- Diagnostic configuration (replaces legacy sign_define)
             vim.diagnostic.config({

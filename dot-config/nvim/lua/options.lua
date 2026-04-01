@@ -34,7 +34,7 @@ vim.opt.list = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
-vim.opt.inccommand = 'split'
+vim.opt.inccommand = 'nosplit'
 
 vim.opt.grepprg = "rg --vimgrep $*"
 vim.opt.listchars = { tab = '▸ ', nbsp = '¬', extends = '»', precedes = '«', trail = '•' }

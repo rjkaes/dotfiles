@@ -17,7 +17,7 @@ return {
     -- Highlight TODO, NOTE, etc.
     {
         'folke/todo-comments.nvim',
-        cmd = { "TodoTrouble", "TodoTelescope" },
+        cmd = { "TodoTrouble" },
         event = { "BufReadPost", "BufNewFile", "BufWritePre" },
         dependencies = {
             'nvim-lua/plenary.nvim'
