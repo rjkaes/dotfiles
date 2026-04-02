@@ -55,7 +55,7 @@ return {
                 map('n', '<leader>htd', function() gs.toggle_deleted() end, "Toggle deleted")
 
                 -- Text object
-                map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', "Select hunk")
+                map({ 'o', 'x' }, 'ih', function() gs.select_hunk() end, "Select hunk")
             end,
         },
     },

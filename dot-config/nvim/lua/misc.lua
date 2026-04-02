@@ -128,7 +128,7 @@ local search_hl_group = vim.api.nvim_create_augroup("auto_hlsearch", { clear = t
 vim.api.nvim_create_autocmd("CursorMoved", {
     group = search_hl_group,
     callback = function()
-        if vim.v.hlsearch == 1 and vim.fn.searchcount({ maxcount = 0 }).exact_match == 0 then
+        if vim.v.hlsearch == 1 and vim.fn.searchcount({ maxcount = 1 }).exact_match == 0 then
             vim.schedule(function() vim.cmd.nohlsearch() end)
         end
     end,

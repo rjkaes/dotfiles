@@ -326,16 +326,6 @@ hi('DiagnosticUnderlineWarn',  { undercurl = true, sp = colors.warning })
 hi('DiagnosticUnderlineInfo',  { undercurl = true, sp = colors.info })
 hi('DiagnosticUnderlineHint',  { undercurl = true, sp = colors.hint })
 
--- Legacy LSP Support
-hi('LspDiagnosticsError', { link = "DiagnosticError" })
-hi('LspDiagnosticsWarning', { link = "DiagnosticWarn" })
-hi('LspDiagnosticsInfo', { link = "DiagnosticInfo" })
-hi('LspDiagnosticsHint', { link = "DiagnosticHint" })
-hi('LspDiagnosticsUnderlineError', { link = "DiagnosticUnderlineError" })
-hi('LspDiagnosticsUnderlineWarning', { link = "DiagnosticUnderlineWarn" })
-hi('LspDiagnosticsUnderlineInfo', { link = "DiagnosticUnderlineInfo" })
-hi('LspDiagnosticsUnderlineHint', { link = "DiagnosticUnderlineHint" })
-
 -- LSP Semantic Tokens
 hi('LspReferenceText',  { bg = colors.gray2 })
 hi('LspReferenceRead',  { bg = colors.gray2 })
@@ -533,14 +523,6 @@ hi('@variable.member.json', { link = 'BaseConstant' })
 -- Plugin Highlights
 -- =========================================
 
--- Cmp
-hi('CmpItemAbbr',           { link = 'BaseFg' })
-hi('CmpItemAbbrDeprecated', { fg = colors.gray6, strikethrough = true })
-hi('CmpItemAbbrMatch',      { fg = colors.blue, bold = true })
-hi('CmpItemAbbrMatchFuzzy', { fg = colors.blue, bold = true })
-hi('CmpItemKind',           { link = 'BaseConstant' })
-hi('CmpItemMenu',           { link = 'BaseDim' })
-
 -- Indent Blankline
 hi('IblIndent', { fg = colors.gray2 })
 hi('IblScope',  { link = 'BaseBorder' })
@@ -556,24 +538,6 @@ hi('MasonHeader',              { fg = colors.bg, bg = colors.blue, bold = true }
 hi('MasonHighlight',           { link = 'BaseKeyword' })
 hi('MasonHighlightBlock',      { fg = colors.bg, bg = colors.blue })
 hi('MasonHighlightBlockBold',  { fg = colors.bg, bg = colors.blue, bold = true })
-
--- Notify
-hi('NotifyERRORBorder', { link = 'BaseError' })
-hi('NotifyWARNBorder',  { link = 'BaseWarn' })
-hi('NotifyINFOBorder',  { link = 'BaseInfo' })
-hi('NotifyDEBUGBorder', { link = 'BaseDim' })
-hi('NotifyTRACEBorder', { link = 'BaseDim' })
-hi('NotifyERRORIcon',   { link = 'BaseError' })
-hi('NotifyWARNIcon',    { link = 'BaseWarn' })
-hi('NotifyINFOIcon',    { link = 'BaseInfo' })
-hi('NotifyDEBUGIcon',   { link = 'BaseDim' })
-hi('NotifyTRACEIcon',   { link = 'BaseDim' })
-hi('NotifyERRORTitle',  { link = 'BaseError' })
-hi('NotifyWARNTitle',   { link = 'BaseWarn' })
-hi('NotifyINFOTitle',   { link = 'BaseInfo' })
-hi('NotifyDEBUGTitle',  { link = 'BaseDim' })
-hi('NotifyTRACETitle',  { link = 'BaseDim' })
-hi('NotifyBackground',  { link = 'NormalFloat' })
 
 -- CodeCompanion
 hi('CodeCompanionChatInfo',       { link = 'BaseInfo' })
@@ -633,22 +597,6 @@ hi('MarkviewInlineCode', { fg = colors.green, bg = colors.bg })
 hi('GitSignsAdd',    { link = 'BaseSuccess' })
 hi('GitSignsChange', { link = 'BaseWarn' })
 hi('GitSignsDelete', { link = 'BaseError' })
--- NvimTree
-hi('NvimTreeNormal',          { link = 'Normal' })
-hi('NvimTreeFolderName',      { link = 'Directory' })
-hi('NvimTreeFolderIcon',      { link = 'Directory' })
-hi('NvimTreeOpenedFolderName',{ fg = colors.blue, bold = true })
-hi('NvimTreeEmptyFolderName', { link = 'BaseSubtext' })
-hi('NvimTreeIndentMarker',    { link = 'BaseBorder' })
-hi('NvimTreeSpecialFile',     { link = 'BaseType' })
-hi('NvimTreeExecFile',        { link = 'BaseSuccess' })
-hi('NvimTreeGitDirty',        { link = 'GitSignsChange' })
-hi('NvimTreeGitStaged',       { link = 'GitSignsAdd' })
-hi('NvimTreeGitMerge',        { link = 'BaseFunction' })
-hi('NvimTreeGitRenamed',      { link = 'BaseFunction' })
-hi('NvimTreeGitNew',          { link = 'GitSignsAdd' })
-hi('NvimTreeGitDeleted',      { link = 'GitSignsDelete' })
-
 -- WhichKey
 hi('WhichKey',          { link = 'BaseConstant' })
 hi('WhichKeyGroup',     { link = 'BaseKeyword' })

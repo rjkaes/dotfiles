@@ -16,7 +16,7 @@ return {
             input = { enabled = true },
         },
         keys = {
-            -- Picker (same bindings as old telescope config)
+            -- Picker
             { "<C-p>",     function() Snacks.picker.files({ hidden = true, ignored = false }) end, desc = "Find Files" },
             { "<leader>j", function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
             { "<leader>f", function() Snacks.picker.grep({ hidden = true }) end,                   desc = "Live Grep" },

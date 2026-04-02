@@ -1,3 +1,5 @@
+local servers = { 'biome', 'eslint', 'lua_ls', 'standardrb' }
+
 return {
     -- Completion
     {
@@ -47,12 +49,7 @@ return {
         dependencies = { 'williamboman/mason.nvim' },
         opts = {
             automatic_installation = true,
-            ensure_installed = {
-                'biome',
-                'eslint',
-                'lua_ls',
-                'standardrb',
-            },
+            ensure_installed = servers,
         },
     },
 
@@ -73,12 +70,7 @@ return {
                 vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
 
             -- Enable servers (configs live in lsp/*.lua)
-            vim.lsp.enable({
-                'biome',
-                'eslint',
-                'lua_ls',
-                'standardrb',
-            })
+            vim.lsp.enable(servers)
 
             -- LSP keymaps (set on attach)
             vim.api.nvim_create_autocmd('LspAttach', {
@@ -105,12 +97,6 @@ return {
                         { buffer = buf, desc = "Document Symbols" })
                 end,
             })
-
-            -- Make the active signature parameter visually distinct
-            local pmenu = vim.api.nvim_get_hl(0, { name = 'PMenu' })
-            vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter',
-                { fg = pmenu.fg, bg = pmenu.bg, bold = true })
-
             -- Diagnostic configuration (replaces legacy sign_define)
             vim.diagnostic.config({
                 virtual_text = true,
