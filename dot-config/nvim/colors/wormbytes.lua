@@ -597,6 +597,11 @@ hi('MarkviewInlineCode', { fg = colors.green, bg = colors.bg })
 hi('GitSignsAdd',    { link = 'BaseSuccess' })
 hi('GitSignsChange', { link = 'BaseWarn' })
 hi('GitSignsDelete', { link = 'BaseError' })
+
+-- Snacks
+hi('SnacksPickerDir',            { fg = colors.gray6 })
+hi('SnacksPickerListCursorLine', { bg = colors.gray3 })
+hi('SnacksPickerMatch',          { fg = colors.blue, bold = true })
 -- WhichKey
 hi('WhichKey',          { link = 'BaseConstant' })
 hi('WhichKeyGroup',     { link = 'BaseKeyword' })
