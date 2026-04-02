@@ -5,7 +5,14 @@ return {
         lazy = false,
         ---@type snacks.Config
         opts = {
-            picker = { enabled = true },
+            picker = {
+                enabled = true,
+                matcher = {
+                    frecency = true,
+                    cwd_bonus = true,
+                },
+                layout = "telescope",
+            },
             explorer = { enabled = true },
             zen = { enabled = true },
             notifier = {
