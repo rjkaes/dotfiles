@@ -40,7 +40,7 @@ local wormbytes = {
     cursor_bg = '#52ad70',
     cursor_fg = '#FFFFFF',
     cursor_border = '#52ad70',
-    selection_bg = '#D4D4D4',
+    selection_bg = '#C0BDB6',
     selection_fg = '#1C1C1C',
     ansi = {
       '#FAFAF8',  -- black  (bg)
@@ -56,10 +56,10 @@ local wormbytes = {
       '#9E9E9E',  -- bright black  (gray5)
       '#D73A49',  -- bright red
       '#22863A',  -- bright green
-      '#B58900',  -- bright yellow
+      '#946D00',  -- bright yellow
       '#005CC5',  -- bright blue
       '#6F42C1',  -- bright magenta
-      '#0598BC',  -- bright cyan
+      '#047A9A',  -- bright cyan
       '#1C1C1C',  -- bright white  (fg)
     },
   },

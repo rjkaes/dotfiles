@@ -1,9 +1,5 @@
 vim.g.cpp_attributes_highlight = 1
 
--- Disable netrw in favour of nvim-tree
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
 -- Tada Configuration for TODO list
 vim.g.tada_todo_style = 'simple'
 vim.g.tada_todo_pane_file = 'TODO'

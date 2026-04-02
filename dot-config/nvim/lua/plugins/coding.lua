@@ -1,23 +1,21 @@
 return {
-    -- Comment stuff in and out with `gc`
+    -- Surround (replaces vim-surround + vim-repeat)
     {
-        'numToStr/Comment.nvim',
-        dependencies = {'JoosepAlviste/nvim-ts-context-commentstring'},
-        opts = {
-            pre_hook = function()
-                return
-                    require("ts_context_commentstring.internal").calculate_commentstring()
-            end
-        }
+        'echasnovski/mini.surround',
+        version = '*',
+        event = 'VeryLazy',
+        opts = {},
     },
 
-    -- A bunch of Tim Pope plugins to make using vim easier
-    {'tpope/vim-eunuch', event = "VeryLazy"}, {'tpope/vim-characterize'},
-    {'tpope/vim-repeat'}, {'tpope/vim-abolish', cmd = "Abolish"},
-    {'tpope/vim-surround'}, {'tpope/vim-unimpaired'}, -- Auto pairs
-    {'windwp/nvim-autopairs', event = "InsertEnter", config = true},
-    {'windwp/nvim-ts-autotag', event = "InsertEnter", config = true},
+    -- Tim Pope essentials
+    { 'tpope/vim-eunuch', event = "VeryLazy" },
+    { 'tpope/vim-characterize' },
+    { 'tpope/vim-abolish', cmd = "Abolish" },
+    { 'tpope/vim-unimpaired' },
 
-    -- { 'cweagans/vim-taskpaper'
-    {'dewyze/vim-tada'}
+    -- Auto pairs
+    { 'windwp/nvim-autopairs', event = "InsertEnter", config = true },
+    { 'windwp/nvim-ts-autotag', event = "InsertEnter", config = true },
+
+    { 'dewyze/vim-tada' },
 }

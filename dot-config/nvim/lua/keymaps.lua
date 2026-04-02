@@ -33,9 +33,6 @@ vim.keymap.set('n', '<leader><tab>', '<c-^>', { silent = true, desc = "Switch to
 -- Quickly write the file
 vim.keymap.set('n', '<leader>w', ':w<cr>', { silent = true, desc = "Save file" })
 
--- Clear the search highlighting (use 8 to pair with `*`)
-vim.keymap.set('n', '<leader>8', ':nohlsearch<cr>', { silent = true, desc = "Clear search highlighting" })
-
 --  Shortcode to reference current file's path in command line mode.
 vim.keymap.set('c', '%%', "expand('%:h').'/'", { expr = true, desc = "Expand to current file's directory" })
 

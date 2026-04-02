@@ -33,8 +33,6 @@ vim.keymap.set("t", "<C-v><Esc>", "<Esc>", { desc = "Send Escape" })
 -- Change the default color for the terminal cursor to red
 vim.api.nvim_set_hl(0, "TermCursor", { ctermfg = "red", fg = "red" })
 
-vim.opt.inccommand = "nosplit"
-
 -- Autocommands
 local ft_fugitive_group = vim.api.nvim_create_augroup("ft_fugitive", { clear = true })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
@@ -115,7 +113,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     pattern = "*",
     group = vimrc_ex_group,
     callback = function()
-        vim.highlight.on_yank()
+        vim.hl.on_yank()
     end,
 })
 
@@ -125,7 +123,13 @@ vim.api.nvim_create_user_command("SynGroup", function()
     print(vim.fn.synIDattr(s, "name") .. " -> " .. vim.fn.synIDattr(vim.fn.synIDtrans(s), "name"))
 end, {})
 
--- Enable virtual text for diagnostics
-vim.diagnostic.config({
-    virtual_text = true,
+-- Auto-clear search highlighting when cursor moves away from matches
+local search_hl_group = vim.api.nvim_create_augroup("auto_hlsearch", { clear = true })
+vim.api.nvim_create_autocmd("CursorMoved", {
+    group = search_hl_group,
+    callback = function()
+        if vim.v.hlsearch == 1 and vim.fn.searchcount({ maxcount = 1 }).exact_match == 0 then
+            vim.schedule(function() vim.cmd.nohlsearch() end)
+        end
+    end,
 })

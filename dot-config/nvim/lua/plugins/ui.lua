@@ -17,14 +17,14 @@ return {
     -- Highlight TODO, NOTE, etc.
     {
         'folke/todo-comments.nvim',
-        cmd = { "TodoTrouble", "TodoTelescope" },
+        cmd = { "TodoTrouble" },
         event = { "BufReadPost", "BufNewFile", "BufWritePre" },
         dependencies = {
             'nvim-lua/plenary.nvim'
         },
         opts = {
             keywords = {
-                nocheckin = { icon = " ", color = "error", alt = { "nc" } },
+                nocheckin = { icon = " ", color = "error", alt = { "nc" } },
             },
             colors = {
                 error = { "DiagnosticError", "ErrorMsg", "#E06C75" },
@@ -46,48 +46,27 @@ return {
         },
     },
 
-    -- Useful status updates for LSP
-    {
-        'j-hui/fidget.nvim',
-        event = "VeryLazy",
-    },
-
     {
         "folke/noice.nvim",
         event = "VeryLazy",
         dependencies = {
             "MunifTanjim/nui.nvim",
-            "rcarriga/nvim-notify",
         },
         opts = {
             lsp = {
-                -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
                 override = {
                     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
                     ["vim.lsp.util.stylize_markdown"] = true,
-                    ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
                 },
             },
-            -- you can enable a preset for easier configuration
             presets = {
-                bottom_search = false,        -- use a classic bottom cmdline for search
-                command_palette = true,       -- position the cmdline and popupmenu together
-                long_message_to_split = true, -- long messages will be sent to a split
-                inc_rename = false,           -- enables an input dialog for inc-rename.nvim
-                lsp_doc_border = false,       -- add a border to hover docs and signature help
+                bottom_search = false,
+                command_palette = true,
+                long_message_to_split = true,
+                inc_rename = false,
+                lsp_doc_border = false,
             },
         }
-    },
-
-    {
-        "rcarriga/nvim-notify",
-        lazy = true,
-        opts = {
-            render = "compact",
-            timeout = 500,
-            fps = 10,
-            stages = "static",
-        },
     },
 
     {
@@ -96,10 +75,8 @@ return {
         init = function()
             vim.g.lualine_laststatus = vim.o.laststatus
             if vim.fn.argc(-1) > 0 then
-                -- set an empty statusline till lualine loads
                 vim.o.statusline = " "
             else
-                -- hide the statusline on the starter page
                 vim.o.laststatus = 0
             end
         end,
@@ -108,7 +85,4 @@ return {
 
     -- Tabular
     { 'godlygeek/tabular', cmd = 'Tabularize', event = "VeryLazy" },
-
-    -- Distraction free writing
-    { 'junegunn/goyo.vim', cmd = 'Goyo',       event = "VeryLazy" },
 }

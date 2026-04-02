@@ -58,6 +58,10 @@ local palettes = {
     pmenu_sel_fg = '#1a1b26', -- bg (dark on yellow)
     pmenu_sel_bg = '#E5C07B', -- yellow
     search_fg = '#000000',    -- black (bg)
+    search_bg = '#E5C07B',    -- yellow (same as accent, already light)
+    incsearch_bg = '#D4884A', -- orange
+    cursearch_bg = '#FFD93D',  -- bright yellow
+    todo_bg = '#E5C07B',      -- yellow
     selection = '#2A2D3D',    -- tinted dark blue-gray
 
     -- CodeCompanion
@@ -93,10 +97,10 @@ local palettes = {
     -- Brighter variants for emphasis
     bright_red = '#D73A49',
     bright_green = '#22863A',
-    bright_yellow = '#B58900',
+    bright_yellow = '#946D00',
     bright_blue = '#005CC5',
     bright_magenta = '#6F42C1',
-    bright_cyan = '#0598BC',
+    bright_cyan = '#047A9A',
     bright_fg = '#1C1C1C',
 
     -- Special colors
@@ -110,7 +114,11 @@ local palettes = {
     pmenu_sel_fg = '#1C1C1C', -- fg (dark on gold)
     pmenu_sel_bg = '#D4A017', -- gold
     search_fg = '#1C1C1C',    -- black (fg)
-    selection = '#D4D4D4',    -- gray3
+    search_bg = '#F5E6A3',    -- light warm yellow
+    incsearch_bg = '#F5CFA3', -- light warm orange
+    cursearch_bg = '#FFDF5E',  -- vivid yellow
+    todo_bg = '#F5E6A3',      -- light warm yellow
+    selection = '#C0BDB6',    -- warm mid-gray (darkened for accent contrast)
 
     -- CodeCompanion
     chat_header = '#1C1C1C',  -- black (fg)
@@ -182,7 +190,7 @@ hi('BaseUrl',       { fg = colors.cyan, underline = true })
 hi('BaseBg',        { bg = colors.bg })
 hi('BaseFg',        { fg = colors.fg })
 hi('BaseSubtext',   { fg = colors.gray7 })
-hi('BaseDim',       { fg = colors.gray6 })
+hi('BaseDim',       { fg = colors.gray7 })
 hi('BaseBorder',    { fg = colors.gray4 })
 hi('BasePanel',     { bg = colors.gray1 })
 hi('BaseSelection', { bg = colors.selection })
@@ -209,9 +217,9 @@ hi('SignColumn',   { fg = colors.line_nr, bg = colors.bg })
 hi('Visual',       { link = 'BaseSelection' })
 hi('VisualNOS',    { link = 'BaseSelection' })
 
-hi('Search',       { fg = colors.search_fg, bg = colors.yellow })
-hi('IncSearch',    { fg = colors.search_fg, bg = colors.orange })
-hi('CurSearch',    { fg = colors.search_fg, bg = colors.bright_yellow })
+hi('Search',       { fg = colors.search_fg, bg = colors.search_bg })
+hi('IncSearch',    { fg = colors.search_fg, bg = colors.incsearch_bg })
+hi('CurSearch',    { fg = colors.search_fg, bg = colors.cursearch_bg })
 
 hi('MatchParen',   { fg = colors.cyan, bg = colors.gray3, bold = true })
 
@@ -224,7 +232,7 @@ hi('WinBar',       { fg = colors.fg, bg = colors.bg })
 hi('WinBarNC',     { fg = colors.gray7, bg = colors.bg })
 
 hi('TabLine',      { fg = colors.gray8, bg = colors.gray1 })
-hi('TabLineFill',  { fg = colors.gray6, bg = colors.gray1 })
+hi('TabLineFill',  { fg = colors.gray7, bg = colors.gray1 })
 hi('TabLineSel',   { fg = colors.fg, bg = colors.gray3, bold = true })
 
 hi('Pmenu',        { fg = colors.fg, bg = colors.gray2 })
@@ -301,7 +309,7 @@ hi('Debug',        { fg = colors.red })
 hi('Underlined',   { fg = colors.blue, underline = true })
 hi('Ignore',       { fg = colors.gray5 })
 hi('Error',        { fg = colors.red, bg = colors.bg, bold = true })
-hi('Todo',         { fg = colors.search_fg, bg = colors.yellow, bold = true })
+hi('Todo',         { fg = colors.search_fg, bg = colors.todo_bg, bold = true })
 
 -- =========================================
 -- LSP Highlights
@@ -317,16 +325,6 @@ hi('DiagnosticUnderlineError', { undercurl = true, sp = colors.error })
 hi('DiagnosticUnderlineWarn',  { undercurl = true, sp = colors.warning })
 hi('DiagnosticUnderlineInfo',  { undercurl = true, sp = colors.info })
 hi('DiagnosticUnderlineHint',  { undercurl = true, sp = colors.hint })
-
--- Legacy LSP Support
-hi('LspDiagnosticsError', { link = "DiagnosticError" })
-hi('LspDiagnosticsWarning', { link = "DiagnosticWarn" })
-hi('LspDiagnosticsInfo', { link = "DiagnosticInfo" })
-hi('LspDiagnosticsHint', { link = "DiagnosticHint" })
-hi('LspDiagnosticsUnderlineError', { link = "DiagnosticUnderlineError" })
-hi('LspDiagnosticsUnderlineWarning', { link = "DiagnosticUnderlineWarn" })
-hi('LspDiagnosticsUnderlineInfo', { link = "DiagnosticUnderlineInfo" })
-hi('LspDiagnosticsUnderlineHint', { link = "DiagnosticUnderlineHint" })
 
 -- LSP Semantic Tokens
 hi('LspReferenceText',  { bg = colors.gray2 })
@@ -525,14 +523,6 @@ hi('@variable.member.json', { link = 'BaseConstant' })
 -- Plugin Highlights
 -- =========================================
 
--- Cmp
-hi('CmpItemAbbr',           { link = 'BaseFg' })
-hi('CmpItemAbbrDeprecated', { fg = colors.gray6, strikethrough = true })
-hi('CmpItemAbbrMatch',      { fg = colors.blue, bold = true })
-hi('CmpItemAbbrMatchFuzzy', { fg = colors.blue, bold = true })
-hi('CmpItemKind',           { link = 'BaseConstant' })
-hi('CmpItemMenu',           { link = 'BaseDim' })
-
 -- Indent Blankline
 hi('IblIndent', { fg = colors.gray2 })
 hi('IblScope',  { link = 'BaseBorder' })
@@ -548,24 +538,6 @@ hi('MasonHeader',              { fg = colors.bg, bg = colors.blue, bold = true }
 hi('MasonHighlight',           { link = 'BaseKeyword' })
 hi('MasonHighlightBlock',      { fg = colors.bg, bg = colors.blue })
 hi('MasonHighlightBlockBold',  { fg = colors.bg, bg = colors.blue, bold = true })
-
--- Notify
-hi('NotifyERRORBorder', { link = 'BaseError' })
-hi('NotifyWARNBorder',  { link = 'BaseWarn' })
-hi('NotifyINFOBorder',  { link = 'BaseInfo' })
-hi('NotifyDEBUGBorder', { link = 'BaseDim' })
-hi('NotifyTRACEBorder', { link = 'BaseDim' })
-hi('NotifyERRORIcon',   { link = 'BaseError' })
-hi('NotifyWARNIcon',    { link = 'BaseWarn' })
-hi('NotifyINFOIcon',    { link = 'BaseInfo' })
-hi('NotifyDEBUGIcon',   { link = 'BaseDim' })
-hi('NotifyTRACEIcon',   { link = 'BaseDim' })
-hi('NotifyERRORTitle',  { link = 'BaseError' })
-hi('NotifyWARNTitle',   { link = 'BaseWarn' })
-hi('NotifyINFOTitle',   { link = 'BaseInfo' })
-hi('NotifyDEBUGTitle',  { link = 'BaseDim' })
-hi('NotifyTRACETitle',  { link = 'BaseDim' })
-hi('NotifyBackground',  { link = 'NormalFloat' })
 
 -- CodeCompanion
 hi('CodeCompanionChatInfo',       { link = 'BaseInfo' })
@@ -625,33 +597,6 @@ hi('MarkviewInlineCode', { fg = colors.green, bg = colors.bg })
 hi('GitSignsAdd',    { link = 'BaseSuccess' })
 hi('GitSignsChange', { link = 'BaseWarn' })
 hi('GitSignsDelete', { link = 'BaseError' })
-
--- Telescope
-hi('TelescopeNormal',        { link = 'Normal' })
-hi('TelescopeBorder',        { link = 'FloatBorder' })
-hi('TelescopePromptBorder',  { link = 'FloatBorder' })
-hi('TelescopeResultsBorder', { link = 'FloatBorder' })
-hi('TelescopePreviewBorder', { link = 'FloatBorder' })
-hi('TelescopeSelection',     { link = 'PmenuSel' })
-hi('TelescopeSelectionCaret',{ fg = colors.orange, bg = colors.pmenu_sel_bg })
-hi('TelescopeMatching',      { fg = colors.orange, bold = true })
-
--- NvimTree
-hi('NvimTreeNormal',          { link = 'Normal' })
-hi('NvimTreeFolderName',      { link = 'Directory' })
-hi('NvimTreeFolderIcon',      { link = 'Directory' })
-hi('NvimTreeOpenedFolderName',{ fg = colors.blue, bold = true })
-hi('NvimTreeEmptyFolderName', { link = 'BaseSubtext' })
-hi('NvimTreeIndentMarker',    { link = 'BaseBorder' })
-hi('NvimTreeSpecialFile',     { link = 'BaseType' })
-hi('NvimTreeExecFile',        { link = 'BaseSuccess' })
-hi('NvimTreeGitDirty',        { link = 'GitSignsChange' })
-hi('NvimTreeGitStaged',       { link = 'GitSignsAdd' })
-hi('NvimTreeGitMerge',        { link = 'BaseFunction' })
-hi('NvimTreeGitRenamed',      { link = 'BaseFunction' })
-hi('NvimTreeGitNew',          { link = 'GitSignsAdd' })
-hi('NvimTreeGitDeleted',      { link = 'GitSignsDelete' })
-
 -- WhichKey
 hi('WhichKey',          { link = 'BaseConstant' })
 hi('WhichKeyGroup',     { link = 'BaseKeyword' })

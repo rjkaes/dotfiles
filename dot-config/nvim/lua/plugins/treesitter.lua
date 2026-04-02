@@ -9,8 +9,11 @@ return {
         },
         config = function()
             require('nvim-treesitter').install {
-                'lua', 'vim', 'ruby', 'c_sharp', 'git_config', 'gitcommit',
-                'git_rebase', 'gitignore', 'gitattributes', 'yaml',
+                'bash', 'c_sharp', 'css', 'git_config', 'gitattributes',
+                'gitcommit', 'git_rebase', 'gitignore', 'html', 'javascript',
+                'json', 'lua', 'markdown', 'markdown_inline', 'python',
+                'regex', 'ruby', 'rust', 'sql', 'tsx', 'typescript', 'vim',
+                'vimdoc', 'yaml',
             }
         end
     },
