@@ -18,7 +18,7 @@ return {
                             default = model,
                         },
                         num_ctx = {
-                            default = 32768,
+                            default = 131072,
                         },
                         temperature = {
                             default = 0.2,
@@ -37,10 +37,7 @@ return {
                 adapters = {
                     http = {
                         qwencoder = function()
-                            return require("codecompanion.adapters").extend("ollama", ai("qwencoder", "qwen3-coder:30b"))
-                        end,
-                        devstral = function()
-                            return require("codecompanion.adapters").extend("ollama", ai("devstral", "devstral-small-2:24b"))
+                            return require("codecompanion.adapters").extend("ollama", ai("qwencoder", "qwen3.5:35b-a3b-coding-nvfp4"))
                         end,
                     },
                 },
@@ -49,10 +46,10 @@ return {
                         adapter = "qwencoder",
                     },
                     inline = {
-                        adapter = "devstral",
+                        adapter = "qwencoder",
                     },
                     agent = {
-                        adapter = "devstral",
+                        adapter = "qwencoder",
                     },
                 },
             })
