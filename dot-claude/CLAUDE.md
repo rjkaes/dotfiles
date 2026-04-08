@@ -114,14 +114,14 @@ Use WebSearch when unsure. Don't guess.
 
 **RULES OF EXECUTION:**
 1. **NO CHATTER:** Do not acknowledge the request, explain the logic, or summarize the script.
-2. **TOOLING:**
-   - Simple string/regex: Execute macOS `perl -pi -e` commands directly in the terminal.
-   - Complex C#/.NET: Write a temporary `.csx` script and execute it via `dotnet-script`.
-   - Complex TS/JS/React: Write a temporary `.ts` script and execute it via `npx tsx`.
+2. **TOOLING (in order of preference):**
+   - **AST-aware (structural):** Use `ast-grep` for any change involving code structure (renaming symbols, changing signatures, rewriting patterns, adding/removing arguments). Use the `ast-grep` skill for rule syntax. Prefer `ast-grep run --pattern` for simple transforms and `ast-grep scan --rule` with a temporary YAML rule for complex ones.
+   - **Simple string/regex:** Use `perl -pi -e` for changes that are purely textual (comments, strings, non-code files).
+   - **Complex scripted:** As a last resort, write a temporary script (`.csx` via `dotnet-script`, `.ts` via `npx tsx`) and execute it.
 3. **AUTONOMOUS WORKFLOW:**
-   - Quietly generate and save the required script to disk (if applicable).
-   - Execute the script using your terminal tool.
+   - Quietly generate and save any required rule/script to disk (if applicable).
+   - Execute using the terminal tool.
    - Verify the changes succeeded (e.g., check `git diff --stat`).
-   - **BUILD VERIFICATION:** Immediately run `dotnet build` (for C#) or `npx tsc --noEmit` / `npm run build` (for TS/React). If the build fails, revert the changes or fix the script autonomously.
-   - DELETE the temporary script immediately after successful execution and a passing build.
-4. **OUTPUT:** Reply with exactly one sentence confirming the number of files modified and that the build passed. Do not output the script contents or terminal commands in the chat.
+   - **BUILD VERIFICATION:** Immediately run the project's build/typecheck command. If the build fails, revert the changes or fix autonomously.
+   - DELETE any temporary rule/script immediately after successful execution and a passing build.
+4. **OUTPUT:** Reply with exactly one sentence confirming the number of files modified and that the build passed. Do not output rule/script contents or terminal commands in the chat.
