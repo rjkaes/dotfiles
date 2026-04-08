@@ -4,7 +4,6 @@ return {
         event = "VeryLazy",
         dependencies = {
             "nvim-lua/plenary.nvim",
-            "nvim-treesitter/nvim-treesitter",
         },
         config = function()
             local ai = function(name, model)
