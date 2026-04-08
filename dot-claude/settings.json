@@ -3,14 +3,12 @@
   "cleanupPeriodDays": 30,
   "env": {
     "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "80",
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_NO_FLICKER": "1",
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "ENABLE_LSP_TOOL": "1"
   },
   "includeGitInstructions": false,
   "permissions": {
-    "defaultMode": "acceptEdits",
     "allow": [
       "Bash(*)",
       "Read(*)",
@@ -40,7 +38,8 @@
       "Read(**/*secret*.yml)",
       "Read(**/*secret*.key)",
       "Read(**/*secret*.pem)"
-    ]
+    ],
+    "defaultMode": "acceptEdits"
   },
   "hooks": {
     "Notification": [
@@ -50,17 +49,6 @@
           {
             "type": "command",
             "command": "terminal-notifier -title 'Claude Code' -message 'Claude Code needs your attention' -sound Ping"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/git-guard"
           }
         ]
       }
@@ -85,7 +73,34 @@
     "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "ast-grep@ast-grep-marketplace": true,
-    "csharp-lsp@claude-plugins-official": true
+    "csharp-lsp@claude-plugins-official": true,
+    "agent-orchestration@claude-code-workflows": true,
+    "agent-teams@claude-code-workflows": true,
+    "application-performance@claude-code-workflows": true,
+    "backend-api-security@claude-code-workflows": true,
+    "backend-development@claude-code-workflows": true,
+    "cicd-automation@claude-code-workflows": true,
+    "code-refactoring@claude-code-workflows": true,
+    "codebase-cleanup@claude-code-workflows": true,
+    "comprehensive-review@claude-code-workflows": true,
+    "conductor@claude-code-workflows": true,
+    "context-management@claude-code-workflows": true,
+    "database-design@claude-code-workflows": true,
+    "database-migrations@claude-code-workflows": true,
+    "debugging-toolkit@claude-code-workflows": true,
+    "developer-essentials@claude-code-workflows": true,
+    "dotnet-contribution@claude-code-workflows": true,
+    "error-debugging@claude-code-workflows": true,
+    "error-diagnostics@claude-code-workflows": true,
+    "frontend-mobile-security@claude-code-workflows": true,
+    "full-stack-orchestration@claude-code-workflows": true,
+    "git-pr-workflows@claude-code-workflows": true,
+    "performance-testing-review@claude-code-workflows": true,
+    "reverse-engineering@claude-code-workflows": true,
+    "security-scanning@claude-code-workflows": true,
+    "shell-scripting@claude-code-workflows": true,
+    "systems-programming@claude-code-workflows": true,
+    "tdd-workflows@claude-code-workflows": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -105,7 +120,14 @@
         "source": "directory",
         "path": "/Users/rjk/SynologyDrive/Drive/dotfiles/dot-claude/plugins/local-marketplace"
       }
+    },
+    "claude-code-workflows": {
+      "source": {
+        "source": "github",
+        "repo": "wshobson/agents"
+      }
     }
   },
-  "effortLevel": "medium"
+  "effortLevel": "medium",
+  "autoDreamEnabled": true
 }
