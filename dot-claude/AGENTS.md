@@ -1,8 +1,5 @@
 # Agent-Specific Instructions
 
-These supplement CLAUDE.md (which is always injected). Do not duplicate
-rules already covered there or in the system prompt.
-
 ## Scope
 
 <critical>

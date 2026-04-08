@@ -1,8 +1,14 @@
 ## General best practices
 
+- Use sub-agents for larger or specialized work to keep main agent context
+  clean.
 - Lint shell scripts with shellcheck before committing.
+- Use `tmp/` (project-local) for intermediate files and comparison
+  artifacts, not `/tmp`. This keeps outputs discoverable and
+  project-scoped, and avoids requesting permissions for `/tmp`.
 - Do not re-read files you have already read.
 - Test your code before declaring done.
+- Use `bc -l` for calculations.
 
 ## Git workflow
 
@@ -60,32 +66,62 @@ Never speculate about code you have not opened. Read referenced files BEFORE ans
 
 Structure code top-down like a narrative. Comments explain **why** (business logic, design decisions), not **what**. Place comments before the relevant block. Use section headers for multi-phase logic. Prefer documented inline code over excessive decomposition when logic is sequential. Focus on complex algorithms, business logic, and integration points.
 
-## Common failure modes
+## Critical Behavioral Patterns
 
-**XY Problem:** When a request seems oddly narrow or convoluted, ask "What are you trying to accomplish overall?" before helping with the proposed approach.
+### 1. Problem Diagnosis & Strategy (The "Before" Phase)
+* **XY Problem Mitigation:** Identify the high-level goal (X) before solving a narrow request (Y).
+    * **Red Flags:** Roundabout methods, focus on implementation over motivation (e.g., "how to get last 3 chars" vs. "get file extension"), or resistance to context.
+    * **Action:** Pause implementation. Explicitly state your understanding of "X." Ask: "What is the high-level goal?" and "Why this specific approach?"
+* **Decision Logic:**
+    * **State Assumptions:** Briefly list environmental or technical assumptions before writing code.
+    * **Architecture First:** If multiple paths exist, present brief trade-offs (e.g., Performance vs. Readability). Wait for a "Go" signal if the impact is significant.
+    * **Commitment:** Once an approach is agreed upon, do not pivot unless a technical blocker is found or constraints change.
 
-**Check the Whole Stack:** After implementing a feature, verify all relevant layers (DB, backend, API types, tests). Adapt "the stack" to the project type.
+### 2. Engineering Integrity (The Implementation Phase)
+* **Atomic Planning:** For any task requiring >10 lines of code, provide a numbered plan. Each step must include a **Verification Check** (e.g., "Step 1: Update schema. Check: Run migrations and verify table X").
+* **General Solutions vs. Test-Gaming:**
+    * **Logic over Samples:** Logic must work for all valid inputs, not just provided test cases.
+    * **Anti-Hardcoding:** Never hard-code values to pass specific tests. If a test seems flawed, flag it immediately.
+    * **Edge-Case First:** Proactively account for nulls, empty states, and out-of-bounds inputs without being asked.
+* **Idiomatic Consistency:** Prioritize existing patterns and style in the current repository over generic "best practices" or default LLM styles.
+* **Pivot Protocol:** If a plan is found to be flawed mid-execution, **stop**. Explain the blocker and propose a revised "Step 1."
 
-**Look Deeper:** On code review or bug investigation, do a deep first pass. Verify findings against surrounding code before reporting. "Look deeper" from the user means the first pass was insufficient.
+### 3. Verification & Deep Review (The "After" Phase)
+* **Full-Stack Verification:** After implementation, verify all relevant layers: Database schemas, backend logic, API types, and tests. Adapt "the stack" to the specific project.
+* **Deep-Pass Investigation:**
+    * **Trigger:** Bug reports or code reviews.
+    * **Action:** Perform a comprehensive first pass. Verify findings against surrounding code and dependencies before reporting.
+    * **"Look Deeper":** If the user says "look deeper," assume the first pass only addressed symptoms. Re-examine the root cause.
+* **Verification Loop:** Before claiming a task is "done," dry-run the solution against the original "X" goal. Ensure no regressions were introduced to the broader system.
 
-## Behavioral guidelines
+### 4. Communication & Collaboration Standards
+* **No Fluff:** Eliminate conversational filler ("Certainly!", "I'd be happy to help"). Start with the answer or the code.
+* **Direct Pushback:** If a user request is technically unsound, insecure, or adds unnecessary complexity, explain why and suggest a simpler alternative. Do not be a "yes-man."
+* **Context Preservation:** If a conversation spans multiple sessions, summarize the current state of the "Work in Progress" before ending, or when starting a new major sub-task.
 
-### Think before coding
-- State assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them; don't pick silently.
-- Push back if a simpler approach exists.
-- Once committed to an approach, don't revisit without new contradicting information.
-
-### General solutions over test-gaming
-- Logic must work for all valid inputs, not just test cases.
-- Never hard-code values to pass specific tests.
-- If a test seems wrong, flag it.
-
-### Goal-driven execution
-- Transform tasks into verifiable goals before implementing.
-- For multi-step tasks, state a brief plan with verification checks.
-- Verify results against the original goal before claiming done.
+### 5. Maintenance & Technical Debt
+* **Documentation:** Every new function or complex logic block must include concise docstrings/comments explaining *why*, not just *what*.
+* **Refactor-as-you-go:** If you encounter messy code in the immediate vicinity of your task, suggest a quick refactor. Do not contribute to technical debt.
+* **Minimal Dependencies:** Prefer standard library solutions over adding new external packages unless the complexity tradeoff is massive.
 
 ## Ground Knowledge with Search
 
 Use WebSearch when unsure. Don't guess.
+
+# BULK REFACTORING PROTOCOL (STRICT TOKEN CONSERVATION)
+
+**TRIGGER:** If a change spans >3 files, requires repetitive string manipulation, or involves sweeping structural changes, YOU MUST NOT REWRITE FILE CONTENTS IN CHAT.
+
+**RULES OF EXECUTION:**
+1. **NO CHATTER:** Do not acknowledge the request, explain the logic, or summarize the script.
+2. **TOOLING:**
+   - Simple string/regex: Execute macOS `perl -pi -e` commands directly in the terminal.
+   - Complex C#/.NET: Write a temporary `.csx` script and execute it via `dotnet-script`.
+   - Complex TS/JS/React: Write a temporary `.ts` script and execute it via `npx tsx`.
+3. **AUTONOMOUS WORKFLOW:**
+   - Quietly generate and save the required script to disk (if applicable).
+   - Execute the script using your terminal tool.
+   - Verify the changes succeeded (e.g., check `git diff --stat`).
+   - **BUILD VERIFICATION:** Immediately run `dotnet build` (for C#) or `npx tsc --noEmit` / `npm run build` (for TS/React). If the build fails, revert the changes or fix the script autonomously.
+   - DELETE the temporary script immediately after successful execution and a passing build.
+4. **OUTPUT:** Reply with exactly one sentence confirming the number of files modified and that the build passed. Do not output the script contents or terminal commands in the chat.
