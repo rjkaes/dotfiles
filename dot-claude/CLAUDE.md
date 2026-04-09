@@ -1,5 +1,6 @@
 ## General best practices
 
+- Use trueline MCP tools.
 - Use sub-agents for larger or specialized work to keep main agent context
   clean.
 - Lint shell scripts with shellcheck before committing.
@@ -45,7 +46,7 @@ Prefer LSP over Grep/Glob/Read for code navigation:
 - `workspaceSymbol` / `documentSymbol` / `hover`
 - `incomingCalls` / `outgoingCalls`
 
-Before renaming or changing a signature, use `findReferences` first. Use Grep/Glob only for text/pattern searches where LSP doesn't help. Check LSP diagnostics after writing code; fix type errors and missing imports immediately.
+Before renaming or changing a signature, use `findReferences` first. Use `ast-grep` for structural pattern searches (matching code by AST shape) where LSP's fixed queries don't apply and Grep's text matching is too loose. Use Grep/Glob only for text/pattern searches where neither LSP nor `ast-grep` helps. LSP diagnostics may lag behind edits. After writing code, run the project's build/typecheck command (not LSP diagnostics) as the source of truth for errors. Use LSP diagnostics only as early hints, not for final verification.
 
 ## Debugging
 
