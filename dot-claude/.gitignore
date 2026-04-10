@@ -16,3 +16,4 @@ tasks/
 telemetry/
 shell-snapshots
 sessions/
+.caveman-active

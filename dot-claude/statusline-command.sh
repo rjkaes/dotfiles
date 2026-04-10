@@ -11,6 +11,7 @@ if defaults read -g AppleInterfaceStyle &>/dev/null; then
     MAGENTA='\033[38;2;198;120;221m'
     ORANGE='\033[38;2;204;122;62m'
     YELLOW='\033[38;2;229;192;123m'
+    GREEN='\033[38;2;152;195;121m'
     DIM='\033[38;2;138;138;138m'
 else
     # Light mode: deeper colors for light backgrounds
@@ -18,6 +19,7 @@ else
     MAGENTA='\033[38;2;130;80;223m'
     ORANGE='\033[38;2;194;93;0m'
     YELLOW='\033[38;2;165;108;0m'
+    GREEN='\033[38;2;55;135;45m'
     DIM='\033[38;2;92;92;92m'
 fi
 BOLD='\033[1m'
@@ -87,6 +89,19 @@ if git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
     [ -n "$parts" ] && git_part="${git_part} ${BOLD}${ORANGE}[${parts}]${RESET}"
 fi
 
+# Caveman mode badge
+caveman_part=""
+caveman_flag="$HOME/.claude/.caveman-active"
+if [ -f "$caveman_flag" ]; then
+    caveman_mode=$(cat "$caveman_flag" 2>/dev/null)
+    if [ "$caveman_mode" = "full" ] || [ -z "$caveman_mode" ]; then
+        caveman_part="🦣"
+    else
+        caveman_suffix=$(echo "$caveman_mode" | tr '[:lower:]' '[:upper:]')
+        caveman_part="🦣 ${GREEN}${caveman_suffix}${RESET}"
+    fi
+fi
+
 # Model
 model_part=""
 [ -n "$model" ] && model_part="${BOLD}${YELLOW}${model}${RESET}"
@@ -98,5 +113,6 @@ short_cwd="${cwd##*/}"
 # Build output, only adding separators between non-empty sections
 output="${BOLD}${BLUE}${short_cwd}${RESET}${git_part}"
 [ -n "$model_part" ] && output="${output} ${SEP} ${model_part}"
+[ -n "$caveman_part" ] && output="${output} ${SEP} ${caveman_part}"
 
 echo -e "$output"
