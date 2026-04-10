@@ -1,10 +1,5 @@
 ## General best practices
 
-- Use trueline MCP tools instead of built-in Read/Edit. On first edit in a
-  session, ToolSearch `+trueline read edit search` to load schemas. Use
-  `trueline_outline` for structure, `trueline_search` to get refs, then
-  `trueline_edit` to apply changes. A PreToolUse hook blocks built-in Edit
-  and redirects to trueline, so never attempt Edit directly.
 - Use sub-agents for larger or specialized work to keep main agent context
   clean.
 - Lint shell scripts with shellcheck before committing.
@@ -12,6 +7,11 @@
   artifacts, not `/tmp`. This keeps outputs discoverable and
   project-scoped, and avoids requesting permissions for `/tmp`.
 - Do not re-read files you have already read.
+- When a plugin hook (claude-mem, context-mode) intercepts a Read and
+  returns partial content with hints (e.g. `get_observations([IDs])`,
+  `smart_outline`, `smart_unfold`), follow the hints. Do not retry Read
+  with offset (gets "unchanged" cache) or fall back to Bash `cat`. Use
+  the suggested tool. `cat` is a last resort only if those tools fail.
 - Test your code before declaring done.
 - Use `bc -l` for calculations.
 
