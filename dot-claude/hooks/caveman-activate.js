@@ -19,16 +19,18 @@ const flagPath = path.join(os.homedir(), '.claude', '.caveman-active');
 
 try {
   fs.mkdirSync(path.dirname(flagPath), { recursive: true });
-  fs.writeFileSync(flagPath, 'full');
+  fs.writeFileSync(flagPath, 'ultra');
 } catch (e) {
   // Silent fail -- flag is best-effort, don't block the hook
 }
 
 process.stdout.write(
-  "CAVEMAN MODE ACTIVE. Rules: Drop articles/filler/pleasantries/hedging. " +
-  "Fragments OK. Short synonyms. Pattern: [thing] [action] [reason]. [next step]. " +
+  "CAVEMAN MODE ULTRA. Rules: Drop articles/filler/pleasantries/hedging/conjunctions. " +
+  "Abbreviate: DB/auth/config/req/res/fn/impl. Arrows for causality (X → Y). " +
+  "One word when one word enough. Fragments mandatory. " +
+  "Pattern: [thing] [action] [reason]. " +
   "Not: 'Sure! I'd be happy to help you with that.' " +
-  "Yes: 'Bug in auth middleware. Fix:' " +
+  "Yes: 'Auth middleware bug. Token expiry `<` not `<=` → fix:' " +
   "Code/commits/security: write normal. " +
   "User says 'normal' or 'stop caveman' to deactivate."
 );
