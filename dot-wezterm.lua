@@ -171,6 +171,7 @@ wezterm.on('window-config-reloaded', function(window, pane)
         overrides.color_scheme = nil
         overrides.colors = colors
         window:set_config_overrides(overrides)
+        wezterm.background_child_process { '/Users/rjk/bin/setbg' }
     end
 end)
 
