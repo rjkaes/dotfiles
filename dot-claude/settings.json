@@ -3,7 +3,6 @@
   "cleanupPeriodDays": 30,
   "env": {
     "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "80",
-    "CLAUDE_CODE_NO_FLICKER": "1",
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "ENABLE_LSP_TOOL": "1"
   },
@@ -17,12 +16,13 @@
       "Write(*)",
       "Edit(*)",
       "mcp__plugin_context-mode_context-mode__*",
+      "mcp__plugin_trueline-mcp_mcp__trueline_search",
+      "mcp__plugin_trueline-mcp_mcp__trueline_read",
       "mcp__plugin_trueline-mcp_mcp__trueline_edit",
       "mcp__plugin_trueline-mcp_mcp__trueline_outline",
-      "mcp__plugin_trueline-mcp_mcp__trueline_read",
-      "mcp__plugin_trueline-mcp_mcp__trueline_search",
-      "mcp__plugin_trueline-mcp_mcp__trueline_stats",
-      "mcp__plugin_trueline-mcp_mcp__trueline_changes"
+      "mcp__plugin_trueline-mcp_mcp__trueline_verify",
+      "mcp__plugin_trueline-mcp_mcp__trueline_changes",
+      "mcp__plugin_claude-mem_mcp-*"
     ],
     "deny": [
       "Bash(rm -rf /*)",
@@ -53,30 +53,8 @@
         ]
       }
     ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node /Users/rjk/.claude/hooks/caveman-activate.js",
-            "timeout": 5,
-            "statusMessage": "Loading caveman mode..."
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node /Users/rjk/.claude/hooks/caveman-mode-tracker.js",
-            "timeout": 5,
-            "statusMessage": "Tracking caveman mode..."
-          }
-        ]
-      }
-    ]
+    "SessionStart": [],
+    "UserPromptSubmit": []
   },
   "statusLine": {
     "type": "command",
