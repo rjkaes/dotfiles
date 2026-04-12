@@ -1,3 +1,7 @@
+[user]
+    name = Robert James Kaes
+    email = robert@kaes.ca
+
 [core]
     excludesfile=~/.gitignore
     pager = DELTA_FEATURES=$(test "$TERM_BACKGROUND_COLOR" = light && echo wormbytes-light || echo wormbytes-dark) delta
