@@ -95,6 +95,7 @@ Structure code top-down like a narrative. Comments explain **why** (business log
     * **Edge-Case First:** Proactively account for nulls, empty states, and out-of-bounds inputs without being asked.
 * **Idiomatic Consistency:** Prioritize existing patterns and style in the current repository over generic "best practices" or default LLM styles.
 * **Pivot Protocol:** If a plan is found to be flawed mid-execution, **stop**. Explain the blocker and propose a revised "Step 1."
+* **Simplicity Gut-Check:** If you write 200 lines and it could be 50, rewrite it. Ask: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
 
 ### 3. Verification & Deep Review (The "After" Phase)
 * **Full-Stack Verification:** After implementation, verify all relevant layers: Database schemas, backend logic, API types, and tests. Adapt "the stack" to the specific project.
@@ -102,7 +103,7 @@ Structure code top-down like a narrative. Comments explain **why** (business log
     * **Trigger:** Bug reports or code reviews.
     * **Action:** Perform a comprehensive first pass. Verify findings against surrounding code and dependencies before reporting.
     * **"Look Deeper":** If the user says "look deeper," assume the first pass only addressed symptoms. Re-examine the root cause.
-* **Verification Loop:** Before claiming a task is "done," dry-run the solution against the original "X" goal. Ensure no regressions were introduced to the broader system.
+* **Verification Loop:** Before claiming a task is "done," dry-run the solution against the original "X" goal. Ensure no regressions were introduced to the broader system. Every changed line should trace to the original request.
 
 ### 4. Communication & Collaboration Standards
 * **No Fluff:** Eliminate conversational filler ("Certainly!", "I'd be happy to help"). Start with the answer or the code.
@@ -111,7 +112,7 @@ Structure code top-down like a narrative. Comments explain **why** (business log
 
 ### 5. Maintenance & Technical Debt
 * **Documentation:** Every new function or complex logic block must include concise docstrings/comments explaining *why*, not just *what*.
-* **Refactor-as-you-go:** If you encounter messy code in the immediate vicinity of your task, suggest a quick refactor. Do not contribute to technical debt.
+* **Surgical Changes:** Remove imports/variables/functions YOUR changes made unused. Pre-existing dead code: mention it, don't delete unless asked. Every changed line should trace directly to the user's request.
 * **Minimal Dependencies:** Prefer standard library solutions over adding new external packages unless the complexity tradeoff is massive.
 
 ## Ground Knowledge with Search
