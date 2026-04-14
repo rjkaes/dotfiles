@@ -12,6 +12,10 @@
   artifacts, not `/tmp`. This keeps outputs discoverable and
   project-scoped, and avoids requesting permissions for `/tmp`.
 - Do not re-read files you have already read.
+- When $CMEM observations appear in session context, actively use claude-mem
+  tools (`mem-search`, `get_observations`, `smart-explore`, `timeline`) to
+  pull prior session context. Check at session start for relevant history
+  and mid-task when hitting familiar territory.
 - When a plugin hook (claude-mem, context-mode) intercepts a Read and
   returns partial content with hints (e.g. `get_observations([IDs])`,
   `smart_outline`, `smart_unfold`), follow the hints. Do not retry Read
