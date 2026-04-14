@@ -85,9 +85,9 @@
     "agent-teams@claude-code-workflows": false,
     "application-performance@claude-code-workflows": false,
     "backend-api-security@claude-code-workflows": false,
-    "backend-development@claude-code-workflows": false,
+    "backend-development@claude-code-workflows": true,
     "cicd-automation@claude-code-workflows": false,
-    "code-refactoring@claude-code-workflows": false,
+    "code-refactoring@claude-code-workflows": true,
     "codebase-cleanup@claude-code-workflows": false,
     "comprehensive-review@claude-code-workflows": false,
     "conductor@claude-code-workflows": false,
@@ -95,8 +95,8 @@
     "database-design@claude-code-workflows": false,
     "database-migrations@claude-code-workflows": false,
     "debugging-toolkit@claude-code-workflows": true,
-    "developer-essentials@claude-code-workflows": false,
-    "dotnet-contribution@claude-code-workflows": false,
+    "developer-essentials@claude-code-workflows": true,
+    "dotnet-contribution@claude-code-workflows": true,
     "error-debugging@claude-code-workflows": false,
     "error-diagnostics@claude-code-workflows": false,
     "frontend-mobile-security@claude-code-workflows": false,
@@ -109,7 +109,8 @@
     "systems-programming@claude-code-workflows": true,
     "tdd-workflows@claude-code-workflows": false,
     "caveman@caveman": true,
-    "claude-mem@thedotmack": true
+    "claude-mem@thedotmack": true,
+    "javascript-typescript@claude-code-workflows": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
