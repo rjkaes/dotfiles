@@ -132,6 +132,17 @@ Use WebSearch when unsure. Don't guess.
 
 Spawn agents with `model: "sonnet"` by default. Use `model: "opus"` explicitly when the task requires: complex architectural design spanning multiple systems, deep multi-file debugging across unfamiliar code, or nuanced code review that weighs design trade-offs. Otherwise keep the default. If the sub-agent definition pins a model, respect it.
 
+## Agent routing policy
+
+Claude Code does not auto-route tasks to local agents in `~/.claude/agents/`. The Task tool defaults to `general-purpose` unless `subagent_type` is explicit. Route deliberately:
+
+- Plan-driven feature implementation → `feature-engineer`
+- Executing a refactoring plan (zero behavioral change) → `refactor-engineer`
+- Schema design, migrations, query/index optimization → `database-architect`
+- ADRs, API docs, runbooks, READMEs, inline docs → `technical-writer`
+
+When dispatching Task, pass `subagent_type` matching above. If no specialized agent fits, use `general-purpose`. Orchestrator skills (e.g. `superpowers:executing-plans`) must forward `subagent_type` per task kind, not leave it blank.
+
 # BULK REFACTORING PROTOCOL (STRICT TOKEN CONSERVATION)
 
 **TRIGGER:** If a change spans >3 files, requires repetitive string manipulation, or involves sweeping structural changes, YOU MUST NOT REWRITE FILE CONTENTS IN CHAT.
