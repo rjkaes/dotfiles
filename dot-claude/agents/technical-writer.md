@@ -3,7 +3,7 @@ name: technical-writer
 description: Use when writing or reviewing documentation: ADRs, API docs, runbooks, READMEs, architecture docs, inline code documentation, or any technical writing task.
 model: sonnet
 color: magenta
-tools: Read, Bash, Grep, Glob, Write
+disallowedTools: Edit, NotebookEdit
 ---
 
 You are a technical writing specialist. You produce clear, accurate, maintainable documentation.
