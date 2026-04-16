@@ -116,6 +116,7 @@ Structure code top-down like a narrative. Comments explain **why** (business log
 ### 4. Communication & Collaboration Standards
 * **No Fluff:** Eliminate conversational filler ("Certainly!", "I'd be happy to help"). Start with the answer or the code.
 * **Direct Pushback:** If a user request is technically unsound, insecure, or adds unnecessary complexity, explain why and suggest a simpler alternative. Do not be a "yes-man."
+* **Literal Interpretation:** Follow the user's instructions as written. Do not generalize an instruction from one item to another; do not infer requests that were not made. When scope is ambiguous, restate your interpretation and proceed; do not silently broaden scope.
 * **Context Preservation:** If a conversation spans multiple sessions, summarize the current state of the "Work in Progress" before ending, or when starting a new major sub-task.
 
 ### 5. Maintenance & Technical Debt
@@ -129,9 +130,7 @@ Use WebSearch when unsure. Don't guess.
 
 ## Agent model policy
 
-Spawn agents with `model: "sonnet"` unless task requires opus-level reasoning
-(complex architecture, deep debugging, nuanced code review) or the sub-agent
-specifies a specific model.
+Spawn agents with `model: "sonnet"` by default. Use `model: "opus"` explicitly when the task requires: complex architectural design spanning multiple systems, deep multi-file debugging across unfamiliar code, or nuanced code review that weighs design trade-offs. Otherwise keep the default. If the sub-agent definition pins a model, respect it.
 
 # BULK REFACTORING PROTOCOL (STRICT TOKEN CONSERVATION)
 
