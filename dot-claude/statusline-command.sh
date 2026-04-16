@@ -3,6 +3,7 @@ input=$(cat)
 
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd')
 model=$(echo "$input" | jq -r '.model.display_name // ""')
+transcript=$(echo "$input" | jq -r '.transcript_path // ""')
 
 # Detect macOS dark mode
 if defaults read -g AppleInterfaceStyle &>/dev/null; then
@@ -89,6 +90,29 @@ if git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
     [ -n "$parts" ] && git_part="${git_part} ${BOLD}${ORANGE}[${parts}]${RESET}"
 fi
 
+# Token usage from last message in transcript
+tokens_part=""
+if [ -n "$transcript" ] && [ -f "$transcript" ]; then
+    usage=$(tail -r "$transcript" 2>/dev/null \
+        | jq -c 'select(.message.usage)' 2>/dev/null \
+        | head -n 1)
+    if [ -n "$usage" ]; then
+        read -r in_t cr_t cc_t out_t < <(echo "$usage" | jq -r '.message.usage | "\(.input_tokens // 0) \(.cache_read_input_tokens // 0) \(.cache_creation_input_tokens // 0) \(.output_tokens // 0)"')
+        ctx=$((in_t + cr_t + cc_t))
+        if [ "$ctx" -ge 1000 ]; then
+            ctx_fmt=$(awk "BEGIN {printf \"%.1fk\", $ctx/1000}")
+        else
+            ctx_fmt="${ctx}"
+        fi
+        if [ "$out_t" -ge 1000 ]; then
+            out_fmt=$(awk "BEGIN {printf \"%.1fk\", $out_t/1000}")
+        else
+            out_fmt="${out_t}"
+        fi
+        tokens_part="${BOLD}${GREEN}⧉ ${ctx_fmt}${RESET} ${DIM}(out ${out_fmt})${RESET}"
+    fi
+fi
+
 # Model
 model_part=""
 [ -n "$model" ] && model_part="${BOLD}${YELLOW}${model}${RESET}"
@@ -99,6 +123,7 @@ short_cwd="${cwd##*/}"
 
 # Build output, only adding separators between non-empty sections
 output="${BOLD}${BLUE}${short_cwd}${RESET}${git_part}"
-[ -n "$model_part" ] && output="${output} ${SEP} ${model_part}"
+[ -n "$model_part" ]  && output="${output} ${SEP} ${model_part}"
+[ -n "$tokens_part" ] && output="${output} ${SEP} ${tokens_part}"
 
 echo -e "$output"
