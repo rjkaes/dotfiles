@@ -2,9 +2,13 @@
 
 - Use trueline MCP tools instead of built-in Read/Edit. On first edit in a
   session, ToolSearch `+trueline read edit search` to load schemas. Use
-  `trueline_outline` for structure, `trueline_search` to get refs, then
-  `trueline_edit` to apply changes. A PreToolUse hook blocks built-in Edit
-  and redirects to trueline, so never attempt Edit directly.
+  `trueline_search` to get refs, then `trueline_edit` to apply changes. A
+  PreToolUse hook blocks built-in Edit and redirects to trueline, so never
+  attempt Edit directly.
+- Use `smart_outline` (claude-mem) as default for exploring file structure.
+  Use `trueline_outline` only when feeding into the trueline edit workflow
+  (need refs/hashes). Use `trueline_read` when you need edit-ready refs for
+  specific line ranges.
 - Use sub-agents for larger or specialized work to keep main agent context
   clean.
 - Lint shell scripts with shellcheck before committing.
@@ -23,6 +27,7 @@
   the suggested tool. `cat` is a last resort only if those tools fail.
 - Test your code before declaring done.
 - Use `bc -l` for calculations.
+- No emdashes in prose. Use commas, semicolons, colons, or parentheses.
 
 ## Git workflow
 
@@ -74,7 +79,6 @@ Never speculate about code you have not opened. Read referenced files BEFORE ans
 - TODO comments for deferred features or nuances.
 - CQS by default; exceptions for atomics and fluent interfaces.
 - "Parse, Don't Validate": prefer typed wrappers at API/module boundaries over bare `string`/`int`.
-- No emdashes in prose. Use commas, semicolons, colons, or parentheses.
 
 ### Literate Programming
 
@@ -122,6 +126,12 @@ Structure code top-down like a narrative. Comments explain **why** (business log
 ## Ground Knowledge with Search
 
 Use WebSearch when unsure. Don't guess.
+
+## Agent model policy
+
+Spawn agents with `model: "sonnet"` unless task requires opus-level reasoning
+(complex architecture, deep debugging, nuanced code review) or the sub-agent
+specifies a specific model.
 
 # BULK REFACTORING PROTOCOL (STRICT TOKEN CONSERVATION)
 

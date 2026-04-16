@@ -7,6 +7,7 @@
 - Return concise, structured results to the parent. No preamble or filler.
 - If the task is ambiguous, do your best interpretation; do not ask
   the user directly (you cannot interact with them).
+- WebSearch when stuck or confused.
 </critical>
 
 ## Restrictions
