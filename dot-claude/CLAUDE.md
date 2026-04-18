@@ -1,13 +1,13 @@
 ## General best practices
 
-- Trueline MCP over built-in Read/Edit. First edit per session: ToolSearch `+trueline read edit search` to load schemas. Use `trueline_search` → `trueline_edit`. PreToolUse hook blocks built-in Edit.
+- Trueline MCP over built-in Read/Edit. First edit per session: ToolSearch `+trueline read edit search` load schemas. Use `trueline_search` → `trueline_edit`. PreToolUse hook blocks built-in Edit.
 - `smart_outline` (claude-mem) default for file structure. `trueline_outline` only when feeding trueline edit workflow (need refs/hashes). `trueline_read` when needing edit-ready refs for line ranges.
 - Sub-agents for larger/specialized work; keep main context clean.
 - Lint shell scripts with shellcheck before commit.
 - `tmp/` (project-local) for intermediate files, not `/tmp`.
 - Don't re-read files already read.
-- When `$CMEM` observations appear, use claude-mem tools (`mem-search`, `get_observations`, `smart-explore`, `timeline`). Check at session start and mid-task on familiar territory.
-- Plugin hook (claude-mem, context-mode) intercepts Read with hints (e.g. `get_observations([IDs])`, `smart_outline`, `smart_unfold`): follow hints. Don't retry Read with offset (cached) or fall back to `cat`. `cat` is last resort.
+- `$CMEM` observations appear → use claude-mem tools (`mem-search`, `get_observations`, `smart-explore`, `timeline`). Check at session start + mid-task on familiar territory.
+- Plugin hook (claude-mem, context-mode) intercepts Read with hints (e.g. `get_observations([IDs])`, `smart_outline`, `smart_unfold`): follow hints. Don't retry Read with offset (cached) or fall back to `cat`. `cat` last resort.
 - Test code before declaring done.
 - `bc -l` for calculations.
 - No emdashes in prose. Use commas, semicolons, colons, parentheses.
@@ -18,7 +18,7 @@ Plain `git` in current tree. `git -C /path` for other repos (avoids `cd` side ef
 
 Commit messages: conventional title (<50 chars), body wrapped at 72 chars (prose only). Explain non-obvious trade-offs. Backticks for inline types; indented blocks for multi-line code.
 
-**NEVER include `Co-Authored-By` or any attribution.** Write as a human developer.
+**NEVER include `Co-Authored-By` or any attribution.** Write as human developer.
 
 Commit as **separate tool calls**: `git add`, then `git commit` heredoc, then `git status`.
 ```bash
@@ -37,12 +37,12 @@ Standard conventional types, plus:
 
 ## Code Intelligence
 
-Prefer LSP over Grep/Glob/Read for navigation:
+LSP over Grep/Glob/Read for navigation:
 - `goToDefinition` / `goToImplementation` / `findReferences`
 - `workspaceSymbol` / `documentSymbol` / `hover`
 - `incomingCalls` / `outgoingCalls`
 
-Before renaming/changing signatures: `findReferences` first. `ast-grep` for structural pattern searches where LSP can't and Grep is too loose. Grep/Glob for text searches only. LSP diagnostics lag edits — run project build/typecheck as truth source. LSP diagnostics = early hints only, not final verification.
+Before renaming/changing signatures: `findReferences` first. `ast-grep` for structural pattern searches where LSP can't + Grep too loose. Grep/Glob for text searches only. LSP diagnostics lag edits → run project build/typecheck as truth source. LSP diagnostics = early hints only, not final verification.
 
 ## Debugging
 
@@ -55,19 +55,19 @@ Never speculate about unopened code. Read referenced files BEFORE answering. Tra
 - Realistic names (not `foo`/`bar`) in docs.
 - Document intentionally omitted code reader might expect.
 - TODO comments for deferred features/nuances.
-- CQS by default; exceptions for atomics, fluent interfaces.
+- CQS default; exceptions for atomics, fluent interfaces.
 - "Parse, Don't Validate": typed wrappers at API/module boundaries over bare `string`/`int`.
 
 ### Literate Programming
 
-Top-down narrative structure. Comments explain **why** (business logic, design decisions), not **what**. Place before the relevant block. Section headers for multi-phase logic. Documented inline code over excessive decomposition when sequential. Focus: complex algorithms, business logic, integration points.
+Top-down narrative. Comments explain **why** (business logic, design decisions), not **what**. Place before relevant block. Section headers for multi-phase logic. Documented inline code over excessive decomposition when sequential. Focus: complex algorithms, business logic, integration points.
 
 ## Critical Behavioral Patterns
 
 ### 1. Problem Diagnosis & Strategy (Before)
-* **XY Problem:** Identify high-level goal (X) before solving narrow request (Y).
+* **XY Problem:** ID high-level goal (X) before solving narrow request (Y).
     * **Red Flags:** Roundabout methods, focus on impl over motivation, resistance to context.
-    * **Action:** Pause. State understanding of "X." Ask: "What's the high-level goal? Why this approach?"
+    * **Action:** Pause. State understanding of "X." Ask: "What's high-level goal? Why this approach?"
 * **Decision Logic:**
     * **State Assumptions** before writing code.
     * **Architecture First:** Multiple paths → present brief trade-offs. Wait for "Go" if impact significant.
@@ -81,7 +81,7 @@ Top-down narrative structure. Comments explain **why** (business logic, design d
     * **Edge-Case First:** Account for nulls/empty/out-of-bounds unprompted.
 * **Idiomatic Consistency:** Existing repo patterns over generic best-practices/LLM defaults.
 * **Pivot Protocol:** Flawed plan mid-execution → **stop**. Explain blocker, propose revised "Step 1."
-* **Simplicity Gut-Check:** 200 lines could be 50? Rewrite. Would a senior engineer call this overcomplicated?
+* **Simplicity Gut-Check:** 200 lines could be 50? Rewrite. Senior engineer call this overcomplicated?
 
 ### 3. Verification & Deep Review (After)
 * **Full-Stack:** Verify all layers (DB, backend, API types, tests). Adapt stack to project.
@@ -97,7 +97,7 @@ Top-down narrative structure. Comments explain **why** (business logic, design d
 ### 5. Maintenance & Tech Debt
 * **Documentation:** Every new function/complex block: concise docstrings explaining *why*.
 * **Surgical Changes:** Remove imports/vars/functions YOUR changes made unused. Pre-existing dead code: mention, don't delete unless asked. Every changed line traces to user's request.
-* **Minimal Dependencies:** Stdlib over new external packages unless complexity tradeoff is massive.
+* **Minimal Dependencies:** Stdlib over new external packages unless complexity tradeoff massive.
 
 ## Search
 
@@ -110,7 +110,7 @@ Use `model: "opus"` only for:
 * deep multi-file debugging in unfamiliar code
 * nuanced code review weighing design trade-offs
 
-Default agents to `model: "sonnet"`. Respect pinned models in sub-agent definitions.
+Default agents → `model: "sonnet"`. Respect pinned models in sub-agent definitions.
 
 ## Agent routing policy
 
