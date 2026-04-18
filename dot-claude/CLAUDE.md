@@ -130,7 +130,15 @@ Use WebSearch when unsure. Don't guess.
 
 ## Agent model policy
 
-Spawn agents with `model: "sonnet"` by default. Use `model: "opus"` explicitly when the task requires: complex architectural design spanning multiple systems, deep multi-file debugging across unfamiliar code, or nuanced code review that weighs design trade-offs. Otherwise keep the default. If the sub-agent definition pins a model, respect it.
+Only use `model: "opus"` when the task requires any of the following:
+
+* complex architectural design spanning multiple systems
+* deep multi-file debugging across unfamiliar code
+* nuanced code review that weighs design trade-offs.
+
+Spawn agents with `model: "sonnet"` by default.
+
+If the sub-agent definition pins a model, respect it.
 
 ## Agent routing policy
 
