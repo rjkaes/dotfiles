@@ -48,7 +48,17 @@
         ]
       }
     ],
-    "SessionStart": [],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat $HOME/.claude/RTK.md"
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [],
     "PreToolUse": [
       {
