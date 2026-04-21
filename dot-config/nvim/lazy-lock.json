@@ -7,7 +7,7 @@
   "codecompanion.nvim": { "branch": "main", "commit": "e003fac48f8af4fc2d4ece3ee2f6f1897f71b912" },
   "conform.nvim": { "branch": "master", "commit": "086a40dc7ed8242c03be9f47fbcee68699cc2395" },
   "csharp.nvim": { "branch": "main", "commit": "e44e275dabbcfc188ce1a5f504aad778e917c814" },
-  "easy-dotnet.nvim": { "branch": "main", "commit": "db34bd56ea682fcb0efc4a8896f9702ee22b6b22" },
+  "easy-dotnet.nvim": { "branch": "main", "commit": "1e6b569af3818a1665f14115aea7b0a920b179f6" },
   "emmet-vim": { "branch": "master", "commit": "92ef2f74f4093edc99db5e9e4cf7e40116a85bd6" },
   "github-theme": { "branch": "main", "commit": "c106c9472154d6b2c74b74565616b877ae8ed31d" },
   "gitsigns.nvim": { "branch": "main", "commit": "6d808f99bd63303646794406e270bd553ad7792e" },
