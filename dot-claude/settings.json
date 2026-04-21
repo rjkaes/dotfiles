@@ -17,7 +17,7 @@
       "mcp__plugin_trueline-mcp_mcp__trueline_outline",
       "mcp__plugin_trueline-mcp_mcp__trueline_verify",
       "mcp__plugin_trueline-mcp_mcp__trueline_changes",
-      "mcp__plugin_claude-mem_mcp-*"
+      "mcp__plugin_claude-mem_mcp-search__*"
     ],
     "deny": [
       "Bash(rm -rf /*)",
@@ -49,13 +49,26 @@
       }
     ],
     "SessionStart": [],
-    "UserPromptSubmit": [
+    "UserPromptSubmit": [],
+    "PreToolUse": [
       {
-        "matcher": "",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "node $HOME/.claude/hooks/caveman-remind"
+            "command": "rtk hook claude"
+          }
+        ]
+      }
+    ]
+    ,
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/plan-guard"
           }
         ]
       }
@@ -109,7 +122,7 @@
     "systems-programming@claude-code-workflows": true,
     "tdd-workflows@claude-code-workflows": false,
     "caveman@caveman": true,
-    "claude-mem@thedotmack": true,
+    "claude-mem@thedotmack": false,
     "javascript-typescript@claude-code-workflows": true
   },
   "extraKnownMarketplaces": {
@@ -150,6 +163,8 @@
       }
     }
   },
-  "effortLevel": "medium",
-  "autoDreamEnabled": true
+  "showClearContextOnPlanAccept": true,
+  "autoDreamEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "useAutoModeDuringPlan": true
 }

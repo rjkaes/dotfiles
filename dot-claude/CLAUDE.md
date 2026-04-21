@@ -18,6 +18,9 @@ Plain `git` in current tree. `git -C /path` for other repos (avoids `cd` side ef
 
 Commit messages: conventional title (<50 chars), body wrapped at 72 chars (prose only). Explain non-obvious trade-offs. Backticks for inline types; indented blocks for multi-line code.
 
+**NEVER create git worktress _inside_ a git repo.  Any work trees must be in a
+different directory _above_ the git repo.**
+
 **NEVER include `Co-Authored-By` or any attribution.** Write as human developer.
 
 Commit as **separate tool calls**: `git add`, then `git commit` heredoc, then `git status`.
@@ -135,3 +138,23 @@ Pass `subagent_type` matching above. No specialized fit → `general-purpose`. O
    - **Scripted:** Last resort: temp script (`.csx` via `dotnet-script`, `.ts` via `npx tsx`).
 3. **WORKFLOW:** Generate/save rule/script quietly → execute → verify `git diff --stat` → **build/typecheck** (fail → revert or fix) → DELETE temp rule/script.
 4. **OUTPUT:** One sentence: file count + build passed. No script/command contents in chat.
+
+## Plan file requirements
+
+Every plan file written to `~/.claude/plans/*.md` MUST contain these two sections verbatim (verbatim headings — the `plan-guard` hook greps for them):
+
+### Implementation via sub-agents
+
+Implementation of this plan runs through sub-agents, not the orchestrator:
+
+- Feature work → `feature-engineer`
+- Refactoring (zero behavioral change) → `refactor-engineer`
+- Schema / migrations / query optimization → `database-architect`
+- Docs / ADRs / READMEs → `technical-writer`
+- Otherwise → `general-purpose`
+
+Orchestrator never implements directly.
+
+### Worktree policy
+
+Do NOT create git worktrees for this work. Work in the current tree. If an isolation need is genuinely unavoidable, a worktree MUST live in a sibling directory outside the repo — never inside it — and requires explicit user confirmation first.

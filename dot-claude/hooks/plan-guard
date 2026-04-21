@@ -1,0 +1,26 @@
+#!/bin/sh
+set -eu
+
+payload=$(cat)
+tool=$(printf '%s' "$payload" | jq -r '.tool_name // ""')
+path=$(printf '%s' "$payload" | jq -r '.tool_input.file_path // ""')
+
+case "$tool" in
+    Write|Edit) ;;
+    *) exit 0 ;;
+esac
+
+case "$path" in
+    "$HOME"/.claude/plans/*.md) ;;
+    *) exit 0 ;;
+esac
+
+missing=""
+grep -qF '### Implementation via sub-agents' "$path" || missing="$missing sub-agents"
+grep -qF '### Worktree policy'                "$path" || missing="$missing worktree"
+
+[ -z "$missing" ] && exit 0
+
+printf 'plan-guard: %s missing required section(s):%s. Add them exactly as specified in CLAUDE.md -> "Plan file requirements".\n' \
+    "$path" "$missing" >&2
+exit 2
