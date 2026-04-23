@@ -27,9 +27,16 @@ gh pr checkout <PR-number>
 ```
 This puts the code on disk so agents can read files directly.
 
+Immediately after checkout, generate the diff once and save it. All agents read from this file; the orchestrator never loads the full diff into its own context:
+```bash
+mkdir -p tmp
+git diff origin/<base-branch>...HEAD > tmp/pr-diff.txt
+```
+Use the base branch retrieved earlier in this step.
+
 ## Step 2: Identify applicable Tier 2 agents
 
-Check the diff to determine which specialized agents apply:
+Grep `tmp/pr-diff.txt` to determine which specialized agents apply (do not load the full diff into context):
 
 - **`pr-review-toolkit:silent-failure-hunter`**: Always run. Catches swallowed errors, empty catch
   blocks, inappropriate fallbacks, missing error propagation.
@@ -38,12 +45,12 @@ Check the diff to determine which specialized agents apply:
 - **`security-scanning:security-auditor`**: Run when the diff touches authentication, authorization,
   user input handling, database queries, cookie/session logic, crypto usage, or
   dependency files (`package.json`, `*.csproj`, `requirements.txt`, `go.mod`).
-  Grep the diff for: `req.body`, `req.params`, `req.query`, SQL strings, `eval`,
+  Grep `tmp/pr-diff.txt` for: `req.body`, `req.params`, `req.query`, SQL strings, `eval`,
   `innerHTML`, `dangerouslySetInnerHTML`, auth middleware, `jwt`, `bcrypt`,
   `crypto`, `cookie`, `session`, `password`, `secret`, `token`.
 - **`backend-development:performance-engineer`**: Run when the diff touches database queries, ORM
   calls, loops over collections, API endpoint handlers, caching logic, or adds
-  new dependencies. Grep the diff for: `.find(`, `.query(`, `SELECT`, `INSERT`,
+  new dependencies. Grep `tmp/pr-diff.txt` for: `.find(`, `.query(`, `SELECT`, `INSERT`,
   `.map(`, `.forEach(`, `cache`, `redis`, `paginate`, `limit`, `offset`.
 - **`backend-development:backend-architect`**: Run when the PR changes >10 files or >500 diff lines,
   or introduces new directories/modules/services. Checks layering violations,
@@ -61,16 +68,15 @@ Tier 1 and Tier 2 are independent. Launch them concurrently.
 ### Tier 1: Core Review
 
 Precompute the CLAUDE.md file list once (root `CLAUDE.md` plus any `CLAUDE.md`
-in directories containing changed files), then launch 5 parallel Task-tool calls
+in directories containing changed files), then launch 4 parallel Task-tool calls
 (not Skill tool) with `subagent_type: "general-purpose"` and `model: "sonnet"`.
-Pass `$ARGUMENTS` (PR URL), the full PR diff, and the CLAUDE.md file paths to
-every agent. Each agent performs one role:
+Pass `$ARGUMENTS` (PR URL), the path `tmp/pr-diff.txt`, and the CLAUDE.md file paths to
+every agent. Each agent reads the diff from that file. Each agent performs one role:
 
-1. Audit the changes for compliance with the CLAUDE.md files.
-2. Shallow bug scan of the diff only (high-signal, ignore linter-catchable issues).
-3. Read git blame/history of modified code and identify bugs in that context.
-4. Read previous PRs that touched these files; flag comments that still apply.
-5. Read code comments in modified files; verify the changes comply with that guidance.
+1. Shallow bug scan of the diff only (high-signal, ignore linter-catchable issues).
+2. Read git blame/history of modified code and identify bugs in that context.
+3. Read previous PRs that touched these files; flag comments that still apply.
+4. Read code comments in modified files; verify the changes comply with that guidance.
 
 Each finding is scored 0-100 by a Haiku verification agent using this rubric:
 - **0**: False positive, doesn't survive scrutiny, or pre-existing issue.
@@ -88,7 +94,7 @@ For each applicable agent (from Step 2), call the Task tool with
 `subagent_type: "<qualified-name>"` (e.g. `pr-review-toolkit:silent-failure-hunter`),
 `model: "sonnet"`, and a prompt containing:
 
-- Full unified diff (from `git diff origin/<base-branch>...HEAD`).
+- Path to `tmp/pr-diff.txt` (agents read this file directly; orchestrator does not pass diff inline).
 - List of changed-file paths.
 - The required output format (see below).
 - The CLAUDE.md file paths (same list precomputed in Tier 1).
