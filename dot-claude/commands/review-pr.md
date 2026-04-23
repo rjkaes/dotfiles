@@ -12,38 +12,46 @@ and list of changed files. Store these for use in later steps.
 
 **Fail-fast checks** (abort with a message if any fail):
 - PR is not a draft and is still open.
-- PR has not already received a review from this run.
+- PR has not already received a review from the authenticated viewer
+  (`gh pr view <n> --json reviews -q '[.reviews[] | select(.author.login == "<viewer>")] | length'`
+  returns 0, where `<viewer>` is resolved via `gh api user -q .login`).
 
 **Context enrichment** (note for the review body, do not block):
 - Check `gh pr checks` for CI status. If CI is failing, flag it later.
 - Check if the PR is part of a stack (`gh pr list --head <branch>`) and note
   dependent PRs.
 
+**Checkout the PR branch** (after eligibility checks pass, before any diff analysis):
+```bash
+gh pr checkout <PR-number>
+```
+This puts the code on disk so agents can read files directly.
+
 ## Step 2: Identify applicable Tier 2 agents
 
 Check the diff to determine which specialized agents apply:
 
-- **silent-failure-hunter**: Always run. Catches swallowed errors, empty catch
+- **`pr-review-toolkit:silent-failure-hunter`**: Always run. Catches swallowed errors, empty catch
   blocks, inappropriate fallbacks, missing error propagation.
-- **pr-test-analyzer**: Always run. Identifies critical untested paths, edge
+- **`pr-review-toolkit:pr-test-analyzer`**: Always run. Identifies critical untested paths, edge
   case gaps, test quality issues.
-- **security-auditor**: Run when the diff touches authentication, authorization,
+- **`security-scanning:security-auditor`**: Run when the diff touches authentication, authorization,
   user input handling, database queries, cookie/session logic, crypto usage, or
   dependency files (`package.json`, `*.csproj`, `requirements.txt`, `go.mod`).
   Grep the diff for: `req.body`, `req.params`, `req.query`, SQL strings, `eval`,
   `innerHTML`, `dangerouslySetInnerHTML`, auth middleware, `jwt`, `bcrypt`,
   `crypto`, `cookie`, `session`, `password`, `secret`, `token`.
-- **performance-reviewer**: Run when the diff touches database queries, ORM
+- **`backend-development:performance-engineer`**: Run when the diff touches database queries, ORM
   calls, loops over collections, API endpoint handlers, caching logic, or adds
   new dependencies. Grep the diff for: `.find(`, `.query(`, `SELECT`, `INSERT`,
   `.map(`, `.forEach(`, `cache`, `redis`, `paginate`, `limit`, `offset`.
-- **architect-reviewer**: Run when the PR changes >10 files or >500 diff lines,
+- **`backend-development:backend-architect`**: Run when the PR changes >10 files or >500 diff lines,
   or introduces new directories/modules/services. Checks layering violations,
   dependency direction, pattern consistency, and abstraction appropriateness.
-- **comment-analyzer**: Run when the diff adds or modifies docstrings, JSDoc,
+- **`pr-review-toolkit:comment-analyzer`**: Run when the diff adds or modifies docstrings, JSDoc,
   XML doc comments (`///`), or README/documentation files. Catches stale
   comments, inaccurate parameter descriptions, misleading explanations.
-- **type-design-analyzer**: Run only if the diff adds or modifies type/interface
+- **`pr-review-toolkit:type-design-analyzer`**: Run only if the diff adds or modifies type/interface
   definitions. Rates encapsulation, invariant expression, enforcement.
 
 ## Step 3: Run Tier 1 and Tier 2 in parallel
@@ -52,12 +60,17 @@ Tier 1 and Tier 2 are independent. Launch them concurrently.
 
 ### Tier 1: Core Review
 
-Use the `/code-review:code-review` skill. This runs 5 parallel Sonnet agents:
-1. CLAUDE.md compliance audit
-2. Shallow bug scan (changes only, high-signal, ignore linter-catchable issues)
-3. Git blame/history context analysis
-4. Previous PR comment applicability check
-5. Code comment compliance verification
+Precompute the CLAUDE.md file list once (root `CLAUDE.md` plus any `CLAUDE.md`
+in directories containing changed files), then launch 5 parallel Task-tool calls
+(not Skill tool) with `subagent_type: "general-purpose"` and `model: "sonnet"`.
+Pass `$ARGUMENTS` (PR URL), the full PR diff, and the CLAUDE.md file paths to
+every agent. Each agent performs one role:
+
+1. Audit the changes for compliance with the CLAUDE.md files.
+2. Shallow bug scan of the diff only (high-signal, ignore linter-catchable issues).
+3. Read git blame/history of modified code and identify bugs in that context.
+4. Read previous PRs that touched these files; flag comments that still apply.
+5. Read code comments in modified files; verify the changes comply with that guidance.
 
 Each finding is scored 0-100 by a Haiku verification agent using this rubric:
 - **0**: False positive, doesn't survive scrutiny, or pre-existing issue.
@@ -71,10 +84,18 @@ Filter at 80+.
 
 ### Tier 2: Specialized Dimensions
 
-Launch applicable agents (from Step 2) as **parallel Sonnet sub-agents**. Each
-agent receives the full diff and list of changed files.
+For each applicable agent (from Step 2), call the Task tool with
+`subagent_type: "<qualified-name>"` (e.g. `pr-review-toolkit:silent-failure-hunter`),
+`model: "sonnet"`, and a prompt containing:
 
-Each sub-agent must return findings in this exact format:
+- Full unified diff (from `gh pr diff`).
+- List of changed-file paths.
+- The required output format (see below).
+- The CLAUDE.md file paths (same list precomputed in Tier 1).
+- Instruction: only return findings, never run `gh pr comment`, `gh api`, or any
+  command that posts to the PR.
+
+Each agent must return findings in this exact format:
 
 ```
 FILE: <path>
@@ -85,14 +106,12 @@ DESCRIPTION: <one-line summary>
 DETAIL: <explanation and recommended fix>
 ```
 
-Sub-agents must **only return findings**. They must never run `gh pr comment`,
-`gh api`, or any command that posts to the PR.
-
 ## Step 4: Score Tier 2 findings
 
-For each Tier 2 finding, launch a **parallel Haiku agent** that takes the
-finding, the relevant diff context, and any applicable CLAUDE.md files. The
-agent scores the finding using the same 0-100 rubric from Tier 1.
+For each Tier 2 finding, call the Task tool with `model: "haiku"` and
+`subagent_type: "general-purpose"`. The agent receives: the finding text,
+relevant diff context, the applicable CLAUDE.md file paths, and the 0-100
+rubric below verbatim. It returns a single score.
 
 Filter at 80+.
 
@@ -113,9 +132,12 @@ the same location). When in doubt, keep both.
 (`issue` > `todo` > `suggestion` > `nitpick`), rather than by source agent.
 Source agent attribution is preserved in the comment prefix.
 
+**TYPE conflicts:** When two agents disagree on `TYPE` for an overlapping finding,
+keep the higher severity (`issue` > `todo` > `suggestion` > `nitpick`).
+
 ## Step 6: Post the review
 
-Use `gh api` to submit a single pull request review with:
+Post the review using `gh api` as follows:
 
 ### Inline comments
 
@@ -140,6 +162,34 @@ Prefix each comment with the source agent in brackets, e.g.:
 silently discarded. This masks auth failures. Propagate or log at warn level.
 ```
 
+**Posting procedure:**
+
+1. Resolve the head commit SHA once:
+   ```bash
+   gh pr view <n> --json headRefOid -q .headRefOid
+   ```
+2. For each surviving finding, POST to
+   `/repos/{owner}/{repo}/pulls/{number}/comments` with:
+   ```json
+   {
+     "body": "**[<agent>]** <conventional-comment>",
+     "commit_id": "<head-sha>",
+     "path": "<file>",
+     "line": <end-line>,
+     "side": "RIGHT",
+     "start_line": <start-line-if-range>,
+     "start_side": "RIGHT"
+   }
+   ```
+   Omit `start_line` and `start_side` for single-line findings. Use `side: "LEFT"`
+   only when the finding targets a removed line.
+   If a finding's `LINES` range falls outside the diff hunk, GitHub will reject the
+   inline comment. In that case, degrade to a non-anchored comment by appending it
+   to the review body instead.
+3. After all inline comments are posted, submit the review via
+   `POST /repos/{owner}/{repo}/pulls/{number}/reviews` with the summary body
+   (see below) and `event` set per the verdict rule.
+
 ### Review body
 
 The body is a **summary only**. Do not repeat full finding details. Format:
@@ -156,7 +206,7 @@ Reviewed N files. Found X issues, Y suggestions, Z nitpicks.
 **Suggestions:**
 - brief description (file:line)
 
-Sources: code-review (Tier 1), silent-failure-hunter, pr-test-analyzer [, security-auditor, performance-reviewer, architect-reviewer, comment-analyzer, type-design-analyzer] (Tier 2)
+Sources: code-review (Tier 1), pr-review-toolkit:silent-failure-hunter, pr-review-toolkit:pr-test-analyzer [, security-scanning:security-auditor, backend-development:performance-engineer, backend-development:backend-architect, pr-review-toolkit:comment-analyzer, pr-review-toolkit:type-design-analyzer] (Tier 2)
 ```
 
 Append context lines from Step 1 if applicable:
@@ -182,6 +232,9 @@ Submit as `REQUEST_CHANGES` if any blocking findings (`issue:`, `todo:`,
 
 ## Step 7: Final eligibility guard
 
-Before posting, re-check with a Haiku agent that the PR is still open, not a
-draft, and has not already received a review from this run. If ineligible, do
-not post.
+Before posting, re-check with a Haiku agent (Task tool, `model: "haiku"`,
+`subagent_type: "general-purpose"`) that the PR is still open, not a draft,
+and has not already received a review from the authenticated viewer
+(`gh pr view <n> --json reviews -q '[.reviews[] | select(.author.login == "<viewer>")] | length'`
+returns 0, where `<viewer>` is resolved via `gh api user -q .login`). If
+ineligible, do not post.
