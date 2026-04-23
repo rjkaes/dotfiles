@@ -99,7 +99,6 @@ Top-down narrative. Comments explain **why** (business logic, design decisions),
 
 ### 5. Maintenance & Tech Debt
 * **Documentation:** Every new function/complex block: concise docstrings explaining *why*.
-* **Surgical Changes:** Remove imports/vars/functions YOUR changes made unused. Pre-existing dead code: mention, don't delete unless asked. Every changed line traces to user's request.
 * **Minimal Dependencies:** Stdlib over new external packages unless complexity tradeoff massive.
 
 ## Search
@@ -125,6 +124,23 @@ Claude Code does not auto-route to local agents in `~/.claude/agents/`. Task too
 - ADRs, API docs, runbooks, READMEs, inline docs → `technical-writer`
 
 Pass `subagent_type` matching above. No specialized fit → `general-purpose`. Orchestrator skills (e.g. `superpowers:executing-plans`) must forward `subagent_type` per task kind, never blank.
+
+# MINIMAL EDIT PROTOCOL
+
+IMPORTANT: Min change for goal. Every edit = diff human must review.
+
+Rules:
+- Preserve original code, logic, structure, naming, formatting, comments unless change explicitly requires modifying them.
+- No reformat, reorder, rename, "clean up" code outside task. No drive-by edits.
+- No refactor, extract helpers, introduce abstractions unless required.
+- No add error handling, logging, validation, type hints, defensive checks beyond task.
+- No rewrite block for "improve" style, idioms, best practices.
+- No touch whitespace, import order, trailing commas in unrelated lines.
+- Keep existing control flow. Prefer add branch/line over restructure surrounding code.
+- Larger change seems warranted → stop, surface as suggestion instead.
+- Doubt between two edits → pick smaller, more localized diff.
+
+Goal: reviewer read diff, see exactly requested change, nothing more.
 
 # BULK REFACTORING PROTOCOL
 
