@@ -88,7 +88,7 @@ For each applicable agent (from Step 2), call the Task tool with
 `subagent_type: "<qualified-name>"` (e.g. `pr-review-toolkit:silent-failure-hunter`),
 `model: "sonnet"`, and a prompt containing:
 
-- Full unified diff (from `gh pr diff`).
+- Full unified diff (from `git diff origin/<base-branch>...HEAD`).
 - List of changed-file paths.
 - The required output format (see below).
 - The CLAUDE.md file paths (same list precomputed in Tier 1).
