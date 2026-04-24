@@ -16,8 +16,8 @@ case "$path" in
 esac
 
 missing=""
-grep -qF '### Implementation via sub-agents' "$path" || missing="$missing sub-agents"
-grep -qF '### Worktree policy'                "$path" || missing="$missing worktree"
+grep -qF '## Implementation via sub-agents' "$path" || missing="$missing sub-agents"
+grep -qF '## Worktree policy'                "$path" || missing="$missing worktree"
 
 [ -z "$missing" ] && exit 0
 

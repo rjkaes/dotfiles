@@ -1,13 +1,11 @@
 ## General best practices
 
-- Trueline MCP over built-in Read/Edit. First edit per session: ToolSearch `+trueline read edit search` load schemas. Use `trueline_search` → `trueline_edit`. PreToolUse hook blocks built-in Edit.
-- `smart_outline` (claude-mem) default for file structure. `trueline_outline` only when feeding trueline edit workflow (need refs/hashes). `trueline_read` when needing edit-ready refs for line ranges.
+- trueline MCP over built-in Read/Edit. First edit per session: ToolSearch `+trueline read edit search` load schemas. Use `trueline_search` → `trueline_edit`. PreToolUse hook blocks built-in Edit.
 - Sub-agents for larger/specialized work; keep main context clean.
 - Lint shell scripts with shellcheck before commit.
 - `tmp/` (project-local) for intermediate files, not `/tmp`.
 - Don't re-read files already read.
-- `$CMEM` observations appear → use claude-mem tools (`mem-search`, `get_observations`, `smart-explore`, `timeline`). Check at session start + mid-task on familiar territory.
-- Plugin hook (claude-mem, context-mode) intercepts Read with hints (e.g. `get_observations([IDs])`, `smart_outline`, `smart_unfold`): follow hints. Don't retry Read with offset (cached) or fall back to `cat`. `cat` last resort.
+- Plugin hook (context-mode) intercepts Read with hints: follow hints. Don't retry Read with offset (cached) or fall back to `cat`. `cat` last resort.
 - Test code before declaring done.
 - `bc -l` for calculations.
 - No emdashes in prose. Use commas, semicolons, colons, parentheses.
@@ -112,7 +110,7 @@ Use `model: "opus"` only for:
 * deep multi-file debugging in unfamiliar code
 * nuanced code review weighing design trade-offs
 
-Default agents → `model: "sonnet"`. Respect pinned models in sub-agent definitions.
+Respect pinned models in sub-agent definitions.
 
 ## Agent routing policy
 
@@ -159,7 +157,8 @@ Goal: reviewer read diff, see exactly requested change, nothing more.
 
 Every plan file written to `~/.claude/plans/*.md` MUST contain these two sections verbatim (verbatim headings — the `plan-guard` hook greps for them):
 
-### Implementation via sub-agents
+<plan-requirements>
+## Implementation via sub-agents
 
 Implementation of this plan runs through sub-agents, not the orchestrator:
 
@@ -171,6 +170,7 @@ Implementation of this plan runs through sub-agents, not the orchestrator:
 
 Orchestrator never implements directly.
 
-### Worktree policy
+## Worktree policy
 
 Do NOT create git worktrees for this work. Work in the current tree. If an isolation need is genuinely unavoidable, a worktree MUST live in a sibling directory outside the repo — never inside it — and requires explicit user confirmation first.
+</plan-requirements>
