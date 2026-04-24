@@ -16,8 +16,7 @@
       "mcp__plugin_trueline-mcp_mcp__trueline_edit",
       "mcp__plugin_trueline-mcp_mcp__trueline_outline",
       "mcp__plugin_trueline-mcp_mcp__trueline_verify",
-      "mcp__plugin_trueline-mcp_mcp__trueline_changes",
-      "mcp__plugin_claude-mem_mcp-search__*"
+      "mcp__plugin_trueline-mcp_mcp__trueline_changes"
     ],
     "deny": [
       "Bash(rm -rf /*)",
@@ -70,8 +69,7 @@
           }
         ]
       }
-    ]
-    ,
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
@@ -132,7 +130,6 @@
     "systems-programming@claude-code-workflows": true,
     "tdd-workflows@claude-code-workflows": false,
     "caveman@caveman": true,
-    "claude-mem@thedotmack": false,
     "javascript-typescript@claude-code-workflows": true
   },
   "extraKnownMarketplaces": {
@@ -165,16 +162,11 @@
         "source": "github",
         "repo": "JuliusBrussee/caveman"
       }
-    },
-    "thedotmack": {
-      "source": {
-        "source": "github",
-        "repo": "thedotmack/claude-mem"
-      }
     }
   },
   "showClearContextOnPlanAccept": true,
   "autoDreamEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "useAutoModeDuringPlan": true
+  "theme": "light-daltonized",
+  "useAutoModeDuringPlan": true,
+  "effortLevel": "xhigh"
 }
