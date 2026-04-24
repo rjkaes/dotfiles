@@ -3,3 +3,5 @@ dot-gitconfig.secret
 
 # Ignore conflict files from Synology Client syncing
 dot-config/*/**/*_MacBook-Pro.lan_*_Conflict*
+dot-claude/stats-cache.json
+dot-claude/transcripts/
