@@ -8,7 +8,8 @@ Review the pull request at $ARGUMENTS comprehensively using a two-tier approach.
 ## Step 1: Fetch PR metadata and early eligibility check
 
 Use `gh pr view` to get the PR number, base branch, head SHA, repo owner/name,
-and list of changed files. Store these for use in later steps.
+and list of changed files. Store the head SHA in `HEAD_SHA`. Store the other
+values for use in later steps.
 
 **Fail-fast checks** (abort with a message if any fail):
 - PR is not a draft and is still open.
@@ -104,13 +105,17 @@ For each applicable agent (from Step 2), call the Task tool with
 Each agent must return findings in this exact format:
 
 ```
-FILE: <path>
-LINES: <start>-<end>
-TYPE: issue | suggestion | nitpick
-CONFIDENCE: <0-100>
-DESCRIPTION: <one-line summary>
-DETAIL: <explanation and recommended fix>
+FILE: <path relative to repo root>
+LINES: <start>-<end>            # use single number, e.g. "42", for one-line findings
+SIDE: RIGHT | LEFT              # default RIGHT; LEFT only for findings on removed lines
+TYPE: praise | nitpick | suggestion | issue | todo | question | thought | chore | note
+CONFIDENCE: <0-100>             # used for filtering only; NOT sent to the script
+SOURCE: <agent qualified name>  # e.g. pr-review-toolkit:silent-failure-hunter
+DESCRIPTION: <single-line summary, no newlines>
+DETAIL: <multi-line elaboration ok>
 ```
+
+Blocking types: `issue`, `todo`, `chore`. Non-blocking: `praise`, `nitpick`, `suggestion`, `question`, `thought`, `note`. Tier-1 and Tier-2 agents may emit any of these; Step 5 calibration may promote between types.
 
 ## Step 4: Score Tier 2 findings
 
@@ -143,98 +148,62 @@ keep the higher severity (`issue` > `todo` > `suggestion` > `nitpick`).
 
 ## Step 6: Post the review
 
-Post the review using `gh api` as follows:
+Post the review using the `gh-pr-review-post` script.
 
-### Inline comments
+#### Build `tmp/findings.json`
 
-Every surviving finding becomes an inline review comment attached to the
-specific file and line range in the diff. Use **conventional comments** format
-for every comment:
+For every surviving finding, emit one JSON object with exactly these keys:
 
-- `praise:` -- highlights something positive (leave at least one per review, but never false praise)
-- `nitpick:` -- trivial preference-based request, always non-blocking
-- `suggestion:` -- proposes an improvement, be explicit on what and why
-- `issue:` -- specific problem, pair with a suggestion when possible, blocks merge
-- `todo:` -- small, trivial, necessary change (distinguishes from heavier issues/suggestions)
-- `question:` -- potential concern you're not sure about, asks author for clarification
-- `thought:` -- idea that emerged from reviewing, non-blocking, may inspire follow-up work
-- `chore:` -- process task required before merge (link to the process description)
-- `note:` -- non-blocking, something the reader should be aware of
+| Source field     | JSON key      | Notes                                                        |
+| ---------------- | ------------- | ------------------------------------------------------------ |
+| `FILE`           | `file`        | string, required                                             |
+| end of `LINES`   | `line`        | integer, required                                            |
+| start of `LINES` | `start_line`  | integer, optional; **omit** when start == end                |
+| `SIDE`           | `side`        | `"RIGHT"` (default) or `"LEFT"`; omit to default            |
+| `TYPE`           | `type`        | one of the 9 conventional types                              |
+| `SOURCE`         | `source`      | optional; script auto-prefixes `**[source]**`                |
+| `DESCRIPTION`    | `description` | single-line string, required                                 |
+| `DETAIL`         | `detail`      | optional, multi-line ok                                      |
 
-Prefix each comment with the source agent in brackets, e.g.:
+**Do not pre-prefix `description` with `[source]` or with `type:`.** The script formats the body as `**[source]** type: description\n\ndetail`. Any manual prefix produces double prefixes.
 
-```
-**[silent-failure-hunter]** issue: Error from `fetchUser()` is caught and
-silently discarded. This masks auth failures. Propagate or log at warn level.
-```
+**Drop `CONFIDENCE`.** It was a filter input; the script does not accept it.
 
-**Posting procedure:**
+#### Write `tmp/review-body.md`
 
-1. Resolve the head commit SHA once:
-   ```bash
-   gh pr view <n> --json headRefOid -q .headRefOid
-   ```
-2. For each surviving finding, POST to
-   `/repos/{owner}/{repo}/pulls/{number}/comments` with:
-   ```json
-   {
-     "body": "**[<agent>]** <conventional-comment>",
-     "commit_id": "<head-sha>",
-     "path": "<file>",
-     "line": <end-line>,
-     "side": "RIGHT",
-     "start_line": <start-line-if-range>,
-     "start_side": "RIGHT"
-   }
-   ```
-   Omit `start_line` and `start_side` for single-line findings. Use `side: "LEFT"`
-   only when the finding targets a removed line.
-   If a finding's `LINES` range falls outside the diff hunk, GitHub will reject the
-   inline comment. In that case, degrade to a non-anchored comment by appending it
-   to the review body instead.
-3. After all inline comments are posted, submit the review via
-   `POST /repos/{owner}/{repo}/pulls/{number}/reviews` with the summary body
-   (see below) and `event` set per the verdict rule.
+Create the summary body at `tmp/review-body.md` before invoking the script.
 
-### Review body
+#### Invoke once
 
-The body is a **summary only**. Do not repeat full finding details. Format:
-
-```
-### Code review
-
-Reviewed N files. Found X issues, Y suggestions, Z nitpicks.
-
-**Issues:**
-- brief description (file:line)
-- brief description (file:line)
-
-**Suggestions:**
-- brief description (file:line)
-
-Sources: code-review (Tier 1), pr-review-toolkit:silent-failure-hunter, pr-review-toolkit:pr-test-analyzer [, security-scanning:security-auditor, backend-development:performance-engineer, backend-development:backend-architect, pr-review-toolkit:comment-analyzer, pr-review-toolkit:type-design-analyzer] (Tier 2)
+```bash
+gh-pr-review-post "$ARGUMENTS" \
+  --summary tmp/review-body.md \
+  --commit-sha "$HEAD_SHA" \
+  < tmp/findings.json
 ```
 
-Append context lines from Step 1 if applicable:
+- `$ARGUMENTS` is the PR URL.
+- `$HEAD_SHA` is the head SHA captured in Step 1; pinning prevents comments from drifting if a new commit lands mid-review.
+- For a clean PR (zero findings), still write `tmp/findings.json` as `[]` and add `--event APPROVE`:
 
-- If CI is failing: `Warning: CI is currently red. Findings may overlap with build failures.`
-- If PR is part of a stack: `Note: This PR is part of a stack: #X -> #Y (this) -> #Z`
+  ```bash
+  echo '[]' > tmp/findings.json
+  gh-pr-review-post "$ARGUMENTS" \
+    --summary tmp/review-body.md \
+    --commit-sha "$HEAD_SHA" \
+    --event APPROVE \
+    < tmp/findings.json
+  ```
 
-If no findings survive filtering, post:
+- Do **not** call `gh api ...pulls/.../comments` or `...pulls/.../reviews` directly. The script owns posting.
 
-```
-### Code review
+#### Verdict
 
-No issues found. Checked for bugs, CLAUDE.md compliance, silent failures,
-test coverage gaps[, security, performance, architecture, comment quality].
-```
+The script derives the verdict from finding types (REQUEST_CHANGES if any `issue|todo|chore`, APPROVE otherwise). Only override with `--event` for the empty-findings APPROVE case above, or in a documented exception.
 
-List only the dimensions that were actually run in the bracket.
+#### Out-of-hunk fallback
 
-### Verdict
-
-Submit as `REQUEST_CHANGES` if any blocking findings (`issue:`, `todo:`,
-`chore:`) remain. Otherwise `APPROVE`.
+The script appends out-of-hunk findings to the review body and prints a warning to stderr. Treat the warning as informational; do not retry.
 
 ## Step 7: Final eligibility guard
 
