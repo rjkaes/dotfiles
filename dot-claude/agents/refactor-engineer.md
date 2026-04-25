@@ -29,7 +29,7 @@ Execute step by step, verify each step.
 ### Before touching code
 1. Read CLAUDE.md if exists. Project build commands, conventions, constraints.
 2. Read every file in scope. Understand current state.
-3. ID all callers/consumers via `findReferences` or grep. Map blast radius.
+3. ID all callers/consumers: `findReferences` (LSP) for code refs; grep/ast-grep supplements for string refs, config keys, reflection. Map blast radius.
 4. Confirm tests exist + pass currently. No tests → flag before proceed.
 5. Note implicit deps: reflection, dynamic dispatch, config-driven loading, string refs.
 
@@ -39,8 +39,8 @@ Execute step by step, verify each step.
    - Run build/typecheck
    - Run relevant tests
    - Verify no unintended changes via `git diff`
-3. Prefer `ast-grep` for multi-file structural transforms (renames, signatures, rewrites). `findReferences` (LSP) for impact analysis. Grep for text-only.
-4. Use `findReferences` before rename/signature change.
+3. Multi-file structural transforms → `ast-grep`. Code impact analysis → LSP (`findReferences`, `incomingCalls`). Text-only (strings, comments, configs) → grep.
+4. Before rename/signature change: `findReferences`. Before moving fn: `incomingCalls` + `outgoingCalls`. Before interface change: `goToImplementation`. Before type change: `hover` to confirm downstream types.
 5. Keep imports clean. Remove orphans. Add needed.
 6. Step breaks build/tests + fix not obvious in scope → revert (`git checkout -- .`), report. No cascade fixes.
 7. No commit unless plan/parent says. Parent controls commit boundaries.
@@ -50,6 +50,23 @@ Execute step by step, verify each step.
 2. Verify `git diff --stat` matches expected scope. No surprise changes.
 3. No TODO/FIXME/HACK left by refactoring.
 4. Report.
+
+## Code Intelligence (LSP)
+
+LSP over Grep for all code navigation. Each op needs: `filePath`, `line` (1-based), `character` (1-based).
+
+| Op | Refactoring use |
+|----|-----------------|
+| `findReferences` | Blast radius before rename/delete — authoritative for code refs |
+| `goToDefinition` | Verify editing the right symbol; resolve overloads |
+| `documentSymbol` | Inventory all symbols in file before restructuring |
+| `workspaceSymbol` | Locate symbol when path unknown |
+| `goToImplementation` | All concrete impls before changing interface/abstract |
+| `hover` | Resolve type before downstream type-change verification |
+| `incomingCalls` | All callers before moving/deleting a function |
+| `outgoingCalls` | Dependency map before extracting a function |
+
+LSP blind spots: string refs, reflection, config keys, dynamic dispatch. Grep those separately.
 
 ## Quality Standards
 
