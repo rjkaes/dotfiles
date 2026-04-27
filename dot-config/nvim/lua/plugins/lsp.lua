@@ -92,6 +92,20 @@ return {
                         { buffer = buf, desc = "LSP Type Definitions" })
                     vim.keymap.set('n', '<leader>ds', function() Snacks.picker.lsp_symbols() end,
                         { buffer = buf, desc = "Document Symbols" })
+                    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration,
+                        { buffer = buf, desc = "LSP Declaration" })
+                    vim.keymap.set('n', '<leader>ws', function() Snacks.picker.lsp_workspace_symbols() end,
+                        { buffer = buf, desc = "Workspace Symbols" })
+                    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename,
+                        { buffer = buf, desc = "Rename" })
+                    vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action,
+                        { buffer = buf, desc = "Code Action" })
+                    vim.keymap.set('n', ']d', function() vim.diagnostic.jump({ count = 1 }) end,
+                        { buffer = buf, desc = "Next Diagnostic" })
+                    vim.keymap.set('n', '[d', function() vim.diagnostic.jump({ count = -1 }) end,
+                        { buffer = buf, desc = "Prev Diagnostic" })
+                    vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float,
+                        { buffer = buf, desc = "Diagnostic Float" })
                 end,
             })
             -- Diagnostic configuration (replaces legacy sign_define)
