@@ -17,6 +17,12 @@ values for use in later steps.
   (`gh pr view <n> --json reviews -q '[.reviews[] | select(.author.login == "<viewer>")] | length'`
   returns 0, where `<viewer>` is resolved via `gh api user -q .login`).
 
+**Self-review detection:** Resolve the viewer login (`gh api user -q .login`)
+and the PR author (`gh pr view <n> --json author -q .author.login`). If they
+match, set `SELF_REVIEW=1`. GitHub forbids self-APPROVE and
+self-REQUEST_CHANGES; in Step 6 this forces `--event COMMENT` regardless of
+finding types. Note this in the review body.
+
 **Context enrichment** (note for the review body, do not block):
 - Check `gh pr checks` for CI status. If CI is failing, flag it later.
 - Check if the PR is part of a stack (`gh pr list --head <branch>`) and note
@@ -179,6 +185,7 @@ Create the summary body at `tmp/review-body.md` before invoking the script.
 gh-pr-review-post "$ARGUMENTS" \
   --summary tmp/review-body.md \
   --commit-sha "$HEAD_SHA" \
+  ${SELF_REVIEW:+--event COMMENT} \
   < tmp/findings.json
 ```
 
@@ -199,7 +206,9 @@ gh-pr-review-post "$ARGUMENTS" \
 
 #### Verdict
 
-The script derives the verdict from finding types (REQUEST_CHANGES if any `issue|todo|chore`, APPROVE otherwise). Only override with `--event` for the empty-findings APPROVE case above, or in a documented exception.
+The script derives the verdict from finding types (REQUEST_CHANGES if any `issue|todo|chore`, APPROVE otherwise). Override with `--event` only for:
+- Empty-findings APPROVE (above).
+- `SELF_REVIEW=1` from Step 1: pass `--event COMMENT`. GitHub forbids self-APPROVE and self-REQUEST_CHANGES; the script will also auto-downgrade as a safety net.
 
 #### Out-of-hunk fallback
 
@@ -208,8 +217,17 @@ The script appends out-of-hunk findings to the review body and prints a warning 
 ## Step 7: Final eligibility guard
 
 Before posting, re-check with a Haiku agent (Task tool, `model: "haiku"`,
-`subagent_type: "general-purpose"`) that the PR is still open, not a draft,
-and has not already received a review from the authenticated viewer
-(`gh pr view <n> --json reviews -q '[.reviews[] | select(.author.login == "<viewer>")] | length'`
-returns 0, where `<viewer>` is resolved via `gh api user -q .login`). If
-ineligible, do not post.
+`subagent_type: "general-purpose"`) that:
+
+1. The PR is still open and not a draft.
+2. The viewer has not already submitted a review:
+   `gh pr view <n> --json reviews -q '[.reviews[] | select(.author.login == "<viewer>")] | length'`
+   returns 0.
+3. **No prior partial run left review comments behind:**
+   `gh api --paginate repos/<owner>/<repo>/pulls/<n>/comments --jq '[.[] | select(.user.login == "<viewer>")] | length'`
+   returns 0. If >0, abort and ask the user to confirm whether the prior
+   partial review should be kept or cleaned up first. Do not auto-delete.
+   (The script also enforces this via exit code 2 unless `--allow-duplicate`
+   is passed.)
+
+Resolve `<viewer>` via `gh api user -q .login`. If any check fails, do not post.
