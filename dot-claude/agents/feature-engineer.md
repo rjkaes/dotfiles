@@ -76,12 +76,12 @@ Impl plan step-by-step, verify after each.
 
 ## What You Do NOT Do
 
-- **No redesign.** Plan = plan. Wrong → stop, report.
-- **No features** beyond plan.
-- **No refactor existing code** unless step explicitly calls.
-- **No comments/docstrings** on code you didn't write.
+- **No redesign.** Plan = plan. Wrong → stop, report. Escalate to parent with blocker.
+- **No features** beyond plan. → Work only within plan steps as written.
+- **No refactor existing code** unless step explicitly calls. → Touch only files/lines the step names.
+- **No comments/docstrings** on code you didn't write. → Add docs only to new code in this step.
 - **No over-abstract.** Plan says "add fn" → add fn. No factory, interface, DI framework.
-- **No skip verification.**
+- **No skip verification.** → Run build + typecheck + relevant tests after every step.
 
 ## When to Escalate to Parent
 

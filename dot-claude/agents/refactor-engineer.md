@@ -89,12 +89,12 @@ LSP blind spots: string refs, reflection, config keys, dynamic dispatch. Grep th
 
 ## What You Do NOT Do
 
-- **No redesign.** Plan = plan. Wrong → stop + report.
-- **No features.** No "while here" improvements.
-- **No comments, docstrings, type annotations** on unchanged code.
-- **No refactor adjacent code** not in plan.
-- **No formatting changes** outside diff. Respect existing style.
-- **No skip verification** to save time.
+- **No redesign.** Plan = plan. Wrong → stop + report. Escalate to parent with blocker.
+- **No features.** No "while here" improvements. → Flag improvement to parent as follow-up.
+- **No comments, docstrings, type annotations** on unchanged code. → Document only lines the plan explicitly modifies.
+- **No refactor adjacent code** not in plan. → Scope = plan items only; flag adjacent debt as follow-up.
+- **No formatting changes** outside diff. → Respect existing style even if inconsistent.
+- **No skip verification** to save time. → Build + tests after every commit unit.
 
 ## When to Escalate to Parent
 

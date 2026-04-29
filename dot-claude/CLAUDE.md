@@ -38,12 +38,17 @@ Standard conventional types, plus:
 
 ## Code Intelligence
 
-LSP over Grep/Glob/Read for navigation:
-- `goToDefinition` / `goToImplementation` / `findReferences`
-- `workspaceSymbol` / `documentSymbol` / `hover`
-- `incomingCalls` / `outgoingCalls`
+| Task | Tool |
+|------|------|
+| Find definition / implementation | `goToDefinition` / `goToImplementation` |
+| Find usages before rename/change | `findReferences` |
+| Symbol search across workspace | `workspaceSymbol` / `documentSymbol` |
+| Hover for type / docs | `hover` |
+| Call hierarchy | `incomingCalls` / `outgoingCalls` |
+| Structural code pattern search | `ast-grep` |
+| Text-only search | Grep/Glob |
 
-Before renaming/changing signatures: `findReferences` first. `ast-grep` for structural pattern searches where LSP can't + Grep too loose. Grep/Glob for text searches only. LSP diagnostics lag edits → run project build/typecheck as truth source. LSP diagnostics = early hints only, not final verification.
+LSP diagnostics = hints only. Build/typecheck = truth.
 
 ## Debugging
 
@@ -61,7 +66,7 @@ Never speculate about unopened code. Read referenced files BEFORE answering. Tra
 
 ### Literate Programming
 
-Top-down narrative. Comments explain **why** (business logic, design decisions), not **what**. Place before relevant block. Section headers for multi-phase logic. Documented inline code over excessive decomposition when sequential. Focus: complex algorithms, business logic, integration points.
+Top-down narrative. Comments explain **why** (business logic, design decisions), not **what**. Place before relevant block. Section headers for multi-phase logic. Focus: complex algorithms, business logic, integration points.
 
 ## Critical Behavioral Patterns
 
@@ -90,10 +95,8 @@ Top-down narrative. Comments explain **why** (business logic, design decisions),
 * **Verification Loop:** Before "done": dry-run vs original "X" goal, no regressions, every changed line traces to request.
 
 ### 4. Communication & Collaboration
-* **No Fluff:** No filler ("Certainly!", "I'd be happy to help"). Start with answer/code.
 * **Direct Pushback:** Unsound/insecure/needlessly complex requests → explain why, suggest simpler. No yes-man.
-* **Literal Interpretation:** Follow instructions as written. Don't generalize one item to another. Don't infer unmade requests. Ambiguous scope → restate interpretation, proceed; don't silently broaden.
-* **Context Preservation:** Multi-session work → summarize WIP state before ending or starting major sub-task.
+* **Literal Interpretation:** Follow instructions as written. Don't generalize one item to another. Ambiguous scope → restate interpretation, proceed; don't silently broaden.
 
 ### 5. Maintenance & Tech Debt
 * **Documentation:** Every new function/complex block: concise docstrings explaining *why*.
@@ -117,28 +120,27 @@ Respect pinned models in sub-agent definitions.
 Claude Code does not auto-route to local agents in `~/.claude/agents/`. Task tool defaults to `general-purpose` unless `subagent_type` explicit. Route deliberately:
 
 - Plan-driven feature impl → `feature-engineer`
+- .NET feature impl → `dotnet-contribution:dotnet-architect`
 - Executing refactoring plan (zero behavioral change) → `refactor-engineer`
+- Legacy modernization → `code-refactoring:legacy-modernizer`
 - Schema design, migrations, query/index optimization → `database-architect`
+- SQL-heavy work, complex queries → `database-design:sql-pro`
 - ADRs, API docs, runbooks, READMEs, inline docs → `technical-writer`
+- Debugging / error diagnosis → `error-debugging:debugger`
+- Test suite creation → `backend-development:test-automator`
+- Security review / hardening → `backend-api-security:backend-security-coder`
 
 Pass `subagent_type` matching above. No specialized fit → `general-purpose`. Orchestrator skills (e.g. `superpowers:executing-plans`) must forward `subagent_type` per task kind, never blank.
 
-# MINIMAL EDIT PROTOCOL
+## Minimal Edit Protocol
 
 IMPORTANT: Min change for goal. Every edit = diff human must review.
 
-Rules:
-- Preserve original code, logic, structure, naming, formatting, comments unless change explicitly requires modifying them.
-- No reformat, reorder, rename, "clean up" code outside task. No drive-by edits.
-- No refactor, extract helpers, introduce abstractions unless required.
-- No add error handling, logging, validation, type hints, defensive checks beyond task.
-- No rewrite block for "improve" style, idioms, best practices.
-- No touch whitespace, import order, trailing commas in unrelated lines.
-- Keep existing control flow. Prefer add branch/line over restructure surrounding code.
-- Larger change seems warranted → stop, surface as suggestion instead.
-- Doubt between two edits → pick smaller, more localized diff.
+Do: touch only lines the task requires. Pick the smaller, more local diff when in doubt. Change feels larger than the task → stop, surface as suggestion instead.
 
-Goal: reviewer read diff, see exactly requested change, nothing more.
+Don't: reformat, rename, reorder, extract helpers, add error handling, touch unrelated whitespace.
+
+Goal: reviewer reads diff, sees exactly the requested change, nothing more.
 
 # BULK REFACTORING PROTOCOL
 
@@ -153,7 +155,7 @@ Goal: reviewer read diff, see exactly requested change, nothing more.
 3. **WORKFLOW:** Generate/save rule/script quietly → execute → verify `git diff --stat` → **build/typecheck** (fail → revert or fix) → DELETE temp rule/script.
 4. **OUTPUT:** One sentence: file count + build passed. No script/command contents in chat.
 
-## Plan file requirements
+# Plan file requirements
 
 Every plan file written to `~/.claude/plans/*.md` MUST contain these two sections verbatim (verbatim headings — the `plan-guard` hook greps for them):
 
@@ -163,9 +165,15 @@ Every plan file written to `~/.claude/plans/*.md` MUST contain these two section
 Implementation of this plan runs through sub-agents, not the orchestrator:
 
 - Feature work → `feature-engineer`
+- .NET feature work → `dotnet-contribution:dotnet-architect`
 - Refactoring (zero behavioral change) → `refactor-engineer`
+- Legacy modernization → `code-refactoring:legacy-modernizer`
 - Schema / migrations / query optimization → `database-architect`
+- SQL-heavy work → `database-design:sql-pro`
 - Docs / ADRs / READMEs → `technical-writer`
+- Debugging / error diagnosis → `error-debugging:debugger`
+- Test suite creation → `backend-development:test-automator`
+- Security review / hardening → `backend-api-security:backend-security-coder`
 - Otherwise → `general-purpose`
 
 Orchestrator never implements directly.

@@ -66,11 +66,11 @@ Style/naming/taste out of scope unless spec names them.
 
 ## Don't
 
-- No edit/write/destructive. Read-only.
-- No rewrite/redesign. Suggest min change.
+- No edit/write/destructive. Read-only. → Report findings only; parent applies fixes.
+- No rewrite/redesign. → Suggest min change to satisfy spec.
 - No scope expansion. Pre-existing unrelated bug → mention once, separate section, don't block.
-- No invented reqs. Not in spec + not correctness/security → not finding.
-- No silent approval. Silence implies checked; claim only if true.
+- No invented reqs. → Only flag what spec text explicitly requires or what is demonstrably incorrect/insecure.
+- No silent approval. → Mark items "not verified" when you couldn't confirm.
 
 ## Escalate
 
