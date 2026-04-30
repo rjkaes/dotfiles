@@ -94,12 +94,13 @@ fi
 tokens_part=""
 ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // 0')
 ctx_used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
+ctx_free_pct=$(echo "$input" | jq -r '.context_window.remaining_percentage // empty')
 ctx_out=$(echo "$input" | jq -r '.context_window.total_output_tokens // 0')
+rl_five_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
 
 if [ -n "$ctx_used_pct" ] && [ "$ctx_size" -gt 0 ]; then
     pct_used=$(printf '%.0f' "$ctx_used_pct")
-    pct_free=$(( 100 - pct_used ))
-    [ "$pct_free" -lt 0 ] && pct_free=0
+    pct_free=$([ -n "$ctx_free_pct" ] && printf '%.0f' "$ctx_free_pct" || echo $(( 100 - pct_used )))
 
     # Derive used tokens from percentage (total_input_tokens is per-turn only)
     ctx_tokens=$(awk "BEGIN {printf \"%.0f\", $pct_used * $ctx_size / 100}")
@@ -133,6 +134,18 @@ if [ -n "$ctx_used_pct" ] && [ "$ctx_size" -gt 0 ]; then
     tokens_part="${BOLD}${GREEN}⧉ ${ctx_fmt}/${max_fmt}${RESET} ${BOLD}${bar_color}${bar}${RESET} ${DIM}${pct_free}% free (out ${out_fmt})${RESET}"
 fi
 
+# Rate limit (Claude.ai Pro/Max only — absent on API)
+rate_part=""
+if [ -n "$rl_five_pct" ]; then
+    rl_used=$(printf '%.0f' "$rl_five_pct")
+    rl_free=$(( 100 - rl_used ))
+    if   [ "$rl_free" -gt 50 ]; then rl_color="$GREEN"
+    elif [ "$rl_free" -gt 25 ]; then rl_color="$YELLOW"
+    else                              rl_color="$ORANGE"
+    fi
+    rate_part="${BOLD}${rl_color}⏱ ${rl_used}%${RESET}"
+fi
+
 # Model
 model_part=""
 [ -n "$model" ] && model_part="${BOLD}${YELLOW}${model}${RESET}"
@@ -145,5 +158,6 @@ short_cwd="${cwd##*/}"
 output="${BOLD}${BLUE}${short_cwd}${RESET}${git_part}"
 [ -n "$model_part" ]  && output="${output} ${SEP} ${model_part}"
 [ -n "$tokens_part" ] && output="${output} ${SEP} ${tokens_part}"
+[ -n "$rate_part" ]   && output="${output} ${SEP} ${rate_part}"
 
 echo -e "$output"
