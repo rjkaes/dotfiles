@@ -1,6 +1,6 @@
 ## General best practices
 
-- trueline MCP over built-in Read/Edit. First edit per session: ToolSearch `+trueline read edit search` load schemas. Use `trueline_search` → `trueline_edit`. PreToolUse hook blocks built-in Edit.
+- trueline MCP over built-in Read/Edit. If trueline schemas are not loaded in the current context, run ToolSearch `+trueline read edit search` before the first file edit. Use `trueline_search` → `trueline_edit`. PreToolUse hook blocks built-in Edit.
 - Sub-agents for larger/specialized work; keep main context clean.
 - Lint shell scripts with shellcheck before commit.
 - `tmp/` (project-local) for intermediate files, not `/tmp`.
@@ -19,7 +19,7 @@ Commit messages: conventional title (<50 chars), body wrapped at 72 chars (prose
 **NEVER create git worktress _inside_ a git repo.  Any work trees must be in a
 different directory _above_ the git repo.**
 
-**NEVER include `Co-Authored-By` or any attribution.** Write as human developer.
+**NEVER include `Co-Authored-By` or any attribution.** Match the project's existing commit style; omit AI-specific preambles or signatures.
 
 Commit as **separate tool calls**: `git add`, then `git commit` heredoc, then `git status`.
 ```bash
@@ -76,7 +76,7 @@ Top-down narrative. Comments explain **why** (business logic, design decisions),
     * **Action:** Pause. State understanding of "X." Ask: "What's high-level goal? Why this approach?"
 * **Decision Logic:**
     * **State Assumptions** before writing code.
-    * **Architecture First:** Multiple paths → present brief trade-offs. Wait for "Go" if impact significant.
+    * **Architecture First:** Multiple paths → present brief trade-offs. Wait for "Go" if impact significant. In autonomous/headless contexts (subagents, scheduled agents), document trade-offs in the plan or commit message and proceed with the most conservative path.
     * **Commitment:** Don't pivot once agreed unless blocker found.
 
 ### 2. Engineering Integrity (Implementation)
@@ -106,31 +106,21 @@ Top-down narrative. Comments explain **why** (business logic, design decisions),
 
 WebSearch when unsure. Don't guess.
 
-## Agent model policy
-
-Use `model: "opus"` only for:
-* complex architectural design across multiple systems
-* deep multi-file debugging in unfamiliar code
-* nuanced code review weighing design trade-offs
-
-Respect pinned models in sub-agent definitions.
-
 ## Agent routing policy
 
-Claude Code does not auto-route to local agents in `~/.claude/agents/`. Task tool defaults to `general-purpose` unless `subagent_type` explicit. Route deliberately:
+Route deliberately.  For example:
 
 - Plan-driven feature impl → `feature-engineer`
 - .NET feature impl → `dotnet-contribution:dotnet-architect`
 - Executing refactoring plan (zero behavioral change) → `refactor-engineer`
 - Legacy modernization → `code-refactoring:legacy-modernizer`
-- Schema design, migrations, query/index optimization → `database-architect`
-- SQL-heavy work, complex queries → `database-design:sql-pro`
+- Schema design, migrations, query/index optimization, SQL-heavy work → `database-architect`
 - ADRs, API docs, runbooks, READMEs, inline docs → `technical-writer`
 - Debugging / error diagnosis → `error-debugging:debugger`
 - Test suite creation → `backend-development:test-automator`
 - Security review / hardening → `backend-api-security:backend-security-coder`
 
-Pass `subagent_type` matching above. No specialized fit → `general-purpose`. Orchestrator skills (e.g. `superpowers:executing-plans`) must forward `subagent_type` per task kind, never blank.
+Pass `subagent_type` matching above. No specialized fit → use best available agent → `general-purpose`. Orchestrator skills (e.g. `superpowers:executing-plans`) must forward `subagent_type` per task kind, never blank. Keep this table in sync with the "Implementation via sub-agents" list in Plan file requirements.
 
 ## Minimal Edit Protocol
 
@@ -140,9 +130,11 @@ Do: touch only lines the task requires. Pick the smaller, more local diff when i
 
 Don't: reformat, rename, reorder, extract helpers, add error handling, touch unrelated whitespace.
 
+Exception: "why" comments on new or modified logic (per Literate Programming) are part of the task, not drive-by additions.
+
 Goal: reviewer reads diff, sees exactly the requested change, nothing more.
 
-# BULK REFACTORING PROTOCOL
+## BULK REFACTORING PROTOCOL
 
 **TRIGGER:** Change spans >3 files, repetitive string manipulation, or sweeping structural changes → DO NOT REWRITE FILE CONTENTS IN CHAT.
 
@@ -155,7 +147,7 @@ Goal: reviewer reads diff, sees exactly the requested change, nothing more.
 3. **WORKFLOW:** Generate/save rule/script quietly → execute → verify `git diff --stat` → **build/typecheck** (fail → revert or fix) → DELETE temp rule/script.
 4. **OUTPUT:** One sentence: file count + build passed. No script/command contents in chat.
 
-# Plan file requirements
+## Plan file requirements
 
 Every plan file written to `~/.claude/plans/*.md` MUST contain these two sections verbatim (verbatim headings — the `plan-guard` hook greps for them):
 
@@ -168,9 +160,8 @@ Implementation of this plan runs through sub-agents, not the orchestrator:
 - .NET feature work → `dotnet-contribution:dotnet-architect`
 - Refactoring (zero behavioral change) → `refactor-engineer`
 - Legacy modernization → `code-refactoring:legacy-modernizer`
-- Schema / migrations / query optimization → `database-architect`
-- SQL-heavy work → `database-design:sql-pro`
-- Docs / ADRs / READMEs → `technical-writer`
+- Schema / migrations / query optimization / SQL-heavy work → `database-architect`
+- Docs / ADRs / READMEs / runbooks / inline docs → `technical-writer`
 - Debugging / error diagnosis → `error-debugging:debugger`
 - Test suite creation → `backend-development:test-automator`
 - Security review / hardening → `backend-api-security:backend-security-coder`
