@@ -20,6 +20,7 @@ alias gg rg
 alias mutt "mutt -m maildir -f ~/Maildir/"
 alias v vi
 alias vim vi
+alias oc-s2 "OPENCODE_CONFIG_DIR='$HOME/.config/opencode/profiles/supersimple' opencode"
 
 # Abbreviations!
 abbr -a be 'bundle exec'
@@ -91,3 +92,8 @@ source ~/.orbstack/shell/init.fish 2>/dev/null || :
 # bun
 set --export BUN_INSTALL "$HOME/.bun"
 fish_add_path $BUN_INSTALL/bin
+
+# Added by LM Studio CLI (lms)
+set -gx PATH $PATH /Users/rjk/.lmstudio/bin
+# End of LM Studio CLI section
+

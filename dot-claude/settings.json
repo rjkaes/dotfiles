@@ -35,6 +35,7 @@
     ],
     "defaultMode": "acceptEdits"
   },
+  "model": "opusplan",
   "hooks": {
     "Notification": [
       {
@@ -49,11 +50,10 @@
     ],
     "SessionStart": [
       {
-        "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "cat $HOME/.claude/RTK.md"
+            "command": "\"/opt/homebrew/Cellar/node/25.9.0_3/bin/node\" \"/Users/rjk/.claude/hooks/context-mode-cache-heal.mjs\""
           }
         ]
       }
@@ -70,17 +70,9 @@
         ]
       }
     ],
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/plan-guard"
-          }
-        ]
-      }
-    ]
+    "PostToolUse": [],
+    "Stop": [],
+    "SessionEnd": []
   },
   "statusLine": {
     "type": "command",
@@ -129,7 +121,7 @@
     "shell-scripting@claude-code-workflows": true,
     "systems-programming@claude-code-workflows": true,
     "tdd-workflows@claude-code-workflows": false,
-    "caveman@caveman": true,
+    "caveman@caveman": false,
     "javascript-typescript@claude-code-workflows": true
   },
   "extraKnownMarketplaces": {
@@ -164,9 +156,10 @@
       }
     }
   },
+  "effortLevel": "xhigh",
   "showClearContextOnPlanAccept": true,
   "autoDreamEnabled": true,
   "theme": "light-daltonized",
-  "useAutoModeDuringPlan": true,
-  "effortLevel": "xhigh"
+  "skipAutoPermissionPrompt": true,
+  "useAutoModeDuringPlan": true
 }

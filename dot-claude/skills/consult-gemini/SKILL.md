@@ -21,14 +21,14 @@ Trigger phrases and patterns:
 
 ## Workflow
 
-This skill owns: scope clarification, prompt assembly, file validation, Task dispatch, and output presentation. The `gemini-consultant` subagent owns: Bash execution, piping, exit-code handling, timeouts, and verbatim relay. File contents never enter this skill's context — only paths are passed to the subagent, which pipes them to gemini via stdin.
+This skill owns: scope clarification, prompt assembly, file validation, Task dispatch, and output presentation. The `gemini-consultant` subagent owns: Bash execution, exit-code handling, timeouts, and verbatim relay. File contents never enter this skill's context — only paths are passed to the subagent, which lists them in the prompt for Gemini to read via its `read_file` tool.
 1. **Preflight.** Run `which gemini`. If the binary is missing, surface install instructions (`npm i -g @google/gemini-cli` or equivalent) and stop.
 
 2. **Clarify scope.** Confirm the question and the set of files, paths, or topics to include. If the user's request is ambiguous, ask one focused clarifying question before proceeding.
 
 3. **Build the prompt.** Use the templates below. Name the role, the deliverable shape, and any constraints relevant to the user's goal. List context files as explicit paths — no glob expansion. Confirm each listed file exists (`ls <paths>`) before dispatching; surface any missing paths to the user and stop.
 
-4. **Dispatch `gemini-consultant`.** Use `Task` with `subagent_type: "gemini-consultant"`, passing the assembled prompt with file paths listed inside the prompt string. The subagent pipes files to gemini via stdin (`cat <paths> | gemini -s -p "<question>"`); never pass file contents inline. If `Task` cannot resolve `gemini-consultant`, verify `~/.claude/agents/gemini-consultant.md` exists. For a follow-up consultation on the same context, tell the subagent to use `--resume latest` rather than starting a fresh session.
+4. **Dispatch `gemini-consultant`.** Use `Task` with `subagent_type: "gemini-consultant"`, passing the assembled prompt with file paths listed inside the prompt string. The subagent runs `gemini -p "<question>"` (no `-s`; sandbox is unnecessary for read-only review and strict profiles restrict reads outside the working directory). Gemini reads files via its own `read_file` tool — list paths in the prompt, do not `cat` them. If `Task` cannot resolve `gemini-consultant`, verify `~/.claude/agents/gemini-consultant.md` exists. For a follow-up consultation on the same context, tell the subagent to use `--resume latest` rather than starting a fresh session.
 
 5. **Receive and surface output.** Present a 3-6 bullet synthesis covering the highest-severity findings; if more than 10 findings, group by severity and lead with the top 3 blocking/critical items. Show the raw Gemini output inline only when short (under ~80 lines), otherwise offer to show specific sections. If the agent's provenance footer reports a non-zero exit, timeout, or error, surface the full agent output verbatim and ask the user how to proceed — do not retry.
 
@@ -86,7 +86,7 @@ Deliverable: ranked hypotheses, each with supporting evidence from the provided 
 
 Symptoms: users randomly logged out after ~10 min despite a 24h session TTL. No errors in logs. Affects ~5% of users, primarily on mobile.
 
-Files to review — read and pipe these (delivery mode: stdin pipe, 3 files ~18 KB):
+Files to review — Gemini will read these directly:
   src/auth/session.ts
   src/auth/middleware.ts
   tests/auth/session.test.ts"
