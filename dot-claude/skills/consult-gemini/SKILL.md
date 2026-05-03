@@ -1,5 +1,5 @@
 ---
-description: Consult Google Gemini Pro as a deep-dive engineering second opinion. Use when user asks for "deep review", "second opinion", "ask gemini", "consult gemini", architecture critique, security audit, whole-codebase analysis, or tough debugging that benefits from Gemini's larger context window. Also triggered manually via /consult-gemini or /consult-gemini <question>.
+description: Consult Google Gemini Pro as a deep-dive engineering second opinion. Use when user asks for "deep review", "second opinion", "consult gemini", architecture critique, security audit, whole-codebase analysis, or tough debugging that benefits from Gemini's larger context window. Also triggered manually via /consult-gemini or /consult-gemini <question>.
 allowed-tools: Task, Read, Grep, Glob, Bash(which gemini), Bash(gemini --version), Bash(gemini --help)
 argument-hint: [question]
 ---
@@ -9,7 +9,7 @@ argument-hint: [question]
 Trigger phrases and patterns:
 
 - "deep review", "deep dive", "second opinion"
-- "ask gemini", "consult gemini", "what does gemini think"
+- "consult gemini", "what does gemini think"
 - Architecture critique, security audit, whole-codebase analysis
 - Debugging a problem that benefits from Gemini's larger context window
 - Manual invocation: `/consult-gemini` (prompts for scope) or `/consult-gemini <question>` (uses argument directly)
