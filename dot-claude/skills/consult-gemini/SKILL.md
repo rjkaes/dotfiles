@@ -1,6 +1,7 @@
 ---
-description: Consult Google Gemini Pro as a deep-dive engineering second opinion. Use when user asks for "deep review", "second opinion", "ask gemini", "consult gemini", architecture critique, security audit, whole-codebase analysis, or tough debugging that benefits from Gemini's larger context window. Also triggered manually via /consult-gemini.
+description: Consult Google Gemini Pro as a deep-dive engineering second opinion. Use when user asks for "deep review", "second opinion", "ask gemini", "consult gemini", architecture critique, security audit, whole-codebase analysis, or tough debugging that benefits from Gemini's larger context window. Also triggered manually via /consult-gemini or /consult-gemini <question>.
 allowed-tools: Task, Read, Grep, Glob, Bash(which gemini), Bash(gemini --version), Bash(gemini --help)
+argument-hint: [question]
 ---
 
 ## When to use
@@ -11,7 +12,7 @@ Trigger phrases and patterns:
 - "ask gemini", "consult gemini", "what does gemini think"
 - Architecture critique, security audit, whole-codebase analysis
 - Debugging a problem that benefits from Gemini's larger context window
-- Manual invocation: `/consult-gemini`
+- Manual invocation: `/consult-gemini` (prompts for scope) or `/consult-gemini <question>` (uses argument directly)
 
 ## When NOT to use
 
@@ -24,7 +25,7 @@ Trigger phrases and patterns:
 This skill owns: scope clarification, prompt assembly, file validation, Task dispatch, and output presentation. The `gemini-consultant` subagent owns: Bash execution, exit-code handling, timeouts, and verbatim relay. File contents never enter this skill's context — only paths are passed to the subagent, which lists them in the prompt for Gemini to read via its `read_file` tool.
 1. **Preflight.** Run `which gemini`. If the binary is missing, surface install instructions (`npm i -g @google/gemini-cli` or equivalent) and stop.
 
-2. **Clarify scope.** Confirm the question and the set of files, paths, or topics to include. If the user's request is ambiguous, ask one focused clarifying question before proceeding.
+2. **Clarify scope.** User's invocation argument: `$ARGUMENTS`. If non-empty, treat it as the question and proceed directly to step 3. If empty, confirm the question and the set of files, paths, or topics to include — ask one focused clarifying question if the request is ambiguous.
 
 3. **Build the prompt.** Use the templates below. Name the role, the deliverable shape, and any constraints relevant to the user's goal. List context files as explicit paths — no glob expansion. Confirm each listed file exists (`ls <paths>`) before dispatching; surface any missing paths to the user and stop.
 
