@@ -150,7 +150,7 @@
     br = branch
     catchup = !git log --patch --reverse --topo-order _ribbon..origin/$(git default-branch)
     create-branch = !sh -c 'git push origin HEAD:refs/heads/$1 && git fetch origin && git branch --track $1 origin/$1 && cd . && git checkout $1' -
-    cleanup = "!f() { git fetch; git branch --merged | grep -v '^\\*' | xargs -n 1 git branch -d 2>/dev/null; gone=$(git branch -vv | awk '/: gone]/{print $1}'); [ -n \"$gone\" ] && echo \"$gone\" | xargs git branch -D; true; }; f"
+    cleanup = "!f() { git fetch; cur=$(git rev-parse --show-toplevel); git worktree list | awk 'NR>1{split($3,a,/[][]/); if(a[2]!=\"\") print $1, a[2]}' | while read -r wt b; do [ \"$wt\" = \"$cur\" ] && continue; if git branch --merged | awk '{gsub(/^[* +]+/,\"\"); print}' | grep -Fxq \"$b\" || git branch -vv | awk -v b=\"$b\" '{n=($1~/^[*+]$/)?$2:$1} n==b && /: gone]/{found=1} END{exit !found}'; then git worktree remove --force \"$wt\"; fi; done; git worktree prune; git branch --merged | grep -v '^[*+]' | xargs -n 1 git branch -d 2>/dev/null; gone=$(git branch -vv | awk '/: gone]/{print ($1~/^[*+]$/)?$2:$1}'); [ -n \"$gone\" ] && echo \"$gone\" | xargs git branch -D; true; }; f"
     dc = diff --cached
     default-branch = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
     delete-branch = !sh -c 'git push origin :refs/heads/$1 && git branch -D $1' -
