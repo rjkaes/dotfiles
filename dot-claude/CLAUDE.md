@@ -3,7 +3,6 @@
 - trueline MCP over built-in Read/Edit. If trueline schemas are not loaded in the current context, run ToolSearch `+trueline read edit search` before the first file edit. Use `trueline_search` → `trueline_edit`. PreToolUse hook blocks built-in Edit.
 - Sub-agents for larger/specialized work; keep main context clean.
 - Lint shell scripts with shellcheck before commit.
-- `tmp/` (project-local) for intermediate files, not `/tmp`.
 - Don't re-read files already read.
 - Plugin hook (context-mode) intercepts Read with hints: follow hints. Don't retry Read with offset (cached) or fall back to `cat`. `cat` last resort.
 - Test code before declaring done.
@@ -15,11 +14,6 @@
 Plain `git` in current tree. `git -C /path` for other repos (avoids `cd` side effects). `git mv` for tracked files.
 
 Commit messages: conventional title (<50 chars), body wrapped at 72 chars (prose only). Explain non-obvious trade-offs. Backticks for inline types; indented blocks for multi-line code.
-
-**NEVER create git worktress _inside_ a git repo.  Any work trees must be in a
-different directory _above_ the git repo.**
-
-**NEVER include `Co-Authored-By` or any attribution.** Match the project's existing commit style; omit AI-specific preambles or signatures.
 
 Commit as **separate tool calls**: `git add`, then `git commit` heredoc, then `git status`.
 ```bash
@@ -94,19 +88,18 @@ WebSearch when unsure. Don't guess.
 
 ## Agent routing policy
 
-Route deliberately.  For example:
+Route deliberately. Orchestrator never implements directly. Use these specialized agents (also required in plan files under "## Implementation via sub-agents"):
 
-- Plan-driven feature impl → `feature-engineer`
-- .NET feature impl → `dotnet-contribution:dotnet-architect`
-- Executing refactoring plan (zero behavioral change) → `refactor-engineer`
+- Feature work → `feature-engineer`
+- .NET feature work → `dotnet-contribution:dotnet-architect`
+- Refactoring (zero behavioral change) → `refactor-engineer`
 - Legacy modernization → `code-refactoring:legacy-modernizer`
-- Schema design, migrations, query/index optimization, SQL-heavy work → `database-architect`
+- Schema / migrations / query optimization / SQL-heavy work → `database-architect`
 - ADRs, API docs, runbooks, READMEs, inline docs → `technical-writer`
 - Debugging / error diagnosis → `error-debugging:debugger`
 - Test suite creation → `backend-development:test-automator`
 - Security review / hardening → `backend-api-security:backend-security-coder`
-
-Pass `subagent_type` matching above. No specialized fit → use best available agent → `general-purpose`. Orchestrator skills (e.g. `superpowers:executing-plans`) must forward `subagent_type` per task kind, never blank. Keep this table in sync with the "Implementation via sub-agents" list in Plan file requirements.
+- Otherwise → `general-purpose`
 
 ## Minimal Edit Protocol
 
@@ -135,27 +128,10 @@ Goal: reviewer reads diff, sees exactly the requested change, nothing more.
 
 ## Plan file requirements
 
-Every plan file written to `~/.claude/plans/*.md` MUST contain these two sections verbatim (verbatim headings — the `plan-guard` hook greps for them):
+Every plan file written to `~/.claude/plans/*.md` MUST contain this section verbatim (the `plan-guard` hook checks for it):
 
 <plan-requirements>
 ## Implementation via sub-agents
 
-Implementation of this plan runs through sub-agents, not the orchestrator:
-
-- Feature work → `feature-engineer`
-- .NET feature work → `dotnet-contribution:dotnet-architect`
-- Refactoring (zero behavioral change) → `refactor-engineer`
-- Legacy modernization → `code-refactoring:legacy-modernizer`
-- Schema / migrations / query optimization / SQL-heavy work → `database-architect`
-- Docs / ADRs / READMEs / runbooks / inline docs → `technical-writer`
-- Debugging / error diagnosis → `error-debugging:debugger`
-- Test suite creation → `backend-development:test-automator`
-- Security review / hardening → `backend-api-security:backend-security-coder`
-- Otherwise → `general-purpose`
-
-Orchestrator never implements directly.
-
-## Worktree policy
-
-Do NOT create git worktree for this work. Work in the current tree. If an isolation need is genuinely unavoidable, a worktree MUST live in a sibling directory outside the repo — never inside it — and requires explicit user confirmation first.
+Implementation of this plan runs through specialized sub-agents as defined in the "Agent routing policy" (e.g., `feature-engineer`, `refactor-engineer`, etc.). Orchestrator never implements directly.
 </plan-requirements>

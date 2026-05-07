@@ -26,7 +26,6 @@ fi
 
 missing=""
 printf '%s' "$check" | grep -qF '## Implementation via sub-agents' || missing="$missing sub-agents"
-printf '%s' "$check" | grep -qF '## Worktree policy'                || missing="$missing worktree"
 
 [ -z "$missing" ] && exit 0
 
