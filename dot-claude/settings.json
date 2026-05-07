@@ -11,12 +11,7 @@
       "Write(*)",
       "Edit(*)",
       "mcp__plugin_context-mode_context-mode__*",
-      "mcp__plugin_trueline-mcp_mcp__trueline_search",
-      "mcp__plugin_trueline-mcp_mcp__trueline_read",
-      "mcp__plugin_trueline-mcp_mcp__trueline_edit",
-      "mcp__plugin_trueline-mcp_mcp__trueline_outline",
-      "mcp__plugin_trueline-mcp_mcp__trueline_verify",
-      "mcp__plugin_trueline-mcp_mcp__trueline_changes"
+      "mcp__plugin_trueline-mcp_trueline__trueline_*"
     ],
     "deny": [
       "Bash(rm -rf /*)",
@@ -35,7 +30,7 @@
     ],
     "defaultMode": "acceptEdits"
   },
-  "model": "opusplan",
+  "model": "opus",
   "hooks": {
     "Notification": [
       {
@@ -66,6 +61,15 @@
           {
             "type": "command",
             "command": "rtk hook claude"
+          }
+        ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "d=$(cat); m=$(echo \"$d\" | jq -r '.model // \"\"'); [ \"$m\" = sonnet ] || [ \"$m\" = haiku ] || { printf 'BLOCKED: subagent must use model=sonnet or model=haiku. Got: %s\\n' \"$m\" >&2; exit 2; }"
           }
         ]
       }

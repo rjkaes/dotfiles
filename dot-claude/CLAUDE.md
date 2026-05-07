@@ -36,20 +36,6 @@ Standard conventional types, plus:
 - `experiment`: outside issue/ticket
 - `hotfix`: emergency temporary fix
 
-## Code Intelligence
-
-| Task | Tool |
-|------|------|
-| Find definition / implementation | `goToDefinition` / `goToImplementation` |
-| Find usages before rename/change | `findReferences` |
-| Symbol search across workspace | `workspaceSymbol` / `documentSymbol` |
-| Hover for type / docs | `hover` |
-| Call hierarchy | `incomingCalls` / `outgoingCalls` |
-| Structural code pattern search | `ast-grep` |
-| Text-only search | Grep/Glob |
-
-LSP diagnostics = hints only. Build/typecheck = truth.
-
 ## Debugging
 
 <investigate-before-answering>
@@ -171,5 +157,5 @@ Orchestrator never implements directly.
 
 ## Worktree policy
 
-Do NOT create git worktrees for this work. Work in the current tree. If an isolation need is genuinely unavoidable, a worktree MUST live in a sibling directory outside the repo — never inside it — and requires explicit user confirmation first.
+Do NOT create git worktree for this work. Work in the current tree. If an isolation need is genuinely unavoidable, a worktree MUST live in a sibling directory outside the repo — never inside it — and requires explicit user confirmation first.
 </plan-requirements>
