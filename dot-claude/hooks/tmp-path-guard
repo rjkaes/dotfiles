@@ -1,0 +1,12 @@
+#!/opt/homebrew/bin/dash
+
+# Deny Write/Edit when file_path starts with /tmp/.
+# CLAUDE.md: use project-local tmp/ for intermediate files, not /tmp/.
+
+exec /opt/homebrew/bin/jq -c '
+  .tool_input.file_path // empty |
+  if startswith("/tmp/") or . == "/tmp"
+  then {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"Use project-local tmp/ for intermediate files, not /tmp/ (CLAUDE.md general best practices)."}}
+  else empty
+  end
+'

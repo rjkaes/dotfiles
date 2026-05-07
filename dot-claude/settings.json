@@ -65,11 +65,51 @@
         ]
       },
       {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/commit-attribution-guard"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/worktree-location-guard"
+          }
+        ]
+      },
+      {
+        "matcher": "EnterWorktree",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/worktree-location-guard"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/tmp-path-guard"
+          },
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/plan-guard"
+          }
+        ]
+      },
+      {
         "matcher": "Agent",
         "hooks": [
           {
             "type": "command",
-            "command": "d=$(cat); m=$(echo \"$d\" | jq -r '.model // \"\"'); [ \"$m\" = sonnet ] || [ \"$m\" = haiku ] || { printf 'BLOCKED: subagent must use model=sonnet or model=haiku. Got: %s\\n' \"$m\" >&2; exit 2; }"
+            "command": "/Users/rjk/.claude/hooks/agent-input-guard"
           }
         ]
       }

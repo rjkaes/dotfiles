@@ -1,0 +1,20 @@
+#!/opt/homebrew/bin/dash
+# PreToolUse guard for Agent tool calls.
+#
+# Enforces two CLAUDE.md agent routing rules:
+#   1. subagent_type must be a non-empty string.
+#   2. model, if explicitly set, must be 'sonnet' or 'haiku' (not 'opus').
+#
+# NOTE: The original Python used strict=False to allow literal control chars
+# in JSON strings (e.g. raw newlines in the prompt field). jq requires valid
+# JSON. If hook payloads ever contain unescaped control characters, revert to Python.
+
+exec /opt/homebrew/bin/jq -c '
+  .tool_input |
+  if (.subagent_type // "") == "" then
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"CLAUDE.md agent routing: subagent_type must be set, never blank. Pick a specialized agent or \"general-purpose\"."}}
+  elif ((.model // "") != "") and (.model != "sonnet") and (.model != "haiku") then
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("subagent must use model=sonnet or model=haiku, not " + (.model | @json) + ".")}}
+  else empty
+  end
+'

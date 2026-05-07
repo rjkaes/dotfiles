@@ -1,0 +1,16 @@
+#!/opt/homebrew/bin/dash
+
+# Deny git commits containing AI attribution trailers.
+# CLAUDE.md: NEVER include Co-Authored-By or any AI attribution.
+
+exec /opt/homebrew/bin/jq -c '
+  .tool_input.command // empty |
+  if (test("\\bgit\\b") | not) or (test("\\bcommit\\b") | not) then empty
+  elif test("co-authored-by:"; "i")
+    or test("Generated with \\[Claude\\]")
+    or test("🤖 Generated")
+    or test("Claude <noreply@anthropic\\.com>")
+  then {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"CLAUDE.md: NEVER include Co-Authored-By or AI attribution. Strip the trailer and retry."}}
+  else empty
+  end
+'

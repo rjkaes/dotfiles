@@ -1,0 +1,125 @@
+#!/opt/homebrew/bin/dash
+# PreToolUse guard: enforce worktrees live outside the repo.
+# CLAUDE.md: NEVER create git worktrees inside a git repo.
+#
+# Handles two tool events:
+#   Bash         - intercepts `git worktree add <path>` commands
+#   EnterWorktree - blocks the built-in tool which defaults to inside-repo paths
+#
+# Rewritten from Python to dash+jq: avoids ~50ms Python startup on every Bash
+# call. One jq invocation extracts all fields; the non-worktree Bash fast-exit
+# path does zero additional subprocesses.
+
+set -eu
+
+PAYLOAD=$(cat)
+tool="" cwd="" cmd="" wt_path=""  # set by eval below
+
+eval "$(printf '%s' "$PAYLOAD" | jq -r '
+  "tool=" + (.tool_name // "" | @sh),
+  "cwd=" + (.cwd // "" | @sh),
+  "cmd=" + (.tool_input.command // "" | @sh),
+  "wt_path=" + (.tool_input.path // "" | @sh)
+')" || exit 0
+
+[ -z "$cwd" ] && cwd=$(pwd)
+
+# Fast exits before any further subprocesses
+case "$tool" in
+    Bash)
+        case "$cmd" in
+            *git*worktree*add*) ;;
+            *) exit 0 ;;
+        esac
+        ;;
+    EnterWorktree) ;;
+    *) exit 0 ;;
+esac
+
+deny() {
+    jq -cn --arg r "$1" \
+        '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:$r}}'
+    exit 0
+}
+
+ask() {
+    jq -cn --arg r "$1" \
+        '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"ask",permissionDecisionReason:$r}}'
+    exit 0
+}
+
+get_repo_root() {
+    git -C "${1:-.}" rev-parse --show-toplevel 2>/dev/null || true
+}
+
+is_inside() {
+    # $1 = absolute path, $2 = absolute repo root (both from git, already normalized)
+    [ "$1" = "$2" ] && return 0
+    case "$1" in "$2"/*) return 0 ;; esac
+    return 1
+}
+
+resolve_path() {
+    # Resolve target (possibly relative) against base directory.
+    # Uses the filesystem to normalize .. where the parent dir exists.
+    local base target abs dir
+    base="$1"
+    target="$2"
+    case "$target" in
+        /*) abs="$target" ;;
+        *)  abs="$base/$target" ;;
+    esac
+    dir=$(dirname "$abs")
+    if [ -d "$dir" ]; then
+        printf '%s/%s' "$(cd -- "$dir" && pwd -P)" "$(basename "$abs")"
+    else
+        printf '%s' "$abs"
+    fi
+}
+
+case "$tool" in
+Bash)
+    # Extract tokens after "worktree add" and find the positional path argument,
+    # skipping flags and their values (-b/-B/--reason consume the next token).
+    REST=${cmd#*worktree add}
+    TARGET="" SKIP=""
+    for TOKEN in $REST; do
+        if [ -n "$SKIP" ]; then
+            SKIP=""
+            continue
+        fi
+        case "$TOKEN" in
+            -b|-B|--reason) SKIP=1 ;;
+            -*) ;;
+            *) TARGET=$TOKEN; break ;;
+        esac
+    done
+
+    [ -z "$TARGET" ] && exit 0
+
+    ABS_TARGET=$(resolve_path "$cwd" "$TARGET")
+    REPO_ROOT=$(get_repo_root "$cwd")
+    [ -z "$REPO_ROOT" ] && exit 0
+
+    if is_inside "$ABS_TARGET" "$REPO_ROOT"; then
+        deny "CLAUDE.md: NEVER create git worktrees inside a git repo. Place it in a sibling directory above the repo."
+    fi
+    ;;
+
+EnterWorktree)
+    if [ -z "$wt_path" ]; then
+        deny "EnterWorktree creates worktrees inside the repo by default; CLAUDE.md forbids that. Use 'git worktree add <sibling-path>' instead."
+    fi
+
+    ABS_PATH=$(resolve_path "$cwd" "$wt_path")
+    REPO_ROOT=$(get_repo_root "$cwd")
+
+    if [ -z "$REPO_ROOT" ]; then
+        ask "EnterWorktree wants an isolated worktree; CLAUDE.md requires explicit confirmation. Verify path is outside the repo."
+    elif is_inside "$ABS_PATH" "$REPO_ROOT"; then
+        deny "CLAUDE.md: NEVER create git worktrees inside a git repo. Place it in a sibling directory above the repo."
+    else
+        ask "EnterWorktree wants an isolated worktree; CLAUDE.md requires explicit confirmation. Verify path is outside the repo."
+    fi
+    ;;
+esac
