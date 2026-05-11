@@ -65,6 +65,12 @@
         ]
       },
       {
+        "matcher": "Read|Grep|Glob|mcp__.*trueline_(read|search|outline)",
+        "hooks": [
+          { "type": "command", "command": "/Users/rjk/.claude/hooks/advise-explore.sh" }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {
