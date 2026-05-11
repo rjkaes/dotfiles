@@ -10,8 +10,11 @@
       "Grep(*)",
       "Write(*)",
       "Edit(*)",
+      "mcp__claude_ai_Context7__resolve-library-id",
+      "mcp__claude_ai_Microsoft_Learn__*",
       "mcp__plugin_context-mode_context-mode__*",
-      "mcp__plugin_trueline-mcp_trueline__trueline_*"
+      "mcp__plugin_trueline-mcp_mcp__*",
+      "mcp__plugin_trueline-mcp_trueline__*"
     ],
     "deny": [
       "Bash(rm -rf /*)",
@@ -48,13 +51,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/opt/homebrew/Cellar/node/25.9.0_3/bin/node\" \"/Users/rjk/.claude/hooks/context-mode-cache-heal.mjs\""
+            "command": "\"/Users/rjk/.claude/hooks/context-mode-cache-heal.mjs\""
           }
         ]
       }
     ],
     "UserPromptSubmit": [],
     "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|mcp__.*trueline_edit",
+        "hooks": [
+          { "type": "command", "command": "/Users/rjk/.claude/hooks/enforce-subagent.sh" }
+        ]
+      },
       {
         "matcher": "Bash",
         "hooks": [
