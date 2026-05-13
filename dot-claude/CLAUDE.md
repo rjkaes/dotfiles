@@ -1,13 +1,13 @@
 ## General best practices
 
-- trueline MCP over built-in Read/Edit. If trueline schemas are not loaded in the current context, run ToolSearch `+trueline read edit search` before the first file edit. Use `trueline_search` → `trueline_edit`. PreToolUse hook blocks built-in Edit.
-- Sub-agents for larger/specialized work; keep main context clean.
+- **ALWAYS** Use Sub-agents for implementation. **NEVER** implement directly.
+- **ALWAYS** Use Sub-Agents for Exploration.  **NEVER** fill context directly.
 - Lint shell scripts with shellcheck before commit.
-- Don't re-read files already read.
 - Plugin hook (context-mode) intercepts Read with hints: follow hints. Don't retry Read with offset (cached) or fall back to `cat`. `cat` last resort.
 - Test code before declaring done.
 - `bc -l` for calculations.
 - No emdashes in prose. Use commas, semicolons, colons, parentheses.
+- Always write temp files to `tmp/` (local directory).
 
 ## Git workflow
 
@@ -15,7 +15,8 @@ Plain `git` in current tree. `git -C /path` for other repos (avoids `cd` side ef
 
 Commit messages: conventional title (<50 chars), body wrapped at 72 chars (prose only). Explain non-obvious trade-offs. Backticks for inline types; indented blocks for multi-line code.
 
-Commit as **separate tool calls**: `git add`, then `git commit` heredoc, then `git status`.
+`git commit` heredoc, then `git status`.
+
 ```bash
 git commit -m "$(cat <<'EOF'
 feat(scope): short summary
@@ -101,6 +102,14 @@ Route deliberately. Orchestrator never implements directly. Use these specialize
 - Security review / hardening → `backend-api-security:backend-security-coder`
 - Otherwise → `general-purpose`
 
+# Execution & Tool Use Rules
+
+* **Blast-Radius Planning:** Before executing any file edits or writing new code, you MUST output a strict execution plan:
+  1. List the exact files you intend to create or modify.
+  2. State the exact, minimal change intended for each file.
+* Wait for user approval if the plan involves creating new directories or more than two new architectural abstraction files (like Managers, Wrappers, or Factories).
+* **Token-Efficient Edits:** When modifying files, prefer targeted replacements. Respect existing ASTs and do not rewrite entire files just to change a single function.
+
 ## Minimal Edit Protocol
 
 IMPORTANT: Min change for goal. Every edit = diff human must review.
@@ -121,7 +130,7 @@ Goal: reviewer reads diff, sees exactly the requested change, nothing more.
 1. **NO CHATTER:** No acknowledgement, explanation, or script summary.
 2. **TOOLING (preference order):**
    - **AST-aware:** `ast-grep` for code structure (renames, signatures, patterns, args). Use `ast-grep` skill for rules. `ast-grep run --pattern` simple, `ast-grep scan --rule` with temp YAML complex.
-   - **String/regex:** `perl -pi -e` for purely textual (comments, strings, non-code).
+   - **String/regex:** `ruby -pi -e` for purely textual (comments, strings, non-code).
    - **Scripted:** Last resort: temp script (`.csx` via `dotnet-script`, `.ts` via `npx tsx`).
 3. **WORKFLOW:** Generate/save rule/script quietly → execute → verify `git diff --stat` → **build/typecheck** (fail → revert or fix) → DELETE temp rule/script.
 4. **OUTPUT:** One sentence: file count + build passed. No script/command contents in chat.

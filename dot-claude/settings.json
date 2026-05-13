@@ -33,7 +33,7 @@
     ],
     "defaultMode": "acceptEdits"
   },
-  "model": "opus",
+  "model": "sonnet",
   "hooks": {
     "Notification": [
       {
@@ -56,18 +56,34 @@
         ]
       }
     ],
-    "UserPromptSubmit": [],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/inject-delegate-directive.sh"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Edit|Write|MultiEdit|NotebookEdit|mcp__.*trueline_edit",
         "hooks": [
-          { "type": "command", "command": "/Users/rjk/.claude/hooks/enforce-subagent.sh" }
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/enforce-subagent.sh"
+          }
         ]
       },
       {
         "matcher": "Read|Grep|Glob|mcp__.*trueline_(read|search|outline)",
         "hooks": [
-          { "type": "command", "command": "/Users/rjk/.claude/hooks/advise-explore.sh" }
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/advise-explore.sh"
+          }
         ]
       },
       {
@@ -181,7 +197,8 @@
     "systems-programming@claude-code-workflows": true,
     "tdd-workflows@claude-code-workflows": false,
     "caveman@caveman": false,
-    "javascript-typescript@claude-code-workflows": true
+    "javascript-typescript@claude-code-workflows": true,
+    "context-mode@context-mode": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -212,6 +229,12 @@
       "source": {
         "source": "github",
         "repo": "JuliusBrussee/caveman"
+      }
+    },
+    "context-mode": {
+      "source": {
+        "source": "github",
+        "repo": "mksglu/context-mode"
       }
     }
   },

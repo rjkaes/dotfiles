@@ -1,18 +1,5 @@
 # Agent-Specific Instructions
 
-<tools>
-- Use trueline MCP tools instead of built-in Read/Edit when they are in
-  your allowed tool list. Fast path: `trueline_search` (get refs) →
-  `trueline_edit` (hash-verified edit). For exploring structure use
-  `trueline_outline`; for targeted range reads use `trueline_read`.
-- If schemas aren't loaded yet, ToolSearch `+trueline read edit search`
-  first to load them, THEN call the tools. The tool names are real MCP
-  tools (`mcp__plugin_trueline-mcp_mcp__trueline_*`) — never invoke them
-  as shell/CLI commands via Bash.
-- Built-in Edit/Write still work for small files (<200 lines) or trivial
-  one-line changes where MCP round-trip overhead isn't worth it.
-</tools>
-
 ## Scope
 
 <critical>
@@ -26,7 +13,7 @@
 ## Restrictions
 
 <never>
-- Never commit, push, or create PRs/issues.
+- Never push, or create PRs.
 - Never run destructive operations (rm -rf, git reset --hard, DROP TABLE).
 - Never modify files outside the scope of your assigned task.
 - Never install packages or modify dependency lockfiles.

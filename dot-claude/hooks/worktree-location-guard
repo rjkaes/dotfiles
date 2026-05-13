@@ -107,19 +107,10 @@ Bash)
     ;;
 
 EnterWorktree)
-    if [ -z "$wt_path" ]; then
-        deny "EnterWorktree creates worktrees inside the repo by default; CLAUDE.md forbids that. Use 'git worktree add <sibling-path>' instead."
-    fi
+    # Only block creation. If wt_path is set, EnterWorktree is switching into
+    # an existing worktree (per its docs) — allow without prompting.
+    [ -n "$wt_path" ] && exit 0
 
-    ABS_PATH=$(resolve_path "$cwd" "$wt_path")
-    REPO_ROOT=$(get_repo_root "$cwd")
-
-    if [ -z "$REPO_ROOT" ]; then
-        ask "EnterWorktree wants an isolated worktree; CLAUDE.md requires explicit confirmation. Verify path is outside the repo."
-    elif is_inside "$ABS_PATH" "$REPO_ROOT"; then
-        deny "CLAUDE.md: NEVER create git worktrees inside a git repo. Place it in a sibling directory above the repo."
-    else
-        ask "EnterWorktree wants an isolated worktree; CLAUDE.md requires explicit confirmation. Verify path is outside the repo."
-    fi
+    deny "EnterWorktree creates worktrees inside the repo by default; CLAUDE.md forbids that. Use 'git worktree add <sibling-path>' instead."
     ;;
 esac
