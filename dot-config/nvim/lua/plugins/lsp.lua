@@ -12,16 +12,39 @@ return {
         ---@module 'blink.cmp'
         ---@type blink.cmp.Config
         opts = {
-            snippets = { preset = 'luasnip' },
+            snippets = { preset = 'default' },
+            completion = {
+                list = {
+                    selection = { preselect = false, auto_insert = false },
+                },
+                menu = { auto_show = true },
+                documentation = { auto_show = true, auto_show_delay_ms = 250 },
+                ghost_text = { enabled = true },
+            },
+            signature = { enabled = true },
             keymap = {
                 preset = 'none',
-                ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
-                ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
-                ['<CR>'] = { 'accept', 'fallback' },
+
                 ['<C-Space>'] = { 'show', 'show_documentation', 'hide_documentation' },
-                ['<C-e>'] = { 'hide', 'fallback' },
-                ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
-                ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
+                ['<C-e>']     = { 'cancel', 'fallback' },
+
+                ['<C-n>']     = { 'select_next', 'fallback' },
+                ['<C-p>']     = { 'select_prev', 'fallback' },
+                ['<Down>']    = { 'select_next', 'fallback' },
+                ['<Up>']      = { 'select_prev', 'fallback' },
+
+                ['<Tab>']     = { 'select_and_accept', 'fallback' },
+                ['<S-Tab>']   = { 'fallback' },
+
+                ['<C-y>']     = { 'select_and_accept' },
+                ['<CR>']      = { 'accept', 'fallback' },
+
+                ['<C-l>']     = { 'fallback' },
+                ['<C-j>']     = { 'fallback' },
+
+                ['<C-k>']     = { 'show_signature', 'hide_signature', 'fallback' },
+                ['<C-d>']     = { 'scroll_documentation_down', 'fallback' },
+                ['<C-u>']     = { 'scroll_documentation_up', 'fallback' },
             },
             appearance = {
                 nerd_font_variant = 'mono',
