@@ -14,7 +14,6 @@ return {
     { 'tpope/vim-unimpaired' },
 
     -- Auto pairs
-    { 'windwp/nvim-autopairs', event = "InsertEnter", config = true },
     { 'windwp/nvim-ts-autotag', event = "InsertEnter", config = true },
 
     { 'dewyze/vim-tada' },

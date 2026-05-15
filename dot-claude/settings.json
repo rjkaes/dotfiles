@@ -33,7 +33,7 @@
     ],
     "defaultMode": "acceptEdits"
   },
-  "model": "sonnet",
+  "model": "opus",
   "hooks": {
     "Notification": [
       {
@@ -240,6 +240,7 @@
   },
   "effortLevel": "xhigh",
   "showClearContextOnPlanAccept": true,
+  "tui": "fullscreen",
   "autoDreamEnabled": true,
   "theme": "light-daltonized",
   "skipAutoPermissionPrompt": true,
