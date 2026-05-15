@@ -1,5 +1,6 @@
 ## General best practices
 
+- trueline MCP over built-in Read/Edit. If trueline schemas are not loaded in the current context, run ToolSearch `+trueline read edit search` before the first file edit. Use `trueline_search` → `trueline_edit`. PreToolUse hook blocks built-in Edit.
 - **ALWAYS** Use Sub-agents for implementation. **NEVER** implement directly.
 - **ALWAYS** Use Sub-Agents for Exploration.  **NEVER** fill context directly.
 - Lint shell scripts with shellcheck before commit.
