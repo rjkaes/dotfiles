@@ -9,6 +9,7 @@
 - `bc -l` for calculations.
 - No emdashes in prose. Use commas, semicolons, colons, parentheses.
 - Always write temp files to `tmp/` (local directory).
+- Before editing any file, read it first. Before modifying a function, grep for all callers. Research before you edit.
 
 ## Git workflow
 
