@@ -30,7 +30,7 @@ This skill owns: scope clarification, prompt assembly, file validation, Task dis
 
 3. **Dispatch `gemini-consultant`.** Use `Task` with `subagent_type: "gemini-consultant"`, passing the assembled prompt with file paths listed inside the prompt string. Tell the subagent to `cd` to the project root before running `ask-gemini` so that relative paths in the prompt resolve correctly. The subagent runs `ask-gemini "<question>"` as a **single-line Bash command** — no multiline strings, no heredoc (fish shell does not handle them reliably). Gemini reads files via its own `read_file` tool — list paths in the prompt, do not `cat` them. If `Task` cannot resolve `gemini-consultant`, verify `~/.claude/agents/gemini-consultant.md` exists. For a follow-up consultation on the same context, tell the subagent to use `--resume latest` rather than starting a fresh session.
 
-4. **Integrate findings.** Based on Gemini's output, propose concrete next actions scaled to severity and volume: blocking/critical issues — propose a task or plan to address each; single architectural blocker — offer a design decision or ADR; list of medium/minor fixes — offer to implement directly or batch into a PR. Do not relay findings without a proposed action.
+4. **Integrate findings.** Based on Gemini's output, propose concrete next actions scaled to severity and volume: blocking/critical issues — **explicitly suggest creating a new sub-task for each issue found**; single architectural blocker — offer a design decision or ADR; list of medium/minor fixes — offer to implement directly or batch into a PR. Do not relay findings without a proposed action.
 
 ## Prompt templates
 
@@ -44,32 +44,40 @@ Select the template that matches the user's goal:
 Combine templates when the scope spans multiple concerns (e.g. security audit + architecture critique for a new service).
 **Deep code review**
 ```
+Role: Senior Staff Engineer / Security Architect
+Context: You are providing a second opinion on a code review/implementation performed by Claude.
 [Task tier: deep-analysis — broad context, long reasoning chains, thorough multi-file review]
 Review the provided code for correctness, design, maintainability, and edge cases.
 Scope: flag blocking issues and significant design problems; skip trivial style nitpicks unless they indicate a systemic pattern.
-Deliverable: numbered list of findings, each with file/line, severity (blocking/significant/minor), explanation, and suggested fix.
+Deliverable: A markdown table of findings with the following columns: File/Line, Severity (Blocking/Significant/Minor), Issue, Suggested Fix.
 Do not summarize what the code does — focus on problems and improvements.
 ```
 
 **Architecture critique**
 ```
+Role: Senior Staff Engineer / Security Architect
+Context: You are providing a second opinion on an architecture proposal or system design reviewed by Claude.
 [Task tier: deep-analysis — broad context, long reasoning chains, thorough multi-file review]
 Identify structural weaknesses, coupling, scalability concerns, and missing failure modes. Exclude low-risk cosmetic concerns.
-Deliverable: prioritized list of concerns with rationale and concrete alternatives.
+Deliverable: A markdown table of concerns with columns: Component, Risk, Rationale, Concrete Alternative.
 ```
 
 **Security audit**
 ```
+Role: Senior Staff Engineer / Security Architect
+Context: You are providing a second opinion on the security posture of code/design reviewed by Claude.
 [Task tier: deep-analysis — broad context, long reasoning chains, thorough multi-file review]
 Check for injection risks, auth gaps, insecure defaults, data exposure, supply-chain issues, and compliance/policy risks (e.g. PII handling, audit trails).
-Deliverable: findings ranked by severity (critical / high / medium / low), each with CVE class if applicable, affected scope, and a fix recommendation.
+Deliverable: A markdown table of vulnerabilities with columns: Severity (Critical/High/Medium/Low), CVE Class (if applicable), Affected Scope, Risk, Recommendation.
 ```
 
 **Debugging consult**
 ```
+Role: Senior Staff Engineer / Security Architect
+Context: You are providing a second opinion on a debugging session led by Claude.
 [Task tier: focused-analysis — bounded scope, targeted reasoning, single root-cause hunt]
 Given the symptoms, stack traces, and relevant code, identify the most likely root causes. Distinguish between root causes and symptoms.
-Deliverable: ranked hypotheses, each with supporting evidence from the provided code, a diagnostic step to confirm or rule it out, and whether it is a root cause or a contributing factor.
+Deliverable: A markdown table of hypotheses with columns: Rank, Hypothesis, Type (Root Cause / Contributing Factor), Supporting Evidence, Diagnostic Step.
 ```
 
 ## Dispatch example
