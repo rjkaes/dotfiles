@@ -148,7 +148,7 @@ vim.g.terminal_color_15 = colors.bright_fg
 
 -- Helper function to set highlights
 local function hi(group, opts)
-  vim.api.nvim_set_hl(0, group, vim.tbl_extend('keep', opts, { default = true }))
+  vim.api.nvim_set_hl(0, group, opts)
 end
 
 -- =========================================
