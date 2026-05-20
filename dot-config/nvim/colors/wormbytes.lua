@@ -13,11 +13,11 @@ vim.g.colors_name = 'wormbytes'
 local palettes = {
   dark = {
     -- Base colors
-    bg = '#1a1b26',      -- dark blue-gray (Tokyo Night)
+    bg = '#1c1b1a',      -- warm neutral dark
     fg = '#E8E8E8',      -- white
 
     -- Grays (Dark to Light)
-    gray1 = '#1C1C1C',
+    gray1 = '#141312',
     gray2 = '#262626',
     gray3 = '#3A3A3A',
     gray4 = '#4E4E4E',
@@ -32,11 +32,11 @@ local palettes = {
     -- Meaningful accent colors
     red = '#E06C75',        -- Soft red for errors/deletion
     green = '#98C379',      -- Natural green for strings/addition
-    yellow = '#E5C07B',     -- Warm yellow for warnings/numbers
-    blue = '#61AFEF',       -- Cool blue for keywords/types
-    magenta = '#C678DD',    -- Purple for functions/special
+    yellow = '#E5C07B',     -- Warm yellow for warnings/types
+    blue = '#61AFEF',       -- Cool blue for keywords
+    magenta = '#C678DD',    -- Purple for functions/methods
     cyan = '#56B6C2',       -- Teal for constants/preprocessor
-    orange = '#D4884A',     -- Red-orange for operators/special chars
+    orange = '#D4884A',     -- Red-orange for numbers/operators/special
 
     -- Brighter variants for emphasis
     bright_red = '#FF6B6B',
@@ -55,7 +55,7 @@ local palettes = {
 
     -- UI Specifics
     line_nr = '#767676',      -- gray6
-    pmenu_sel_fg = '#1a1b26', -- bg (dark on yellow)
+    pmenu_sel_fg = '#1c1b1a', -- bg (dark on yellow)
     pmenu_sel_bg = '#E5C07B', -- yellow
     search_fg = '#000000',    -- black (bg)
     search_bg = '#E5C07B',    -- yellow (same as accent, already light)
@@ -88,11 +88,11 @@ local palettes = {
     -- Meaningful accent colors (adjusted for light background)
     red = '#C7254E',        -- Deep red for errors/deletion
     green = '#27761B',      -- Rich green for strings/addition
-    yellow = '#8F5E00',     -- Deep yellow for warnings/numbers
-    blue = '#0366D6',       -- Strong blue for keywords/types
-    magenta = '#8250DF',    -- Purple for functions/special
+    yellow = '#8F5E00',     -- Deep yellow for warnings/types
+    blue = '#0366D6',       -- Strong blue for keywords
+    magenta = '#7239D1',    -- Purple for functions/methods
     cyan = '#07738F',       -- Teal for constants/preprocessor
-    orange = '#A74F00',     -- Orange for operators/special chars
+    orange = '#A74F00',     -- Orange for numbers/operators/special
 
     -- Brighter variants for emphasis
     bright_red = '#D73A49',
@@ -148,7 +148,7 @@ vim.g.terminal_color_15 = colors.bright_fg
 
 -- Helper function to set highlights
 local function hi(group, opts)
-  vim.api.nvim_set_hl(0, group, opts)
+  vim.api.nvim_set_hl(0, group, vim.tbl_extend('keep', opts, { default = true }))
 end
 
 -- =========================================
@@ -167,7 +167,7 @@ hi('BaseWarnBold',  { fg = colors.warning, bold = true })
 -- Syntax Basics
 hi('BaseComment',   { fg = colors.gray7, italic = true })
 hi('BaseString',    { fg = colors.green })
-hi('BaseCharacter', { fg = colors.green })
+hi('BaseCharacter', { link = 'BaseString' })
 hi('BaseNumber',    { fg = colors.orange })
 hi('BaseBoolean',   { fg = colors.red })
 hi('BaseFloat',     { fg = colors.orange })
@@ -207,9 +207,9 @@ hi('FloatTitle',   { fg = colors.blue, bg = colors.gray1, bold = true })
 
 hi('ColorColumn',  { fg = colors.fg, bg = colors.gray1 })
 hi('Cursor',       { fg = colors.bg, bg = colors.fg })
-hi('CursorLine',   { fg = colors.fg, bg = colors.gray1 })
-hi('CursorColumn', { bg = colors.gray1 })
-hi('CursorLineNr', { fg = colors.orange, bg = colors.gray1, bold = true })
+hi('CursorLine',   { bg = colors.gray3 })
+hi('CursorColumn', { bg = colors.gray3 })
+hi('CursorLineNr', { fg = colors.orange, bg = colors.gray3, bold = true })
 
 hi('LineNr',       { fg = colors.line_nr })
 hi('SignColumn',   { fg = colors.line_nr, bg = colors.bg })
@@ -243,10 +243,10 @@ hi('PmenuThumb',   { fg = colors.gray9, bg = colors.gray5 })
 hi('Folded',       { fg = colors.gray7, bg = colors.gray1 })
 hi('FoldColumn',   { fg = colors.gray6, bg = colors.bg })
 
-hi('DiffAdd',      { fg = colors.green, bg = colors.bg })
-hi('DiffChange',   { fg = colors.yellow, bg = colors.bg })
-hi('DiffDelete',   { fg = colors.red, bg = colors.bg })
-hi('DiffText',     { fg = colors.blue, bg = colors.bg, bold = true })
+hi('DiffAdd',      { link = 'BaseSuccess' })
+hi('DiffChange',   { link = 'BaseWarn' })
+hi('DiffDelete',   { link = 'BaseError' })
+hi('DiffText',     { link = 'BaseInfo' })
 
 hi('SpellBad',     { fg = colors.red, undercurl = true })
 hi('SpellCap',     { fg = colors.yellow, undercurl = true })
@@ -548,6 +548,13 @@ hi('LazyH1',           { fg = colors.blue, bold = true })
 hi('LazyButton',       { fg = colors.fg, bg = colors.gray3 })
 hi('LazyButtonActive', { fg = colors.bg, bg = colors.blue })
 
+-- mini.nvim
+hi('MiniStatuslineNormal',         { link = 'StatusLine' })
+hi('MiniStatuslineInactive',       { link = 'StatusLineNC' })
+hi('MiniCompletionActiveParameter',{ link = 'LspSignatureActiveParameter' })
+hi('MiniCursorword',               { link = 'LspReferenceText' })
+hi('MiniCursorwordCurrent',        { link = 'LspReferenceWrite' })
+hi('MiniIndentscopeSymbol',        { link = 'IblScope' })
 -- Mason.nvim
 hi('MasonHeader',              { fg = colors.bg, bg = colors.blue, bold = true })
 hi('MasonHighlight',           { link = 'BaseKeyword' })
@@ -679,6 +686,15 @@ hi('TelescopeSelectionCaret',{ link = 'BaseKeyword' })
 hi('TelescopeMultiSelection',{ link = 'BaseType' })
 hi('TelescopeMatching',      { fg = colors.blue, bold = true })
 
+-- Trouble.nvim
+hi('TroubleNormal',         { link = 'NormalFloat' })
+hi('TroubleText',           { link = 'BaseFg' })
+hi('TroubleCount',          { link = 'BaseNumber' })
+hi('TroubleSource',         { link = 'BaseSubtext' })
+hi('TroubleSignError',      { link = 'DiagnosticError' })
+hi('TroubleSignWarning',    { link = 'DiagnosticWarn' })
+hi('TroubleSignInformation',{ link = 'DiagnosticInfo' })
+hi('TroubleSignHint',       { link = 'DiagnosticHint' })
 -- WhichKey
 hi('WhichKey',          { link = 'BaseConstant' })
 hi('WhichKeyGroup',     { link = 'BaseKeyword' })
