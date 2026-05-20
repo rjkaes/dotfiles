@@ -29,8 +29,8 @@ footprint=$(jq -r '
   ] | map(select(. != "")) | join("\n")
 ' <<<"$input")
 
-max_lines=${MAX_DIRECT_LINES:-5}
-max_chars=${MAX_DIRECT_CHARS:-400}
+max_lines=${MAX_DIRECT_LINES:-20}
+max_chars=${MAX_DIRECT_CHARS:-1500}
 
 if [[ -z "$footprint" ]]; then
   nlines=0
@@ -59,7 +59,7 @@ jq -n \
   '{
     hookSpecificOutput: {
       hookEventName: "PreToolUse",
-      additionalContext: ("Advisory: this " + $tool + " call was " + $reason + ". Opus is the most expensive Claude model — for non-trivial implementation work, dispatch a Sonnet/Haiku subagent (feature-engineer, refactor-engineer, database-architect, debugging-toolkit:debugger, backend-development:test-automator, or general-purpose) per CLAUDE.md. Routing future edits through subagents preserves the main thread'\''s context and reduces cost. This edit was allowed; consider delegating the next one.")
+      additionalContext: ("Advisory: this " + $tool + " call was " + $reason + ". For non-trivial implementation work, dispatch a subagent via Task to keep the orchestrator'\''s context lean. When you dispatch, set model: sonnet by default; drop to model: haiku only when the subagent has no decisions and no summarization to produce (purely mechanical execution). Never model: opus. Routing: see CLAUDE.md. This edit was allowed; consider delegating the next one.")
     }
   }'
 

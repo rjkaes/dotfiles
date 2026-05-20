@@ -1,8 +1,8 @@
 ## General best practices
 
 - trueline MCP over built-in Read/Edit. If trueline schemas are not loaded in the current context, run ToolSearch `+trueline read edit search` before the first file edit. Use `trueline_search` → `trueline_edit`. PreToolUse hook blocks built-in Edit.
-- **ALWAYS** Use Sub-agents for implementation. **NEVER** implement directly.
-- **ALWAYS** Use Sub-Agents for Exploration.  **NEVER** fill context directly.
+- **Default to subagents** for implementation and exploration to keep the orchestrator's context lean. **Exception:** trivial known-target edits (single file, <=20 lines, <=1500 chars, no exploration needed) may run inline — subagent init (~15-30k tokens) is wasted on them.
+- When delegating, pick the cheapest viable model. See "Agent routing policy" -> "Model selection".
 - Lint shell scripts with shellcheck before commit.
 - Plugin hook (context-mode) intercepts Read with hints: follow hints. Don't retry Read with offset (cached) or fall back to `cat`. `cat` last resort.
 - Test code before declaring done.
@@ -103,6 +103,14 @@ Route deliberately. Orchestrator never implements directly. Use these specialize
 - Test suite creation → `backend-development:test-automator`
 - Security review / hardening → `backend-api-security:backend-security-coder`
 - Otherwise → `general-purpose`
+
+### Model selection
+
+When dispatching via the Task tool, set `model` explicitly to bias toward cheaper models:
+
+- **`sonnet` (default):** anything requiring judgment, exploration, synthesis, or summarization — feature work, refactors, debugging, code review, security review, schema design, Explore/reconnaissance dispatches, test creation, architecture decisions. This is most subagent work.
+- **`haiku`:** *only* when the task is fully specified and the subagent has no decisions and no summarization to produce — e.g., "apply this exact edit at this exact location", a fully-specified rename, run-a-command-and-report-exit-code. If the subagent must judge, choose, explore, or summarize, it is not a Haiku task.
+- **`opus`:** never. Opus is the orchestrator's role.
 
 # Execution & Tool Use Rules
 
