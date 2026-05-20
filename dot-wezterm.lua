@@ -7,14 +7,14 @@ local wezterm = require 'wezterm'
 local wormbytes = {
   dark = {
     foreground = '#E8E8E8',
-    background = '#1a1b26',
+    background = '#1c1b1a',
     cursor_bg = '#52ad70',
-    cursor_fg = '#1a1b26',
+    cursor_fg = '#1c1b1a',
     cursor_border = '#52ad70',
     selection_bg = '#2A2D3D',
     selection_fg = '#E8E8E8',
     ansi = {
-      '#1a1b26',  -- black  (bg)
+      '#1c1b1a',  -- black  (bg)
       '#E06C75',  -- red
       '#98C379',  -- green
       '#E5C07B',  -- yellow
@@ -48,7 +48,7 @@ local wormbytes = {
       '#27761B',  -- green
       '#8F5E00',  -- yellow
       '#0366D6',  -- blue
-      '#8250DF',  -- magenta
+      '#7239D1',  -- magenta
       '#07738F',  -- cyan
       '#1C1C1C',  -- white  (fg)
     },
