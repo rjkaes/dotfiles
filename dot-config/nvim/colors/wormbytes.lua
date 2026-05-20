@@ -63,6 +63,7 @@ local palettes = {
     cursearch_bg = '#FFD93D',  -- bright yellow
     todo_bg = '#E5C07B',      -- yellow
     selection = '#2A2D3D',    -- tinted dark blue-gray
+    cursor_line = '#B2B2B2',  -- gray9: light enough to contrast dark bg
 
     -- CodeCompanion
     chat_header = '#E8E8E8',  -- white (fg)
@@ -119,6 +120,7 @@ local palettes = {
     cursearch_bg = '#FFDF5E',  -- vivid yellow
     todo_bg = '#F5E6A3',      -- light warm yellow
     selection = '#C0BDB6',    -- warm mid-gray (darkened for accent contrast)
+    cursor_line = '#E8E8E8',  -- gray2: subtle contrast against light bg
 
     -- CodeCompanion
     chat_header = '#1C1C1C',  -- black (fg)
@@ -207,9 +209,9 @@ hi('FloatTitle',   { fg = colors.blue, bg = colors.gray1, bold = true })
 
 hi('ColorColumn',  { fg = colors.fg, bg = colors.gray1 })
 hi('Cursor',       { fg = colors.bg, bg = colors.fg })
-hi('CursorLine',   { bg = colors.gray3 })
-hi('CursorColumn', { bg = colors.gray3 })
-hi('CursorLineNr', { fg = colors.orange, bg = colors.gray3, bold = true })
+hi('CursorLine',   { bg = colors.cursor_line })
+  hi('CursorColumn', { bg = colors.cursor_line })
+hi('CursorLineNr', { fg = colors.orange, bg = colors.cursor_line, bold = true })
 
 hi('LineNr',       { fg = colors.line_nr })
 hi('SignColumn',   { fg = colors.line_nr, bg = colors.bg })
@@ -622,7 +624,7 @@ hi('GitSignsDelete', { link = 'BaseError' })
 
 -- Snacks
 hi('SnacksPickerDir',            { fg = colors.gray6 })
-hi('SnacksPickerListCursorLine', { bg = colors.gray3 })
+hi('SnacksPickerListCursorLine', { bg = colors.cursor_line })
 hi('SnacksPickerMatch',          { fg = colors.blue, bold = true })
 hi('SnacksPickerInput',          { link = 'Pmenu' })
 hi('SnacksPickerInputBorder',    { link = 'FloatBorder' })
