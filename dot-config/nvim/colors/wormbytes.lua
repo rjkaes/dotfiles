@@ -63,7 +63,7 @@ local palettes = {
     cursearch_bg = '#FFD93D',  -- bright yellow
     todo_bg = '#E5C07B',      -- yellow
     selection = '#2A2D3D',    -- tinted dark blue-gray
-    cursor_line = '#B2B2B2',  -- gray9: light enough to contrast dark bg
+    cursor_line = '#2A2827',
 
     -- CodeCompanion
     chat_header = '#E8E8E8',  -- white (fg)
@@ -120,7 +120,7 @@ local palettes = {
     cursearch_bg = '#FFDF5E',  -- vivid yellow
     todo_bg = '#F5E6A3',      -- light warm yellow
     selection = '#C0BDB6',    -- warm mid-gray (darkened for accent contrast)
-    cursor_line = '#E8E8E8',  -- gray2: subtle contrast against light bg
+    cursor_line = '#ECEBE6',
 
     -- CodeCompanion
     chat_header = '#1C1C1C',  -- black (fg)
