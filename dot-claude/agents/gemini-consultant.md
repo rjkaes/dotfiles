@@ -1,6 +1,6 @@
 ---
 name: gemini-consultant
-description: Use to consult Google Gemini Pro for deep-dive code reviews, second opinions, architecture critique, security audits, large-context analysis, or tough debugging via the local `ask-gemini` CLI (a wrapper around Google's `agy` / Antigravity). Returns Gemini's response verbatim. Read-only — does not edit code.
+description: Use to consult Google Gemini Pro as an adversarial second-opinion reviewer of Claude's work via the local `ask-gemini` CLI (a wrapper around Google's `agy` / Antigravity). Strongest on concurrency races, API compatibility, permission/auth gaps, and structural critique; weaker on deep logic and data-structure lifecycle. Returns Gemini's response verbatim. Read-only — does not edit code.
 model: sonnet
 color: blue
 tools: Bash
