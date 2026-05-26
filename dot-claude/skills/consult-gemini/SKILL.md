@@ -78,8 +78,15 @@ Rules:
   2. Lead with evidence, conclude with verdict. Do not assert "this is bad" before showing the trace.
   3. If you agree with Claude on a point, explain *why* — what evidence in the code supports it. Do not say "agreed" alone.
 
-Deliverable: a markdown table with columns: File/Line | Severity (Blocking/Significant/Minor) | Issue | Evidence (code reference) | Suggested Fix.
-Skip trivial style nits unless they indicate a systemic pattern.
+Deliverable: one record per finding using the schema below. Skip trivial style nits unless they indicate a systemic pattern.
+
+  ```
+  ### Finding <n> — <Blocking|Significant|Minor>
+  - **File/Line:** <path:line>
+  - **Issue:** <one sentence>
+  - **Evidence:** <code reference; use a fenced block for multiline>
+  - **Suggested Fix:** <concrete change; fenced block if code>
+  ```
 ```
 
 **Architecture challenge**
@@ -92,8 +99,15 @@ Rules:
   2. Lead with the observed coupling/risk, conclude with the structural verdict.
   3. Propose a concrete alternative for each concern — not "consider refactoring".
 
-Deliverable: a markdown table with columns: Component | Risk | Evidence (code reference) | Concrete Alternative.
-Exclude low-risk cosmetic concerns.
+Deliverable: one record per concern using the schema below. Exclude low-risk cosmetic concerns.
+
+  ```
+  ### Concern <n>
+  - **Component:** <module/file>
+  - **Risk:** <one sentence>
+  - **Evidence:** <code reference; fenced block if multiline>
+  - **Concrete Alternative:** <specific refactor, not "consider refactoring">
+  ```
 ```
 
 **Security audit**
@@ -110,7 +124,16 @@ Rules:
   2. Lead with the attack path, conclude with severity.
   3. If Claude flagged something already, either confirm with new evidence or refute with a code reference.
 
-Deliverable: a markdown table with columns: Severity (Critical/High/Medium/Low) | CVE Class | Affected Scope | Evidence (code reference) | Attack Path | Recommendation.
+Deliverable: one record per finding using the schema below.
+
+  ```
+  ### Finding <n> — <Critical|High|Medium|Low>
+  - **CVE Class:** <e.g. SQLi, SSRF, AuthZ bypass>
+  - **Affected Scope:** <routes/functions/data>
+  - **Evidence:** <code reference; fenced block if multiline>
+  - **Attack Path:** <step-by-step>
+  - **Recommendation:** <specific fix>
+  ```
 ```
 
 **Debugging consult**
@@ -126,7 +149,16 @@ Rules:
   3. For each hypothesis, give a one-step diagnostic that would confirm or rule it out.
   4. Include at least one hypothesis that disagrees with Claude's leading theory, if any plausible one exists.
 
-Deliverable: a markdown table with columns: Rank | Hypothesis | Type (Root Cause / Contributing) | Evidence | Diagnostic Step | Agrees-with-Claude (yes/no).
+Deliverable: one record per hypothesis, ranked, using the schema below.
+
+  ```
+  ### Hypothesis <rank>
+  - **Type:** <Root Cause | Contributing>
+  - **Hypothesis:** <one sentence>
+  - **Evidence:** <code reference; fenced block if multiline>
+  - **Diagnostic Step:** <one action that confirms or rules it out>
+  - **Agrees with Claude:** <yes | no>
+  ```
 ```
 
 **Iterative debate** (use after a prior consult; subagent runs with `--resume latest`)
@@ -143,7 +175,15 @@ Rules:
   3. Surface any new findings Claude's rebuttal revealed.
   4. Keep debate chains to ≤3 rounds; Gemini grows inconsistent in later rounds (benchmark observation). Start a fresh session for new scope.
 
-Deliverable: a markdown table with columns: Prior Finding | Status (Held/Withdrawn/Revised) | Code-Cited Reason | New Implication (if any).
+Deliverable: one record per prior finding using the schema below.
+
+  ```
+  ### Prior Finding <n>
+  - **Status:** <Held | Withdrawn | Revised>
+  - **Prior Finding:** <restate briefly>
+  - **Code-Cited Reason:** <code reference>
+  - **New Implication:** <if any, else "none">
+  ```
 ```
 
 ## Claude's known blind spots — scan against these
@@ -162,7 +202,7 @@ This bias is what makes the Claude+Gemini pair efficient: their misses barely ov
 - **"Comes in hot"** — opens with a strong verdict, then backfills justification. *Counter:* evidence-first rule above.
 - **Stays at the surface** — doesn't trace call chains as far as Claude. *Counter:* name the specific blind-spot categories in the prompt; require file:line.
 - **Drifts in later debate rounds** — keep `--resume latest` chains to ≤3 rounds.
-- **Lower actionability score (peer-eval 7.2 vs Claude/Qwen 8.6)** — Gemini's fixes are often vaguer than its diagnoses. *Counter:* templates require a "Suggested Fix" / "Concrete Alternative" column, not free-text recommendations.
+- **Lower actionability score (peer-eval 7.2 vs Claude/Qwen 8.6)** — Gemini's fixes are often vaguer than its diagnoses. *Counter:* templates require a "Suggested Fix" / "Concrete Alternative" field, not free-text recommendations.
 
 ## Dispatch example
 
