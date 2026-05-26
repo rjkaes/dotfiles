@@ -33,8 +33,8 @@ return {
                 ['<Down>']    = { 'select_next', 'fallback' },
                 ['<Up>']      = { 'select_prev', 'fallback' },
 
-                ['<Tab>']     = { 'select_and_accept', 'fallback' },
-                ['<S-Tab>']   = { 'fallback' },
+                ['<Tab>']     = { 'select_next', 'fallback' },
+                ['<S-Tab>']   = { 'select_prev', 'fallback' },
 
                 ['<C-y>']     = { 'select_and_accept' },
                 ['<CR>']      = { 'accept', 'fallback' },
