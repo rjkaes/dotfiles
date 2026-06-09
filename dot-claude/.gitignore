@@ -16,4 +16,6 @@ tasks/
 telemetry/
 shell-snapshots
 sessions/
+security/
+session-env/
 .caveman-active
