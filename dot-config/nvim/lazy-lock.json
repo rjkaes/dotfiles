@@ -4,7 +4,7 @@
   "blink.cmp": { "branch": "main", "commit": "78336bc89ee5365633bcf754d93df01678b5c08f" },
   "clangd_extensions.nvim": { "branch": "main", "commit": "78c2ecd659d54972be17aa6ba2deac3c53223b80" },
   "claude-code.nvim": { "branch": "main", "commit": "55c0cb59828fbc3bec744288286a46f5d5750b83" },
-  "codecompanion.nvim": { "branch": "main", "commit": "ab04cf7955b4f3133983ea402f7f3fc5e7d6154b" },
+  "codecompanion.nvim": { "branch": "main", "commit": "c33f868c921bc877a3fb8b66673ff31cd98c3936" },
   "conform.nvim": { "branch": "master", "commit": "619363c30309d29ffa631e67c8183f2a72caa373" },
   "csharp.nvim": { "branch": "main", "commit": "e44e275dabbcfc188ce1a5f504aad778e917c814" },
   "easy-dotnet.nvim": { "branch": "main", "commit": "5c9577f6fc086e211ccc7d93b763e9a5ace4e64b" },
