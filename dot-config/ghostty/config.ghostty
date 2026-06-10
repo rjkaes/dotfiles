@@ -1,0 +1,67 @@
+# Ghostty config converted from dot-wezterm.lua.
+# Ref: https://ghostty.org/docs/config/reference
+
+# Wormbytes palette, matching the Neovim colorscheme in
+# dot-config/nvim/colors/wormbytes.lua. The light/dark variants live in
+# themes/ and Ghostty switches between them automatically with the macOS
+# system appearance, replacing WezTerm's window-config-reloaded handler.
+theme = light:wormbytes-light,dark:wormbytes-dark
+
+# Fonts. Ghostty falls back to Apple Color Emoji automatically on macOS, but
+# it is listed explicitly to mirror the WezTerm fallback list. There is no
+# equivalent for use_cap_height_to_scale_fallback_fonts.
+font-family = Maple Mono Normal NL NF
+font-family = Apple Color Emoji
+font-size = 17
+
+# No ligatures (WezTerm harfbuzz_features calt=0/clig=0/liga=0).
+font-feature = -calt,-clig,-liga,-dlig
+
+# Initial window size, in grid cells (initial_cols / initial_rows).
+window-width = 142
+window-height = 47
+
+# Padding is in points and scales with DPI. left==right and top==bottom, so a
+# single value covers each axis.
+window-padding-x = 10
+window-padding-y = 5
+
+background-opacity = 1
+
+# WezTerm window_decorations = 'RESIZE' hid the titlebar while keeping a
+# resizable, rounded-corner frame. macos-titlebar-style = hidden is the close
+# match (window-decoration = none would also square the corners and kill tabs).
+# macos-titlebar-style = hidden
+
+# WezTerm default_cursor_style was SteadyBlock: a block that does not blink.
+# cursor-style=block is already Ghostty's default; the bar you actually see
+# comes from the shell-integration 'cursor' feature (sets a bar at the prompt).
+# Disabling it is what restores the WezTerm-style block at the fish prompt.
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+
+# Keybinds. WezTerm SplitHorizontal = side-by-side panes -> new_split:right;
+# SplitVertical = stacked panes -> new_split:down.
+keybind = super+enter=new_split:right
+keybind = super+shift+enter=new_split:down
+
+# URL links. link-url is on by default: detected URLs underline on hover while
+# cmd is held and open with cmd+click (mirrors WezTerm's hyperlink behavior).
+# Set explicitly for clarity. Ghostty 1.3.1 has no always-on underline; the
+# link option that would allow a custom highlight mode is not yet settable.
+link-url = true
+
+# Intentionally not ported (no Ghostty equivalent):
+#   - format-tab-title / update-status Lua callbacks and the setbg child
+#     process fired on appearance change.
+#   - front_end/animation_fps/max_fps/webgpu_power_preference: Ghostty renders
+#     with Metal on macOS and exposes no such knobs.
+#   - tab_bar_at_bottom / tab_max_width / hide_tab_bar_if_only_one_tab: macOS
+#     uses native top tabs, which already auto-hide for a single tab.
+#   - underline_thickness = '1.5pt': Ghostty only adjusts thickness relative to
+#     the font default (adjust-underline-thickness), not an absolute value.
+#   - scrollback_lines = 5000: Ghostty's scrollback-limit is byte-based; the
+#     ~10MB default already far exceeds 5000 lines, so it is left at default.
+#   - CTRL+ALT+e QuickSelect URL opener and SUPER+D debug overlay: Ghostty
+#     opens URLs via cmd+click by default; no hint-mode quick-select.

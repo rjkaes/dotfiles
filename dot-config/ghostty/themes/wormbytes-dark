@@ -1,0 +1,27 @@
+# Wormbytes dark, matching dot-config/nvim/colors/wormbytes.lua.
+# A Ghostty theme is just a config file; referenced from ../config.ghostty.
+background = 1c1b1a
+foreground = E8E8E8
+cursor-color = 52ad70
+cursor-text = 1c1b1a
+selection-background = 2A2D3D
+selection-foreground = E8E8E8
+
+# ansi (0-7)
+palette = 0=#1c1b1a
+palette = 1=#E06C75
+palette = 2=#98C379
+palette = 3=#E5C07B
+palette = 4=#61AFEF
+palette = 5=#C678DD
+palette = 6=#56B6C2
+palette = 7=#E8E8E8
+# brights (8-15)
+palette = 8=#4E4E4E
+palette = 9=#FF6B6B
+palette = 10=#A8E6A1
+palette = 11=#FFD93D
+palette = 12=#74C0FC
+palette = 13=#E8A0E8
+palette = 14=#66D9EF
+palette = 15=#FFFFFF
