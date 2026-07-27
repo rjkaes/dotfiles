@@ -5,3 +5,13 @@ dot-gitconfig.secret
 dot-config/*/**/*_MacBook-Pro.lan_*_Conflict*
 dot-claude/stats-cache.json
 dot-claude/transcripts/
+
+# Runtime state Claude Code writes into ~/.claude, not configuration
+dot-claude/.last-cleanup
+dot-claude/daemon.log
+dot-claude/daemon/
+dot-claude/jobs/
+dot-claude/teams/
+dot-claude/remote-settings.json
+# Backups left behind by /doctor and by manual settings edits
+dot-claude/settings.json.*
