@@ -1,149 +1,57 @@
-## General best practices
+## Harness gotchas
 
-- trueline MCP over built-in Read/Edit. If trueline schemas are not loaded in the current context, run ToolSearch `+trueline read edit search` before the first file edit. Use `trueline_search` → `trueline_edit`. PreToolUse hook blocks built-in Edit.
-- **Default to subagents** for implementation and exploration to keep the orchestrator's context lean. **Exception:** trivial known-target edits (single file, <=20 lines, <=1500 chars, no exploration needed) may run inline — subagent init (~15-30k tokens) is wasted on them.
-- When delegating, pick the cheapest viable model. See "Agent routing policy" -> "Model selection".
-- Lint shell scripts with shellcheck before commit.
-- Plugin hook (context-mode) intercepts Read with hints: follow hints. Don't retry Read with offset (cached) or fall back to `cat`. `cat` last resort.
-- Test code before declaring done.
-- `bc -l` for calculations.
-- No emdashes in prose. Use commas, semicolons, colons, parentheses.
-- Always write temp files to `tmp/` (local directory).
-- Before editing any file, read it first. Before modifying a function, grep for all callers. Research before you edit.
+Things you cannot discover from the repo, several of which override defaults you would otherwise follow.
 
-## Git workflow
+- Worktrees go in a sibling directory above the repo, never inside it. `worktree-location-guard` denies the inside case, including `EnterWorktree`, which defaults to it.
+- Intermediate files go in project-local `tmp/`, not `/tmp` (`tmp-path-guard` denies `/tmp`).
+- `dangerouslyDisableSandbox` is never preemptive. Run sandboxed first; bypass only after a real permission error, and say which error forced it.
+- Sub-agents cannot feed ad-hoc input to a CLI by heredoc or `cat`/`echo` pipe: fish plus the permission layer turns those into an interactive prompt that a sub-agent cannot answer. Write the input to `tmp/` and pass the path.
+- git `diff.mnemonicPrefix` is true, so diffs read `i/ w/ c/`, not `a/ b/`. Use `git mv` for tracked files, and `git -C <path>` rather than `cd` for other repos.
+- Hooks and agents in this dotfiles repo are hardlinked to `~/.claude`, so editing them changes the running session, and a broken hook breaks the tooling you would use to fix it. Run `shellcheck`, and exercise the hook against sample input before trusting it.
 
-Plain `git` in current tree. `git -C /path` for other repos (avoids `cd` side effects). `git mv` for tracked files.
+## Preferences
 
-Commit messages: conventional title (<50 chars), body wrapped at 72 chars (prose only). Explain non-obvious trade-offs. Backticks for inline types; indented blocks for multi-line code.
+- No emdashes in prose. Commas, semicolons, colons, parentheses.
+- Commit messages: conventional title under 50 chars, body wrapped at 72 (prose only, not code blocks). Explain the trade-offs the diff does not show.
+- Comments carry the *why*: the business rule, the constraint, the alternative that was rejected. Put them above the block they explain. Note code deliberately left out where a reader would look for it, and leave a TODO for a nuance you are deferring.
+- Realistic names everywhere, docs and examples included. Not `foo`, `bar`, `temp`, `data`.
+- "Parse, don't validate": a typed wrapper at a module or API boundary beats passing bare `string`/`int` inward. Validate at system boundaries and trust internal callers.
+- Command-query separation by default; atomics and fluent interfaces are the exceptions.
+- Stdlib over a new dependency unless the complexity it saves is large.
+- Smallest diff that does the job. No drive-by reformatting, renaming, reordering, helper extraction, or added error handling. If the change is outgrowing the task, stop and offer the rest as a suggestion.
+- Never answer from unopened code. Read the file and trace the real path; do not infer auth, API shape, or config semantics from an env var name.
+- "Look deeper" means the previous pass only treated symptoms. Go back to the root cause.
+- When a request looks like a workaround, ask what the underlying goal is before building the workaround.
+- Before a multi-file change, name the files and the intended edit to each. Ask first if it needs new directories or more than two new abstraction layers (managers, wrappers, factories).
+- Work past roughly ten lines gets numbered steps, each with the check that proves it.
 
-`git commit` heredoc, then `git status`.
+## Skills holding the long-form detail
 
-```bash
-git commit -m "$(cat <<'EOF'
-feat(scope): short summary
-
-Longer explanation here.
-EOF
-)"
-```
-Single-quoted `'EOF'` prevents expansion: backticks, `$`, `\` pass literally. Don't escape.
-
-Standard conventional types, plus:
-- `experiment`: outside issue/ticket
-- `hotfix`: emergency temporary fix
-
-## Debugging
-
-<investigate-before-answering>
-Never speculate about unopened code. Read referenced files BEFORE answering. Trace actual code paths; never assume auth, API patterns, or config from env var names.
-</investigate-before-answering>
-
-## Code style preferences
-
-- Realistic names (not `foo`/`bar`) in docs.
-- Document intentionally omitted code reader might expect.
-- TODO comments for deferred features/nuances.
-- CQS default; exceptions for atomics, fluent interfaces.
-- "Parse, Don't Validate": typed wrappers at API/module boundaries over bare `string`/`int`.
-
-### Literate Programming
-
-Top-down narrative. Comments explain **why** (business logic, design decisions), not **what**. Place before relevant block. Section headers for multi-phase logic. Focus: complex algorithms, business logic, integration points.
-
-## Critical Behavioral Patterns
-
-### 1. Problem Diagnosis & Strategy (Before)
-* **XY Problem:** ID high-level goal (X) before solving narrow request (Y).
-    * **Red Flags:** Roundabout methods, focus on impl over motivation, resistance to context.
-    * **Action:** Pause. State understanding of "X." Ask: "What's high-level goal? Why this approach?"
-* **Decision Logic:**
-    * **State Assumptions** before writing code.
-    * **Architecture First:** Multiple paths → present brief trade-offs. Wait for "Go" if impact significant. In autonomous/headless contexts (subagents, scheduled agents), document trade-offs in the plan or commit message and proceed with the most conservative path.
-    * **Commitment:** Don't pivot once agreed unless blocker found.
-
-### 2. Engineering Integrity (Implementation)
-* **Atomic Planning:** Tasks >10 lines → numbered plan. Each step has **Verification Check** (e.g., "Step 1: Update schema. Check: Run migrations, verify table X").
-* **General Solutions vs Test-Gaming:**
-    * **Logic over Samples:** Works for all valid inputs, not just provided cases.
-    * **Anti-Hardcoding:** Never hard-code to pass tests. Flag flawed tests.
-    * **Edge-Case First:** Account for nulls/empty/out-of-bounds unprompted.
-* **Idiomatic Consistency:** Existing repo patterns over generic best-practices/LLM defaults.
-* **Pivot Protocol:** Flawed plan mid-execution → **stop**. Explain blocker, propose revised "Step 1."
-* **Simplicity Gut-Check:** 200 lines could be 50? Rewrite. Senior engineer call this overcomplicated?
-
-### 3. Verification & Deep Review (After)
-* **Full-Stack:** Verify all layers (DB, backend, API types, tests). Adapt stack to project.
-* **Deep-Pass:** Bug reports/code reviews → first pass verifies against surrounding code. "Look deeper" = symptoms only addressed; re-examine root cause.
-* **Verification Loop:** Before "done": dry-run vs original "X" goal, no regressions, every changed line traces to request.
-
-### 4. Communication & Collaboration
-* **Direct Pushback:** Unsound/insecure/needlessly complex requests → explain why, suggest simpler. No yes-man.
-* **Literal Interpretation:** Follow instructions as written. Don't generalize one item to another. Ambiguous scope → restate interpretation, proceed; don't silently broaden.
-
-### 5. Maintenance & Tech Debt
-* **Documentation:** Every new function/complex block: concise docstrings explaining *why*.
-* **Minimal Dependencies:** Stdlib over new external packages unless complexity tradeoff massive.
-
-## Search
-
-WebSearch when unsure. Don't guess.
+- `bulk-refactoring`: a change spanning more than three files, or one textual edit repeated. Use the tooling ladder rather than hand-editing file after file.
+- `verifying-work`: before claiming anything is done, and when planning steps that each need a check.
+- `code-navigation`: before renaming, moving, deleting, or retyping an existing symbol.
 
 ## Agent routing policy
 
-Route deliberately. Orchestrator never implements directly. Use these specialized agents (also required in plan files under "## Implementation via sub-agents"):
+The delegate-directive hook injects the current inline-versus-dispatch thresholds and the full model-selection ladder on every turn. That injection is the source of truth and is not restated here. What lives here is which agent gets the work:
 
-- Feature work → `feature-engineer`
+- Feature work from a plan → `feature-engineer`
 - .NET feature work → `dotnet-contribution:dotnet-architect`
-- Refactoring (zero behavioral change) → `refactor-engineer`
+- Refactoring with zero behavioral change → `refactor-engineer`
 - Legacy modernization → `code-refactoring:legacy-modernizer`
-- Schema / migrations / query optimization / SQL-heavy work → `database-architect`
+- Schemas, migrations, query optimization, anything SQL-heavy → `database-architect`
 - ADRs, API docs, runbooks, READMEs, inline docs → `technical-writer`
-- Debugging / error diagnosis → `error-debugging:debugger`
-- Test suite creation → `backend-development:test-automator`
-- Security review / hardening → `backend-api-security:backend-security-coder`
-- Otherwise → `general-purpose`
+- Debugging and error diagnosis → `debugging-toolkit:debugging-toolkit-debugger`
+- Test suites → `backend-development:backend-development-test-automator`
+- Security review and hardening → `backend-development:backend-development-security-auditor`
+- Auditing an implementation against its spec → `spec-reviewer`
+- Adversarial second opinion from Gemini → `gemini-consultant`
+- Broad read-only reconnaissance → `Explore`
+- Anything else → `general-purpose`
 
 ### Model selection
 
-When dispatching via the Task tool, set `model` explicitly to bias toward cheaper models:
-
-- **`sonnet` (default):** anything requiring judgment, exploration, synthesis, or summarization — feature work, refactors, debugging, code review, security review, schema design, Explore/reconnaissance dispatches, test creation, architecture decisions. This is most subagent work.
-- **`haiku`:** *only* when the task is fully specified and the subagent has no decisions and no summarization to produce — e.g., "apply this exact edit at this exact location", a fully-specified rename, run-a-command-and-report-exit-code. If the subagent must judge, choose, explore, or summarize, it is not a Haiku task.
-- **`opus`:** never. Opus is the orchestrator's role.
-
-# Execution & Tool Use Rules
-
-* **Blast-Radius Planning:** Before executing any file edits or writing new code, you MUST output a strict execution plan:
-  1. List the exact files you intend to create or modify.
-  2. State the exact, minimal change intended for each file.
-* Wait for user approval if the plan involves creating new directories or more than two new architectural abstraction files (like Managers, Wrappers, or Factories).
-* **Token-Efficient Edits:** When modifying files, prefer targeted replacements. Respect existing ASTs and do not rewrite entire files just to change a single function.
-
-## Minimal Edit Protocol
-
-IMPORTANT: Min change for goal. Every edit = diff human must review.
-
-Do: touch only lines the task requires. Pick the smaller, more local diff when in doubt. Change feels larger than the task → stop, surface as suggestion instead.
-
-Don't: reformat, rename, reorder, extract helpers, add error handling, touch unrelated whitespace.
-
-Exception: "why" comments on new or modified logic (per Literate Programming) are part of the task, not drive-by additions.
-
-Goal: reviewer reads diff, sees exactly the requested change, nothing more.
-
-## BULK REFACTORING PROTOCOL
-
-**TRIGGER:** Change spans >3 files, repetitive string manipulation, or sweeping structural changes → DO NOT REWRITE FILE CONTENTS IN CHAT.
-
-**RULES:**
-1. **NO CHATTER:** No acknowledgement, explanation, or script summary.
-2. **TOOLING (preference order):**
-   - **AST-aware:** `ast-grep` for code structure (renames, signatures, patterns, args). Use `ast-grep` skill for rules. `ast-grep run --pattern` simple, `ast-grep scan --rule` with temp YAML complex.
-   - **String/regex:** `ruby -pi -e` for purely textual (comments, strings, non-code).
-   - **Scripted:** Last resort: temp script (`.csx` via `dotnet-script`, `.ts` via `npx tsx`).
-3. **WORKFLOW:** Generate/save rule/script quietly → execute → verify `git diff --stat` → **build/typecheck** (fail → revert or fix) → DELETE temp rule/script.
-4. **OUTPUT:** One sentence: file count + build passed. No script/command contents in chat.
+Set `model` explicitly on every dispatch, per the ladder in the delegate-directive injection. `agent-input-guard` enforces it: an omitted `model` defaults to sonnet, opus requires an `ESCALATION:` line justifying why sonnet is insufficient, and fable is denied outright.
 
 ## Plan file requirements
 
