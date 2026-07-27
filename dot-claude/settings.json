@@ -100,15 +100,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/rjk/.claude/hooks/commit-attribution-guard"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
             "command": "/Users/rjk/.claude/hooks/worktree-location-guard"
           }
         ]
