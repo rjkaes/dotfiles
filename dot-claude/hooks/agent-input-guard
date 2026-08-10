@@ -5,7 +5,9 @@
 #   1. Subagents may not delegate: if agent_id is set (the caller is itself a
 #      dispatched subagent), deny; it was sent to do the work itself.
 #   2. subagent_type must be a non-empty string.
-#   3. model, if explicitly set, must be 'sonnet' or 'haiku' (not 'opus').
+#   3. model, if explicitly set, must be 'sonnet', 'haiku', or 'opus' with an
+#      'ESCALATION:' justification line in the prompt. Anything else (notably
+#      'fable') is denied outright.
 #
 # NOTE: The original Python used strict=False to allow literal control chars
 # in JSON strings (e.g. raw newlines in the prompt field). jq requires valid
@@ -17,9 +19,14 @@ exec /opt/homebrew/bin/jq -c '
   else .tool_input |
   if (.subagent_type // "") == "" then
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"CLAUDE.md agent routing: subagent_type must be set, never blank. Pick a specialized agent or \"general-purpose\"."}}
-  elif ((.model // "") != "") and (.model != "sonnet") and (.model != "haiku") then
-    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("subagent must use model=sonnet or model=haiku, not " + (.model | @json) + ".")}}
-  else empty
+  elif (.model // "") == "" or .model == "sonnet" or .model == "haiku" then empty
+  elif .model == "opus" then
+    if ((.prompt // "") | test("(^|\n)[ \t]*ESCALATION:[ \t]*\\S")) then empty
+    else
+      {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"model=opus requires an ESCALATION: line in the dispatch prompt explaining why sonnet is insufficient (or that a sonnet attempt already failed). Add a line starting with \"ESCALATION:\" followed by the justification, or dispatch with model=sonnet."}}
+    end
+  else
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("subagent model must be sonnet, haiku, or opus (opus needs an ESCALATION: line); not " + (.model | @json) + ".")}}
   end
   end
 '
