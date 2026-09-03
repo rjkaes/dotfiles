@@ -1,25 +1,28 @@
 {
   "respectGitignore": true,
   "cleanupPeriodDays": 30,
-  "includeGitInstructions": false,
+  "includeGitInstructions": true,
   "permissions": {
     "allow": [
-      "Bash(*)",
-      "Read(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "Write(*)",
-      "Edit(*)",
       "mcp__claude_ai_Context7__resolve-library-id",
       "mcp__claude_ai_Microsoft_Learn__*",
       "mcp__plugin_context-mode_context-mode__*",
       "mcp__plugin:context-mode:context-mode__*",
       "mcp__plugin_trueline-mcp_mcp__*",
       "mcp__plugin_trueline-mcp_trueline__*",
-      "mcp__plugin_trueline-mcp_mcp__*"
+      "mcp__plugin_trueline-mcp_mcp__*",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh issue create:*)",
+      "Bash(gh issue close:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)"
     ],
     "deny": [
       "Bash(rm -rf /*)",
+      "Bash(rmdir /*)",
       "Bash(sudo *)",
       "Bash(chmod -R 777 *)",
       "Bash(> *)",
@@ -33,7 +36,7 @@
       "Read(**/*secret*.key)",
       "Read(**/*secret*.pem)"
     ],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
   "model": "opus",
   "hooks": {
@@ -207,6 +210,51 @@
         "repo": "mksglu/context-mode"
       }
     }
+  },
+  "sandbox": {
+    "enabled": false,
+    "autoAllowBashIfSandboxed": true,
+    "network": {
+      "allowedDomains": [
+        "github.com",
+        "*.nuget.org",
+        "api.nuget.org",
+        "pkgs.dev.azure.com"
+      ]
+    },
+    "filesystem": {
+      "allowWrite": [
+        "~/.nuget/packages",
+        "~/.local/share/NuGet",
+        "~/.dotnet",
+        "~/.templateengine"
+      ],
+      "denyRead": [
+        "~/"
+      ],
+      "allowRead": [
+        "."
+      ]
+    },
+    "credentials": {
+      "files": [
+        {
+          "path": "~/.config/gh/hosts.yml",
+          "mode": "deny"
+        }
+      ],
+      "envVars": [
+        {
+          "name": "GH_TOKEN",
+          "mode": "deny"
+        }
+      ]
+    },
+    "excludedCommands": [
+      "docker *",
+      "gh *",
+      "dotnet test:*"
+    ]
   },
   "effortLevel": "xhigh",
   "showClearContextOnPlanAccept": true,
