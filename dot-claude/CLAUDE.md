@@ -8,6 +8,7 @@ Things you cannot discover from the repo, several of which override defaults you
 - Sub-agents cannot feed ad-hoc input to a CLI by heredoc or `cat`/`echo` pipe: fish plus the permission layer turns those into an interactive prompt that a sub-agent cannot answer. Write the input to `tmp/` and pass the path.
 - git `diff.mnemonicPrefix` is true, so diffs read `i/ w/ c/`, not `a/ b/`. Use `git mv` for tracked files, and `git -C <path>` rather than `cd` for other repos.
 - Hooks and agents in this dotfiles repo are hardlinked to `~/.claude`, so editing them changes the running session, and a broken hook breaks the tooling you would use to fix it. Run `shellcheck`, and exercise the hook against sample input before trusting it.
+- Reads and edits use the `trueline_*` MCP tools, not built-in Read/Edit and not the `trueline` CLI through Bash. The CLI is the fallback for one case only: `trueline_read` failing with `H.reduce is not a function`.
 
 ## Preferences
 
@@ -30,6 +31,7 @@ Things you cannot discover from the repo, several of which override defaults you
 - `bulk-refactoring`: a change spanning more than three files, or one textual edit repeated. Use the tooling ladder rather than hand-editing file after file.
 - `verifying-work`: before claiming anything is done, and when planning steps that each need a check.
 - `code-navigation`: before renaming, moving, deleting, or retyping an existing symbol.
+- `trueline-mcp:trueline-workflow`: the read/edit ladder in full, ref reuse, `insert_after` semantics, and search-then-edit.
 
 ## Agent routing policy
 
