@@ -62,7 +62,9 @@ fi
 if [[ "$tool" == "mcp__plugin_trueline-mcp_mcp__trueline_read" ]]; then
   # Extract the first file_paths entry that has no ":" in it.
   offending=$(jq -r '
-    (.tool_input.file_paths // [])[]
+    (.tool_input.file_paths // [])
+    | if type == "array" then . else [.] end
+    | .[]
     | select(contains(":") | not)
   ' <<<"$input" | head -n1)
   if [[ -n "$offending" ]]; then
