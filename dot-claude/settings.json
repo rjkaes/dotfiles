@@ -10,7 +10,6 @@
       "mcp__plugin:context-mode:context-mode__*",
       "mcp__plugin_trueline-mcp_mcp__*",
       "mcp__plugin_trueline-mcp_trueline__*",
-      "mcp__plugin_trueline-mcp_mcp__*",
       "Bash(gh pr view:*)",
       "Bash(gh pr list:*)",
       "Bash(gh run view:*)",
