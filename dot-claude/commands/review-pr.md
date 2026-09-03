@@ -62,11 +62,17 @@ Grep `tmp/pr-diff.txt` to determine which specialized agents apply (do not load 
 - **`backend-development:backend-architect`**: Run when the PR changes >10 files or >500 diff lines,
   or introduces new directories/modules/services. Checks layering violations,
   dependency direction, pattern consistency, and abstraction appropriateness.
+  Marginal value when `performance-engineer` and `security-auditor` are both already running on the
+  same diff — its top findings often duplicate theirs. Worth keeping for genuinely new abstractions
+  or new sub-services; consider skipping for feature additions inside an existing pattern.
 - **`pr-review-toolkit:comment-analyzer`**: Run when the diff adds or modifies docstrings, JSDoc,
   XML doc comments (`///`), or README/documentation files. Catches stale
   comments, inaccurate parameter descriptions, misleading explanations.
 - **`pr-review-toolkit:type-design-analyzer`**: Run only if the diff adds or modifies type/interface
-  definitions. Rates encapsulation, invariant expression, enforcement.
+  definitions. Skip if the file under review explicitly documents type-design choices in a sibling
+  CLAUDE.md (e.g. a section that says monetary fields stay as `string` or `T`/`F` flags pass through
+  unmodified). This agent tends to flag intentional primitive-obsession that overrides those docs,
+  producing low-survival findings.
 
 ## Step 3: Run Tier 1 and Tier 2 in parallel
 
@@ -81,9 +87,19 @@ Pass `$ARGUMENTS` (PR URL), the path `tmp/pr-diff.txt`, and the CLAUDE.md file p
 every agent. Each agent reads the diff from that file. Each agent performs one role:
 
 1. Shallow bug scan of the diff only (high-signal, ignore linter-catchable issues).
+   *Skip when* the PR has a design spec doc in `docs/` covering the same files —
+   `tier1:comment-compliance` will catch the same divergences with higher confidence.
 2. Read git blame/history of modified code and identify bugs in that context.
+   *Skip when* >70% of the diff is newly-added files (greenfield). With nothing to blame
+   against, this role produces only rename-confirmation notes.
 3. Read previous PRs that touched these files; flag comments that still apply.
+   High signal — keep unconditionally.
 4. Read code comments in modified files; verify the changes comply with that guidance.
+   High signal — keep unconditionally.
+
+Reduce to fewer roles when their *Skip when* conditions apply. Three Tier-1 roles + Tier 2
+is a healthy floor; running all four unconditionally on a greenfield + well-spec'd PR
+produces ~30% duplicate findings.
 
 Each finding is scored 0-100 by a Haiku verification agent using this rubric:
 - **0**: False positive, doesn't survive scrutiny, or pre-existing issue.
@@ -141,6 +157,11 @@ line range with related concerns, **escalate** rather than discard. Two agents
 independently identifying the same area is a stronger signal. Promote
 `suggestion` to `issue` or raise the confidence score to the higher value.
 
+**Cross-tier duplicate signal:** When the same finding surfaces from 3+ agents (e.g. a SuiteQL
+injection flagged by `silent-failure-hunter`, `security-auditor`, `performance-engineer`, and
+`backend-architect`), the duplication itself is signal that the issue is real — promote
+`suggestion` to `issue` and pick the report with the most concrete remediation as the canonical
+version. Drop the others rather than posting four near-identical comments on the same lines.
 **True deduplication:** Only drop a finding if another finding targets the exact
 same file, overlapping line range, AND describes the same root cause (not merely
 the same location). When in doubt, keep both.
@@ -231,3 +252,21 @@ Before posting, re-check with a Haiku agent (Task tool, `model: "haiku"`,
    is passed.)
 
 Resolve `<viewer>` via `gh api user -q .login`. If any check fails, do not post.
+
+## Agent selection guidance
+
+Drop or condition the following on observed low unique signal:
+
+| Agent | Drop condition |
+|-------|----------------|
+| `tier1:shallow-bug-scan` | Diff has a design spec in `docs/`; `tier1:comment-compliance` will catch divergences with higher confidence |
+| `tier1:git-history` | >70% of the diff is newly-added files |
+| `pr-review-toolkit:type-design-analyzer` | A sibling `CLAUDE.md` already documents the type-design choices |
+| `backend-development:backend-architect` | Feature additions inside an existing pattern, when `performance-engineer` and `security-auditor` are both already running |
+
+High-signal agents to keep almost unconditionally:
+- `tier1:prior-pr-comments` — only source for "this was flagged before, still not fixed" findings.
+- `tier1:comment-compliance` — only source for spec / code / CLAUDE.md divergences.
+- `pr-review-toolkit:comment-analyzer` — for any PR adding spec or CLAUDE.md docs.
+- `security-scanning:security-auditor`, `backend-development:performance-engineer` — when their Step 2 grep triggers fire.
+- `pr-review-toolkit:silent-failure-hunter`, `pr-review-toolkit:pr-test-analyzer` — the "always run" defaults are correct.
