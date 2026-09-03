@@ -7,6 +7,13 @@ return {
     { 'tommcdo/vim-fubitive', cmd = "Gbrowse" },
 
     {
+        'sindrets/diffview.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewToggleFiles", "DiffviewFocusFiles" },
+        config = true,
+    },
+
+    {
         'NeogitOrg/neogit',
         event = "VeryLazy",
         cmd = "Neogit",
