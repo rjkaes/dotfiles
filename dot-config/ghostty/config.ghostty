@@ -28,6 +28,34 @@ window-padding-y = 5
 
 background-opacity = 1
 
+# Appearance tuning (no WezTerm equivalent; Ghostty-specific quality knobs).
+# minimum-contrast forces fg/bg apart only when they are nearly identical, so
+# it guards against invisible text without disturbing the wormbytes palette in
+# normal use (1.1 = "never invisible"; 3+ would start overriding real colors).
+minimum-contrast = 1.1
+
+# Hide the pointer while typing; it reappears on any mouse movement.
+mouse-hide-while-typing = true
+
+# Terminal bell handling. Claude Code (preferredNotifChannel = terminal_bell)
+# rings the bell when it needs input; `title` prepends a bell glyph to the
+# ringing tab's title so the specific tab is identifiable, `attention` bounces
+# the Dock icon, and `audio` plays the file at bell-audio-path. Audio is used
+# instead of `system` because the macOS system alert bell is unreliable in
+# Ghostty (often silent); `no-system` suppresses that path entirely.
+bell-features = title,attention,audio,no-system
+bell-audio-path = /System/Library/Sounds/Glass.aiff
+bell-audio-volume = 0.5
+
+# window-colorspace = display-p3 interprets palette/SGR colors in the P3
+# gamut native to Apple displays: richer, more saturated, but it shifts the
+# wormbytes palette away from its sRGB-designed values.
+window-colorspace = display-p3
+
+# alpha-blending = linear-corrected removes the dark fringing around glyph
+# edges (macOS default is native); subtle while background-opacity = 1.
+alpha-blending = linear-corrected
+
 # WezTerm window_decorations = 'RESIZE' hid the titlebar while keeping a
 # resizable, rounded-corner frame. macos-titlebar-style = hidden is the close
 # match (window-decoration = none would also square the corners and kill tabs).
