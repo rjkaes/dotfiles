@@ -47,11 +47,12 @@ bell-features = title,attention,audio,no-system
 bell-audio-path = /System/Library/Sounds/Glass.aiff
 bell-audio-volume = 0.5
 
-# window-colorspace = display-p3 interprets palette/SGR colors in the P3
-# gamut native to Apple displays: richer, more saturated, but it shifts the
-# wormbytes palette away from its sRGB-designed values.
-window-colorspace = display-p3
-
+# window-colorspace is deliberately left at the default `srgb`. Ghostty always
+# sets the layer to Display P3 and converts sRGB colors into it in the shader,
+# so the default is the color-managed path and wormbytes lands on a P3 panel as
+# designed. `display-p3` skips that conversion and reinterprets the coordinates,
+# which oversaturates the palette and every truecolor escape any program emits.
+# See ghostty PR #4913 and discussion #2665.
 # alpha-blending = linear-corrected removes the dark fringing around glyph
 # edges (macOS default is native); subtle while background-opacity = 1.
 alpha-blending = linear-corrected
