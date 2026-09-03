@@ -349,25 +349,59 @@ hi('LspCodeLensSeparator', { link = 'BaseDim' })
 -- LSP agree on colors from the start.
 hi('@lsp.type.class',         { link = 'Structure' })
 hi('@lsp.type.decorator',     { link = '@attribute' })
-hi('@lsp.type.enum',          { link = 'Structure' })
+hi('@lsp.type.enum',          { fg = colors.bright_cyan })
 hi('@lsp.type.enumMember',    { link = '@constant' })
-hi('@lsp.type.event',         { link = 'BaseSpecial' })
+hi('@lsp.type.event',         { fg = colors.bright_red })
 hi('@lsp.type.function',      { link = '@function' })
-hi('@lsp.type.interface',     { link = 'Structure' })
+hi('@lsp.type.interface',     { fg = colors.cyan, italic = true })
 hi('@lsp.type.method',        { link = '@function.method' })
-hi('@lsp.type.modifier',      { link = '@keyword' })
-hi('@lsp.type.namespace',     { link = '@module' })
+hi('@lsp.type.modifier',      { link = '@keyword.modifier' })
+hi('@lsp.type.namespace',     { fg = colors.gray9 })
 hi('@lsp.type.number',        { link = '@number' })
 hi('@lsp.type.operator',      { link = '@operator' })
 hi('@lsp.type.parameter',     { link = '@variable.parameter' })
 hi('@lsp.type.property',      { link = '@property' })
 hi('@lsp.type.regexp',        { link = '@string.regexp' })
 hi('@lsp.type.string',        { link = '@string' })
-hi('@lsp.type.struct',        { link = 'Structure' })
+hi('@lsp.type.struct',        { fg = colors.bright_magenta })
 hi('@lsp.type.type',          { link = '@type' })
-hi('@lsp.type.typeParameter', { link = '@type' })
-hi('@lsp.type.variable',      { link = '@variable' })
+hi('@lsp.type.typeParameter', { fg = colors.bright_yellow, italic = true })
 hi('@lsp.type.macro',         { link = '@function.macro' })
+
+-- Additional standard LSP semantic tokens (Rust, Python, rust-analyzer).
+-- Cover lifetimes, generics, Self/self, derive helpers, format specifiers,
+-- type aliases, and unresolved-reference diagnostics. Linked to treesitter
+-- captures so colors stay consistent when the LSP attaches.
+hi('@lsp.type.boolean',             { link = '@boolean' })
+hi('@lsp.type.builtinType',         { link = '@type.builtin' })
+hi('@lsp.type.deriveHelper',        { link = '@attribute' })
+hi('@lsp.type.escapeSequence',      { link = '@string.escape' })
+hi('@lsp.type.formatSpecifier',     { link = '@markup.list' })
+hi('@lsp.type.generic',             { link = '@lsp.type.typeParameter' })
+hi('@lsp.type.lifetime',            { link = '@keyword.storage' })
+hi('@lsp.type.selfKeyword',         { link = '@variable.builtin' })
+hi('@lsp.type.selfTypeKeyword',     { link = '@type.builtin' })
+hi('@lsp.type.typeAlias',           { link = '@type.definition' })
+hi('@lsp.type.namespace.python',    { link = '@variable' })
+hi('@lsp.type.unresolvedReference', { undercurl = true, sp = colors.error })
+
+-- C# / Roslyn-specific semantic tokens beyond the LSP standard.
+hi('@lsp.type.recordClass',          { fg = colors.yellow,        bold = true })
+hi('@lsp.type.recordStruct',         { fg = colors.bright_magenta, bold = true })
+hi('@lsp.type.delegate',             { fg = colors.magenta,       italic = true })
+hi('@lsp.type.extensionMethod',      { fg = colors.bright_magenta, italic = true })
+hi('@lsp.type.field',                { fg = colors.cyan })
+hi('@lsp.type.controlKeyword',       { fg = colors.bright_blue,   bold = true })
+hi('@lsp.type.operatorOverloaded',   { fg = colors.magenta,       bold = true })
+
+-- XML doc comments (///<summary>, <paramref>, ...) — keep prose quiet,
+-- accent the tag structure so it scans like markup, not code.
+hi('@lsp.type.xmlDocCommentText',            { fg = colors.gray8,   italic = true })
+hi('@lsp.type.xmlDocCommentDelimiter',       { fg = colors.gray6 })
+hi('@lsp.type.xmlDocCommentName',            { fg = colors.cyan,    italic = true })
+hi('@lsp.type.xmlDocCommentAttributeName',   { fg = colors.magenta, italic = true })
+hi('@lsp.type.xmlDocCommentAttributeQuotes', { fg = colors.gray6 })
+hi('@lsp.type.xmlDocCommentAttributeValue',  { fg = colors.green,   italic = true })
 
 -- Clear groups where treesitter sub-groups are more specific than the LSP
 -- token. An empty table removes the highlight so TS captures like
@@ -395,6 +429,15 @@ hi('@lsp.typemod.variable.readonly',         { link = '@constant' })
 hi('@lsp.typemod.keyword.async',             { link = '@keyword.coroutine' })
 hi('@lsp.typemod.macro.defaultLibrary',      { link = '@function.builtin' })
 hi('@lsp.typemod.typeAlias.defaultLibrary',  { link = '@type.builtin' })
+
+-- Injected languages (e.g. regex/SQL in string literals) plus modifiers for
+-- Rust statics and function-pointer / closure-typed variables.
+hi('@lsp.typemod.keyword.injected',  { link = '@keyword' })
+hi('@lsp.typemod.operator.injected', { link = '@operator' })
+hi('@lsp.typemod.string.injected',   { link = '@string' })
+hi('@lsp.typemod.variable.injected', { link = '@variable' })
+hi('@lsp.typemod.variable.callable', { link = '@function' })
+hi('@lsp.typemod.variable.static',   { link = '@constant' })
 hi('@lsp.mod.deprecated',                  { strikethrough = true })
 
 -- Standard modifier styling — these provide visual cues the LSP exclusively
@@ -457,6 +500,7 @@ hi('@keyword.exception',       { link = 'BaseError' })
 hi('@keyword.directive',       { link = 'BasePreProc' })
 hi('@keyword.directive.define', { link = 'BasePreProc' })
 hi('@keyword.storage',         { link = 'BaseType' })
+hi('@keyword.modifier',        { fg = colors.blue, italic = true })
 hi('@keyword.debug',           { link = 'Debug' })
 
 -- Types & modules
