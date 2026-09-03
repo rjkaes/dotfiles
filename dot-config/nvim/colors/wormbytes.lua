@@ -54,7 +54,7 @@ local palettes = {
     hint = '#8A8A8A',
 
     -- UI Specifics
-    line_nr = '#767676',      -- gray6
+    line_nr = '#838383',      -- gray6
     pmenu_sel_fg = '#1c1b1a', -- bg (dark on yellow)
     pmenu_sel_bg = '#E5C07B', -- yellow
     search_fg = '#000000',    -- black (bg)
@@ -89,16 +89,16 @@ local palettes = {
     -- Meaningful accent colors (adjusted for light background)
     red = '#C7254E',        -- Deep red for errors/deletion
     green = '#27761B',      -- Rich green for strings/addition
-    yellow = '#8F5E00',     -- Deep yellow for warnings/types
+    yellow = '#946800',     -- Amber-gold for warnings/types
     blue = '#0366D6',       -- Strong blue for keywords
     magenta = '#7239D1',    -- Purple for functions/methods
     cyan = '#07738F',       -- Teal for constants/preprocessor
-    orange = '#A74F00',     -- Orange for numbers/operators/special
+    orange = '#B04000',     -- Orange for numbers/operators/special
 
     -- Brighter variants for emphasis
-    bright_red = '#D73A49',
-    bright_green = '#22863A',
-    bright_yellow = '#946D00',
+    bright_red = '#D63545',
+    bright_green = '#228439',
+    bright_yellow = '#7E7000',
     bright_blue = '#005CC5',
     bright_magenta = '#6F42C1',
     bright_cyan = '#047A9A',
@@ -106,12 +106,12 @@ local palettes = {
 
     -- Special colors
     error = '#C7254E',
-    warning = '#8F5E00',
+    warning = '#946800',
     info = '#0366D6',
     hint = '#5C5C5C',
 
     -- UI Specifics
-    line_nr = '#858585',      -- gray6 (was gray5, too dim)
+    line_nr = '#737373',      -- gray6 (was gray5, too dim)
     pmenu_sel_fg = '#1C1C1C', -- fg (dark on gold)
     pmenu_sel_bg = '#D4A017', -- gold
     search_fg = '#1C1C1C',    -- black (fg)
@@ -179,7 +179,7 @@ hi('BaseFunction',  { fg = colors.magenta })
 hi('BaseMethod',    { fg = colors.magenta })
 hi('BaseKeyword',   { fg = colors.blue })
 hi('BaseType',      { fg = colors.yellow })
-hi('BaseProperty',  { fg = colors.fg })
+hi('BaseProperty',  { fg = colors.bright_blue, italic = true })
 hi('BaseIdentifier',{ fg = colors.fg })
 hi('BaseOperator',  { fg = colors.orange })
 hi('BaseSpecial',   { fg = colors.orange })
