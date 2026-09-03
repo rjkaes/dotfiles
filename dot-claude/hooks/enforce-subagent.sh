@@ -59,7 +59,7 @@ jq -n \
   '{
     hookSpecificOutput: {
       hookEventName: "PreToolUse",
-      additionalContext: ("Advisory: this " + $tool + " call was " + $reason + ". For non-trivial implementation work, dispatch a subagent via Task to keep the orchestrator'\''s context lean. When you dispatch, set model: sonnet by default; drop to model: haiku only when the subagent has no decisions and no summarization to produce (purely mechanical execution). Never model: opus. Routing: see CLAUDE.md. This edit was allowed; consider delegating the next one.")
+      additionalContext: ("Advisory: this " + $tool + " call was " + $reason + ". For non-trivial implementation work, dispatch a subagent via Task to keep the orchestrator'\''s context lean. When you dispatch, set model: sonnet by default; drop to model: haiku only when the subagent has no decisions and no summarization to produce (purely mechanical execution). opus only with an ESCALATION: justification; fable never. Routing: see CLAUDE.md. This edit was allowed; consider delegating the next one.")
     }
   }'
 
