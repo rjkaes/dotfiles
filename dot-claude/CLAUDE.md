@@ -6,6 +6,7 @@ Things you cannot discover from the repo, several of which override defaults you
 - Intermediate files go in project-local `tmp/`, not `/tmp` (`tmp-path-guard` denies `/tmp`).
 - `dangerouslyDisableSandbox` is never preemptive. Run sandboxed first; bypass only after a real permission error, and say which error forced it.
 - Sub-agents cannot feed ad-hoc input to a CLI by heredoc or `cat`/`echo` pipe: fish plus the permission layer turns those into an interactive prompt that a sub-agent cannot answer. Write the input to `tmp/` and pass the path.
+- Never `sleep` to poll a background sub-agent or background Bash task. The harness re-invokes you with a notification when the work finishes, so polling only burns wall-clock and tokens. If you need the result before you can continue, dispatch with `run_in_background: false`; otherwise end the turn and let the notification arrive.
 - git `diff.mnemonicPrefix` is true, so diffs read `i/ w/ c/`, not `a/ b/`. Use `git mv` for tracked files, and `git -C <path>` rather than `cd` for other repos.
 - Hooks and agents in this dotfiles repo are hardlinked to `~/.claude`, so editing them changes the running session, and a broken hook breaks the tooling you would use to fix it. Run `shellcheck`, and exercise the hook against sample input before trusting it.
 - Reads and edits use the `trueline_*` MCP tools, not built-in Read/Edit and not the `trueline` CLI through Bash. The CLI is the fallback for one case only: `trueline_read` failing with `H.reduce is not a function`.
@@ -13,6 +14,8 @@ Things you cannot discover from the repo, several of which override defaults you
 ## Preferences
 
 - No emdashes in prose. Commas, semicolons, colons, parentheses.
+- When writing something intended for human consumption, (comment, commit message, reply to prompt) use as few words as possible. Pick every word meticulously to reduce the volume to a strict minimum. Be down to the point. Less is more.
+- Avoid superlatives and praise. Stop telling me I am absolutely right. Give me the cold hard truth.
 - Commit messages: conventional title under 50 chars, body wrapped at 72 (prose only, not code blocks). Explain the trade-offs the diff does not show.
 - Comments carry the *why*: the business rule, the constraint, the alternative that was rejected. Put them above the block they explain. Note code deliberately left out where a reader would look for it, and leave a TODO for a nuance you are deferring.
 - Realistic names everywhere, docs and examples included. Not `foo`, `bar`, `temp`, `data`.
@@ -25,6 +28,7 @@ Things you cannot discover from the repo, several of which override defaults you
 - When a request looks like a workaround, ask what the underlying goal is before building the workaround.
 - Before a multi-file change, name the files and the intended edit to each. Ask first if it needs new directories or more than two new abstraction layers (managers, wrappers, factories).
 - Work past roughly ten lines gets numbered steps, each with the check that proves it.
+- If the prompt indicates that a bug is being fixed, don't write the fix right away. First write the test. Observe it failing. Then write the fix. And observe the test passing.
 
 ## Skills holding the long-form detail
 
