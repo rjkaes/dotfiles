@@ -39,18 +39,14 @@
     "defaultMode": "auto"
   },
   "model": "opus",
+  "skillOverrides": {
+    "neovim": "off",
+    "context-mode-workflow": "off",
+    "claude-mem-mcp": "off",
+    "gemini-review-pr": "off",
+    "brutal-review": "off"
+  },
   "hooks": {
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "terminal-notifier -title 'Claude Code' -message 'Claude Code needs your attention' -sound Ping"
-          }
-        ]
-      }
-    ],
     "SessionStart": [
       {
         "hooks": [
@@ -118,10 +114,9 @@
         ]
       }
     ],
-    "PostToolUse": [],
-    "Stop": [],
     "SessionEnd": []
   },
+  "workflowKeywordTriggerEnabled": false,
   "statusLine": {
     "type": "command",
     "command": "bash $HOME/.claude/statusline-command.sh"
@@ -136,7 +131,7 @@
     "lua-lsp@claude-plugins-official": false,
     "plugin-dev@claude-plugins-official": false,
     "pr-review-toolkit@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": false,
     "security-guidance@claude-plugins-official": false,
     "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
@@ -156,7 +151,7 @@
     "database-design@claude-code-workflows": false,
     "database-migrations@claude-code-workflows": false,
     "debugging-toolkit@claude-code-workflows": true,
-    "developer-essentials@claude-code-workflows": true,
+    "developer-essentials@claude-code-workflows": false,
     "dotnet-contribution@claude-code-workflows": true,
     "error-debugging@claude-code-workflows": false,
     "error-diagnostics@claude-code-workflows": false,
@@ -167,11 +162,12 @@
     "reverse-engineering@claude-code-workflows": false,
     "security-scanning@claude-code-workflows": true,
     "shell-scripting@claude-code-workflows": true,
-    "systems-programming@claude-code-workflows": true,
+    "systems-programming@claude-code-workflows": false,
     "tdd-workflows@claude-code-workflows": false,
     "caveman@caveman": false,
-    "javascript-typescript@claude-code-workflows": true,
-    "context-mode@context-mode": true
+    "javascript-typescript@claude-code-workflows": false,
+    "context-mode@context-mode": true,
+    "mattpocock-skills@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -256,11 +252,11 @@
       "dotnet test:*"
     ]
   },
-  "effortLevel": "xhigh",
   "showClearContextOnPlanAccept": true,
   "tui": "fullscreen",
   "autoDreamEnabled": true,
-  "theme": "light-daltonized",
+  "theme": "auto",
+  "preferredNotifChannel": "terminal_bell",
   "skipAutoPermissionPrompt": true,
   "useAutoModeDuringPlan": true
 }
