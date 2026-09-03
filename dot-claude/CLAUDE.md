@@ -2,7 +2,6 @@
 
 Things you cannot discover from the repo, several of which override defaults you would otherwise follow.
 
-- Worktrees go in a sibling directory above the repo, never inside it. `worktree-location-guard` denies the inside case, including `EnterWorktree`, which defaults to it.
 - Intermediate files go in project-local `tmp/`, not `/tmp` (`tmp-path-guard` denies `/tmp`).
 - `dangerouslyDisableSandbox` is never preemptive. Run sandboxed first; bypass only after a real permission error, and say which error forced it.
 - Sub-agents cannot feed ad-hoc input to a CLI by heredoc or `cat`/`echo` pipe: fish plus the permission layer turns those into an interactive prompt that a sub-agent cannot answer. Write the input to `tmp/` and pass the path.
