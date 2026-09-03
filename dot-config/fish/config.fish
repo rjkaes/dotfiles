@@ -97,3 +97,7 @@ fish_add_path $BUN_INSTALL/bin
 set -gx PATH $PATH /Users/rjk/.lmstudio/bin
 # End of LM Studio CLI section
 
+
+
+# Added by Antigravity CLI installer
+set -gx PATH "/Users/rjk/.local/bin" $PATH
