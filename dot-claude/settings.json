@@ -42,7 +42,6 @@
     "neovim": "off",
     "context-mode-workflow": "off",
     "claude-mem-mcp": "off",
-    "gemini-review-pr": "off",
     "brutal-review": "off"
   },
   "hooks": {
