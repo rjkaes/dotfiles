@@ -37,7 +37,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus",
+  "model": "opus[1m]",
   "skillOverrides": {
     "neovim": "off",
     "context-mode-workflow": "off",
@@ -165,7 +165,8 @@
     "caveman@caveman": false,
     "javascript-typescript@claude-code-workflows": false,
     "context-mode@context-mode": true,
-    "mattpocock-skills@claude-plugins-official": true
+    "mattpocock-skills@claude-plugins-official": true,
+    "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -202,6 +203,12 @@
       "source": {
         "source": "github",
         "repo": "mksglu/context-mode"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
       }
     }
   },
@@ -256,5 +263,6 @@
   "theme": "auto",
   "preferredNotifChannel": "terminal_bell",
   "skipAutoPermissionPrompt": true,
-  "useAutoModeDuringPlan": true
+  "useAutoModeDuringPlan": true,
+  "outputStyle": "Concise"
 }
