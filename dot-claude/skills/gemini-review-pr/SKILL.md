@@ -70,7 +70,7 @@ Fill the template below from the PR metadata. Keep it a single logical prompt st
 
 ### 5. Dispatch `gemini-consultant`
 
-Use the `Agent` tool with `subagent_type: "gemini-consultant"`. Tell the subagent to `cd` to the project root before running `ask-gemini`, and to run `ask-gemini "<question>"` as a **single-line** Bash command (no multiline, no heredoc — fish shell). If the prompt is long, instruct the subagent to write it to `tmp/gemini-pr-<n>-prompt.txt` (Write tool) and run `ask-gemini (cat tmp/gemini-pr-<n>-prompt.txt)`. The subagent relays Gemini's output verbatim. For a follow-up round on the same PR, tell it to use `--resume latest`.
+Use the `Agent` tool with `subagent_type: "gemini-consultant"`. Tell the subagent to `cd` to the project root before running `ask-gemini`, and to run `ask-gemini "<question>"` as a **single-line** Bash command (no multiline, no heredoc — the permission layer prompts on them). If the prompt is long, instruct the subagent to write it to `tmp/gemini-pr-<n>-prompt.txt` (Write tool) and run `ask-gemini < tmp/gemini-pr-<n>-prompt.txt`. The subagent relays Gemini's output verbatim. For a follow-up round on the same PR, tell it to use `--resume latest`.
 
 ### 6. Integrate findings
 
@@ -129,7 +129,7 @@ For deeper context, read these changed source files in full: <explicit list of s
 ## Common Mistakes
 
 - **Listing working-tree paths when HEAD ≠ PR head.** Gemini reads stale files and reviews the wrong code. Feed only `tmp/pr-<n>.diff` unless the PR branch is checked out.
-- **Multiline / heredoc `ask-gemini` in fish.** Breaks. Single line, or write the prompt to a `tmp/` file and `cat` it.
+- **Multiline / heredoc `ask-gemini`.** Triggers a permission prompt the subagent cannot answer. Single line, or write the prompt to a `tmp/` file and redirect it on stdin.
 - **`cat`-ing files into the prompt.** Wastes context and defeats Gemini's `read_file`. Pass paths only.
 - **Relaying findings without actions.** Always propose next steps scaled to severity (§6).
 - **Omitting the change paraphrase.** Without intent, Gemini reviews syntax, not intent-vs-implementation.

@@ -14,7 +14,7 @@ Gemini's full, unabridged stdout appears in your response. No paraphrasing, summ
 
 ## How you run it
 
-Write the prompt to a file in `tmp/` (for example `tmp/prompt_$(date +%s)`) and run `ask-gemini < tmp/prompt_XXXXXX > tmp/out_XXXXXX 2> tmp/err_XXXXXX` from the project root, keeping the two output streams in separate files so the wrapper's own stderr line cannot be mistaken for part of Gemini's response. The prompt file is not optional: fish does not handle heredocs reliably, and the invocation must be a single Bash command line with no multiline strings. `cd` to the project root first so relative paths inside the prompt resolve. Set the Bash timeout to 1800000 ms, since deep reviews are slow. Clean up the temp files afterward.
+Write the prompt to a file in `tmp/` (for example `tmp/prompt_$(date +%s)`) and run `ask-gemini < tmp/prompt_XXXXXX > tmp/out_XXXXXX 2> tmp/err_XXXXXX` from the project root, keeping the two output streams in separate files so the wrapper's own stderr line cannot be mistaken for part of Gemini's response. The prompt file is not optional: the permission layer turns heredocs and multiline commands into an interactive prompt you cannot answer, so the invocation must be a single Bash command line. `cd` to the project root first so relative paths inside the prompt resolve. Set the Bash timeout to 1800000 ms, since deep reviews are slow. Clean up the temp files afterward.
 
 Put file paths in the prompt text and let Gemini read them itself via `read_file`. Do not pre-read, stage, or inspect file content: `cat`, `head`, `tail`, `wc`, `ls -lh`, and `grep` against a file all spend context on bytes Gemini is about to read anyway. The stdin file is for content that has no path: piped output, inline snippets.
 
