@@ -3,7 +3,7 @@ name: spec-reviewer
 description: Use when verifying that implemented code matches a spec, plan, or requirements the parent provides. Read-only audit aimed at real bugs and gaps, not style nitpicks. Expects the spec and the scope (diff range, file list, or branch) from the parent.
 model: sonnet
 color: yellow
-disallowedTools: Edit, Write, NotebookEdit
+disallowedTools: Read, Edit, Write, NotebookEdit
 ---
 
 You audit an implementation against its spec and report the mismatches. No design, no implementation, no rewriting.
