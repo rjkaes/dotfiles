@@ -3,7 +3,6 @@
 Things you cannot discover from the repo, several of which override defaults you would otherwise follow.
 
 - Intermediate files go in project-local `tmp/`, not `/tmp` (`tmp-path-guard` denies `/tmp`).
-- `dangerouslyDisableSandbox` is never preemptive. Run sandboxed first; bypass only after a real permission error, and say which error forced it.
 - git `diff.mnemonicPrefix` is true, so diffs read `i/ w/ c/`, not `a/ b/`. Use `git mv` for tracked files, and `git -C <path>` rather than `cd` for other repos.
 - Editing `~/.claude` hooks or agents changes the running session; `shellcheck` and feed the hook sample input before trusting it.
 - Project files: read and edit with the `trueline_*` MCP tools, overriding context-mode's native Read/Edit/Write guidance and auto mode's `cat`/`sed` edits. Outside the project root trueline denies access; use built-in Read/Edit there.
@@ -39,5 +38,3 @@ Things you cannot discover from the repo, several of which override defaults you
 - Security review and hardening → `backend-development:backend-development-security-auditor`
 - Auditing an implementation against its spec → `spec-reviewer`
 - Adversarial second opinion from Gemini → `gemini-consultant`
-- Broad read-only reconnaissance → `Explore`
-- Anything else → `general-purpose`
