@@ -57,6 +57,15 @@
             "command": "\"/Users/rjk/.claude/hooks/context-mode-drop-agent-matcher.mjs\""
           }
         ]
+      },
+      {
+        "matcher": "startup|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/inject-delegate-directive.sh session"
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
