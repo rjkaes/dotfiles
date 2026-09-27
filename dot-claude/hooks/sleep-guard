@@ -1,0 +1,14 @@
+#!/opt/homebrew/bin/dash
+
+# Deny Bash `sleep` at command start or after &&, ||, ;, or a newline: that
+# shape is polling a background task, which the harness already reports on
+# completion. A lone `&` is left out so `server & sleep 2; curl` still runs.
+# `command sleep N` is the deliberate escape for waits that are not polling.
+
+exec /opt/homebrew/bin/jq -c '
+  .tool_input.command // empty |
+  if test("(^|&&|\\|\\||;|\n)\\s*sleep\\b")
+  then {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"sleep-guard: polling burns wall-clock and tokens; the harness re-invokes you when a background sub-agent or Bash task finishes. Need the result now? Dispatch with run_in_background: false. Otherwise end the turn. A wait that is not polling (server warm-up) may use `command sleep N`."}}
+  else empty
+  end
+'

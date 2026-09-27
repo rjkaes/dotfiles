@@ -10,6 +10,7 @@ plans/
 plugins/*
 !plugins/local-marketplace/
 policy-limits.json
+policy-limits.json.*
 projects/
 security_warnings_state_*.json
 tasks/
@@ -19,3 +20,4 @@ sessions/
 security/
 session-env/
 .caveman-active
+.ponytail-active

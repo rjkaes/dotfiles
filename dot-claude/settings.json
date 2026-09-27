@@ -110,6 +110,15 @@
             "command": "/Users/rjk/.claude/hooks/agent-input-guard"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/sleep-guard"
+          }
+        ]
       }
     ],
     "SessionEnd": []
