@@ -39,27 +39,27 @@ else
 fi
 nchars=${#footprint}
 replace_all=$(jq -r '.tool_input.replace_all // false' <<<"$input")
-tool=$(jq -r '.tool_name' <<<"$input")
 
 # Trivial edit — silent pass.
 if [[ "$replace_all" != "true" ]] && (( nlines <= max_lines && nchars <= max_chars )); then
   exit 0
 fi
 
-# Non-trivial: allow, but inject advisory for Claude to read next turn.
+# Non-trivial: allow, but inject a one-line advisory for Claude to read next
+# turn. Model and routing rules live in the session-start directive; repeating
+# them on every large edit only piled up copies in history.
 if [[ "$replace_all" == "true" ]]; then
-  reason="a replace_all sweep"
+  reason="replace_all sweep"
 else
-  reason="${nlines} lines / ${nchars} chars (over ${max_lines}/${max_chars})"
+  reason="${nlines} lines / ${nchars} chars exceeds the ${max_lines}-line / ${max_chars}-char inline limit"
 fi
 
 jq -n \
-  --arg tool "$tool" \
   --arg reason "$reason" \
   '{
     hookSpecificOutput: {
       hookEventName: "PreToolUse",
-      additionalContext: ("Advisory: this " + $tool + " call was " + $reason + ". For non-trivial implementation work, dispatch a subagent via Task to keep the orchestrator'\''s context lean. When you dispatch, set model: sonnet by default; drop to model: haiku only when the subagent has no decisions and no summarization to produce (purely mechanical execution). opus only with an ESCALATION: justification; fable never. Routing: see CLAUDE.md. This edit was allowed; consider delegating the next one.")
+      additionalContext: ("Advisory: " + $reason + "; consider delegating.")
     }
   }'
 

@@ -10,9 +10,9 @@ Things you cannot discover from the repo, several of which override defaults you
 ## Preferences
 
 - Ground every claim in opened code, fetched docs, or search results. Trace the real path; an env var name does not reveal auth, API shape, or config semantics.
-- Comments and commit messages: fewest words that carry the meaning.
+- Comments: fewest words that carry the meaning.
 - Blunt: name flaws, disagree when warranted, skip praise and superlatives.
-- Commit messages: conventional title under 50 chars, body wrapped at 72 (prose only, not code blocks). Explain the trade-offs the diff does not show.
+- Commit messages: fewest words; conventional title under 50 chars, body wrapped at 72 (prose only, not code blocks). Explain the trade-offs the diff does not show.
 - Comments carry the *why*: the business rule, the constraint, the alternative that was rejected. Put them above the block they explain. Note code deliberately left out where a reader would look for it, and leave a TODO for a nuance you are deferring.
 - Realistic names everywhere, docs and examples included. Not `foo`, `bar`, `temp`, `data`.
 - "Parse, don't validate": a typed wrapper at a module or API boundary beats passing bare `string`/`int` inward. Validate at system boundaries and trust internal callers.
