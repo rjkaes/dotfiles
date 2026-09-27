@@ -257,6 +257,7 @@
       }
     }
   },
+  "outputStyle": "Concise",
   "sandbox": {
     "enabled": false,
     "autoAllowBashIfSandboxed": true,
@@ -309,5 +310,5 @@
   "preferredNotifChannel": "terminal_bell",
   "skipAutoPermissionPrompt": true,
   "useAutoModeDuringPlan": true,
-  "outputStyle": "Concise"
+  "awaySummaryEnabled": false
 }
