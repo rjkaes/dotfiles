@@ -29,6 +29,12 @@ printf '%s' "$check" | grep -qF '## Implementation via sub-agents' || missing="$
 
 [ -z "$missing" ] && exit 0
 
-printf 'plan-guard: %s missing required section(s):%s. Add them exactly as specified in CLAUDE.md -> "Plan file requirements".\n' \
-    "$path" "$missing" >&2
+# The section text lives here, not in CLAUDE.md: plans are rare, so one denied
+# write costs less than carrying it in context every turn. Write, not Edit:
+# for Edit this hook checks the pre-edit file, so adding the section is denied.
+# shellcheck disable=SC2016 # backticks are literal markdown
+printf 'plan-guard: %s missing required section(s):%s. Rewrite the file with Write, including verbatim:\n\n%s\n' \
+    "$path" "$missing" '## Implementation via sub-agents
+
+Implementation of this plan runs through specialized sub-agents as defined in the "Agent routing policy" (e.g., `feature-engineer`, `refactor-engineer`, etc.). Orchestrator never implements directly.' >&2
 exit 2
