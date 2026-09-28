@@ -6,11 +6,16 @@
 # left out because heredoc bodies (commit messages, PR text) trip them.
 # `command sleep N` is the deliberate escape for waits that are not polling;
 # the deny reason omits it so the model does not learn to poll through it.
+# A command that is only `true`, `false`, or `:` is the same stall spent as a
+# tool call, so it is denied too.
 
 exec /opt/homebrew/bin/jq -c '
+  def deny($reason): {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:$reason}};
   .tool_input.command // empty |
   if test("(^|&&|\\|\\||;)\\s*sleep\\b")
-  then {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"sleep-guard: polling burns wall-clock and tokens; the harness re-invokes you when a background sub-agent or Bash task finishes. Need the result now? Dispatch with run_in_background: false. Otherwise end the turn."}}
+  then deny("sleep-guard: polling burns wall-clock and tokens; the harness re-invokes you when a background sub-agent or Bash task finishes. Need the result now? Dispatch with run_in_background: false. Otherwise end the turn.")
+  elif test("^\\s*(true|false|:)\\s*$")
+  then deny("sleep-guard: a no-op command does nothing but spend a tool call; the harness re-invokes you when a background sub-agent or Bash task finishes. End the turn.")
   else empty
   end
 '
