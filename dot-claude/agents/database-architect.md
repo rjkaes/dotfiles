@@ -38,4 +38,4 @@ Escalate rather than guess when access patterns stay unclear, when constraints c
 
 ## Report
 
-The DDL and migration files you changed, plans before and after, index recommendations with their justification, risks (locks, long-running migrations, data-loss potential), and open questions.
+The DDL and migration files you changed, each command you ran (migrations, EXPLAIN, tests) with its exit code, plans before and after, index recommendations with their justification, risks (locks, long-running migrations, data-loss potential), and open questions.

@@ -1,11 +1,16 @@
 #!/opt/homebrew/bin/dash
 # PreToolUse guard for Agent tool calls.
 #
-# Enforces two CLAUDE.md agent routing rules:
+# Enforces these CLAUDE.md agent routing rules, checked in this order:
 #   1. subagent_type must be a non-empty string.
-#   2. model, if explicitly set, must be 'sonnet', 'haiku', or 'opus' with an
-#      'ESCALATION:' justification line in the prompt. Anything else (notably
+#   2. model must be set. Unset inherits the parent session's model (Opus),
+#      which bypasses the ESCALATION: rule.
+#   3. model must be 'sonnet', 'haiku', or 'opus'. Anything else (notably
 #      'fable') is denied outright.
+#   4. opus needs an 'ESCALATION:' justification line in the prompt.
+#   5. Implementation agents (feature-engineer, refactor-engineer,
+#      database-architect) need 'Validation:' and 'Non-goals:' lines in the
+#      prompt, each with text after the colon.
 #
 # Subagents may delegate, under exactly these same rules. A strict
 # equal-or-lesser-strength check against the caller's own model is not
@@ -23,13 +28,20 @@ exec /opt/homebrew/bin/jq -c '
   .tool_input |
   if (.subagent_type // "") == "" then
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"CLAUDE.md agent routing: subagent_type must be set, never blank. Pick a specialized agent or \"general-purpose\"."}}
-  elif (.model // "") == "" or .model == "sonnet" or .model == "haiku" then empty
-  elif .model == "opus" then
-    if ((.prompt // "") | test("(^|\n)[ \t]*ESCALATION:[ \t]*\\S")) then empty
-    else
-      {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"model=opus requires an ESCALATION: line in the dispatch prompt explaining why sonnet is insufficient (or that a sonnet attempt already failed). Add a line starting with \"ESCALATION:\" followed by the justification, or dispatch with model=sonnet."}}
-    end
-  else
+  # Unset model inherits the parent session Opus, bypassing the ESCALATION: rule.
+  elif (.model // "") == "" then
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"set model explicitly: sonnet by default, haiku for purely mechanical work, opus only with an ESCALATION: line."}}
+  elif (.model | IN("sonnet", "haiku", "opus") | not) then
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("subagent model must be sonnet, haiku, or opus (opus needs an ESCALATION: line); not " + (.model | @json) + ".")}}
+  elif .model == "opus" and ((.prompt // "") | test("(^|\n)[ \t]*ESCALATION:[ \t]*\\S") | not) then
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"model=opus requires an ESCALATION: line in the dispatch prompt explaining why sonnet is insufficient (or that a sonnet attempt already failed). Add a line starting with \"ESCALATION:\" followed by the justification, or dispatch with model=sonnet."}}
+  elif (.subagent_type | IN("feature-engineer", "refactor-engineer", "database-architect")) then
+    [ (if ((.prompt // "") | test("(^|\n)[ \t]*Validation:[ \t]*\\S")) then empty else "Validation: (exact command + expected result)" end),
+      (if ((.prompt // "") | test("(^|\n)[ \t]*Non-goals:[ \t]*\\S")) then empty else "Non-goals:" end) ] as $missing |
+    if ($missing | length) == 0 then empty
+    else
+      {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("brief contract: " + .subagent_type + " prompt is missing (each on its own line, with text after the colon): " + ($missing | join("; ")))}}
+    end
+  else empty
   end
 '

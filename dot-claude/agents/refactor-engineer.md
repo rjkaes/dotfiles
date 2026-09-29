@@ -30,4 +30,4 @@ Stop and report instead of improvising when a step is ambiguous, when `findRefer
 
 ## Report
 
-Test results with pass and fail counts, any deviation from the plan with its reason, and risks or follow-ups you discovered.
+Each command you ran with its exit code, test pass and fail counts, any deviation from the plan with its reason, and risks or follow-ups you discovered.

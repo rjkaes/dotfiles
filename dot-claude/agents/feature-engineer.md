@@ -30,4 +30,4 @@ Stop and report instead of improvising when a step is ambiguous enough to read t
 
 ## Report
 
-Build and test results, any deviation from the plan with its reason, and open questions or follow-ups.
+Each command you ran with its exit code (build, tests, the brief's `Validation:` check), any deviation from the plan with its reason, and open questions or follow-ups.
