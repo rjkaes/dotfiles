@@ -4,6 +4,7 @@ Things you cannot discover from the repo, several of which override defaults you
 
 - Intermediate files go in project-local `tmp/`, not `/tmp` (`tmp-path-guard` denies `/tmp`).
 - git `diff.mnemonicPrefix` is true, so diffs read `i/ w/ c/`, not `a/ b/`. Use `git mv` for tracked files, and `git -C <path>` rather than `cd` for other repos.
+- Before committing, `git diff --cached --stat` must list only your changes: subagents share the index unless dispatched with `isolation: "worktree"`. `git commit -- <paths>` guarantees it for whole files. One plan step per commit.
 - Editing `~/.claude` hooks or agents changes the running session; `shellcheck` and feed the hook sample input before trusting it.
 - Project files: read and edit with the `trueline_*` MCP tools, overriding context-mode's native Read/Edit/Write guidance and auto mode's `cat`/`sed` edits. Outside the project root trueline denies access; use built-in Read/Edit there.
 
@@ -24,6 +25,7 @@ Things you cannot discover from the repo, several of which override defaults you
 - Before a multi-file change, name the files and the intended edit to each. Ask first if it needs new directories or more than two new abstraction layers (managers, wrappers, factories).
 - Work past roughly ten lines gets numbered steps, each with the check that proves it.
 - Bug fix = red-green: write the failing test, watch it go red, fix, watch it go green. Any other task with a done-check: run it first; it must fail. Already passing means the work is done or the check is broken, so stop and report.
+- Long runs: at a checkpoint, finish and verify the current item, report what is proven and what is carried over, then continue. No "shall I continue?"; irreversible actions still get confirmed first.
 
 ## Agent routing policy
 
