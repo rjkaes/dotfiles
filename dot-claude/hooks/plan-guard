@@ -26,15 +26,23 @@ fi
 
 missing=""
 printf '%s' "$check" | grep -qF '## Implementation via sub-agents' || missing="$missing sub-agents"
+# Write only: existing plans predate the Status section and must stay editable.
+if [ "$tool" = "Write" ]; then
+    printf '%s' "$check" | grep -qF '## Status' || missing="$missing status"
+fi
 
 [ -z "$missing" ] && exit 0
 
 # The section text lives here, not in CLAUDE.md: plans are rare, so one denied
-# write costs less than carrying it in context every turn. Write, not Edit:
-# for Edit this hook checks the pre-edit file, so adding the section is denied.
+# write costs less than carrying it in context every turn. Write, not an edit
+# tool: those check the pre-edit file, so adding a missing section is denied.
 # shellcheck disable=SC2016 # backticks are literal markdown
 printf 'plan-guard: %s missing required section(s):%s. Rewrite the file with Write, including verbatim:\n\n%s\n' \
     "$path" "$missing" '## Implementation via sub-agents
 
-Implementation of this plan runs through specialized sub-agents as defined in the "Agent routing policy" (e.g., `feature-engineer`, `refactor-engineer`, etc.). Orchestrator never implements directly.' >&2
+Implementation of this plan runs through specialized sub-agents as defined in the "Agent routing policy" (e.g., `feature-engineer`, `refactor-engineer`, etc.). The orchestrator edits inline only within the session directive'\''s trivial-edit limits.
+
+## Status
+
+One checkbox per step, ticked when that step'\''s check passes, not at the end. This file is the task state that survives compaction.' >&2
 exit 2
