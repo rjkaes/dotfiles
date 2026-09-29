@@ -126,7 +126,7 @@
         ]
       },
       {
-        "matcher": "Write|Edit",
+        "matcher": "Write|Edit|MultiEdit|mcp__.*trueline_edit",
         "hooks": [
           {
             "type": "command",

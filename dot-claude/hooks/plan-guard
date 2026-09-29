@@ -6,7 +6,7 @@ tool="" path=""  # set by eval below
 eval "$(printf '%s' "$payload" | jq -r '"tool=" + (.tool_name // "" | @sh) + " path=" + (.tool_input.file_path // "" | @sh)')"
 
 case "$tool" in
-    Write|Edit) ;;
+    Write|Edit|MultiEdit|mcp__*trueline_edit) ;;
     *) exit 0 ;;
 esac
 
@@ -15,7 +15,7 @@ case "$path" in
     *) exit 0 ;;
 esac
 
-# For Write, check the payload content (file doesn't exist yet); for Edit, check the existing file
+# For Write, check the payload content (file doesn't exist yet); for every other tool, check the existing file
 if [ "$tool" = "Write" ]; then
     check=$(printf '%s' "$payload" | jq -r '.tool_input.content // ""')
 elif [ -f "$path" ]; then
