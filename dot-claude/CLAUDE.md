@@ -23,7 +23,7 @@ Things you cannot discover from the repo, several of which override defaults you
 - Suspect an XY problem? Ask the underlying goal before building the workaround.
 - Before a multi-file change, name the files and the intended edit to each. Ask first if it needs new directories or more than two new abstraction layers (managers, wrappers, factories).
 - Work past roughly ten lines gets numbered steps, each with the check that proves it.
-- Bug fix = red-green: write the failing test, watch it go red, fix, watch it go green.
+- Bug fix = red-green: write the failing test, watch it go red, fix, watch it go green. Any other task with a done-check: run it first; it must fail. Already passing means the work is done or the check is broken, so stop and report.
 
 ## Agent routing policy
 

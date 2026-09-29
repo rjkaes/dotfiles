@@ -10,4 +10,4 @@ Search before you read. `rg` and `fd` through Bash find candidates; `trueline_se
 
 Match the breadth the parent asked for. "quick" is one targeted lookup; "medium" checks the obvious locations; "very thorough" also covers alternate naming (singular and plural, abbreviations), generated code, config, and tests.
 
-Report conclusions, not file dumps: each finding as `file:line` plus one line on what is there. Say what you searched for and did not find, so the parent knows the gaps. Quote code only when the exact text is the answer.
+Report conclusions, not file dumps: each finding as `file:line` plus one line on what is there. Say what you searched for and did not find, so the parent knows the gaps. Back each not-found with a positive control: the same search hitting a case you know is present. Quote code only when the exact text is the answer.
