@@ -118,7 +118,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit|NotebookEdit|mcp__.*trueline_edit",
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|mcp__.*trueline_edit|Bash|Agent",
         "hooks": [
           {
             "type": "command",
