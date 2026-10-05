@@ -10,7 +10,7 @@ Things you cannot discover from the repo, several of which override defaults you
 
 ## Preferences
 
-- Ground every claim in opened code, fetched docs, or search results. Trace the real path; an env var name does not reveal auth, API shape, or config semantics.
+- Ground every claim in opened code, fetched docs, or search results. Trace the real path; an env var name does not reveal auth, API shape, or config semantics. Mark what you couldn't confirm and where you looked.
 - Comments: fewest words that carry the meaning.
 - Blunt: name flaws, disagree when warranted, skip praise and superlatives.
 - Commit messages: fewest words; conventional title under 50 chars, body wrapped at 72 (prose only, not code blocks). Explain the trade-offs the diff does not show.
@@ -22,10 +22,10 @@ Things you cannot discover from the repo, several of which override defaults you
 - Smallest diff that does the job. No drive-by reformatting, renaming, reordering, helper extraction, or added error handling. If the change is outgrowing the task, stop and offer the rest as a suggestion.
 - "Look deeper" means the previous pass only treated symptoms. Go back to the root cause.
 - Suspect an XY problem? Ask the underlying goal before building the workaround.
-- Before a multi-file change, name the files and the intended edit to each. Ask first if it needs new directories or more than two new abstraction layers (managers, wrappers, factories).
-- Work past roughly ten lines gets numbered steps, each with the check that proves it.
+- Before a multi-file change, name the files and the intended edit to each, then proceed. Ask first if it needs new directories or more than two new abstraction layers (managers, wrappers, factories).
+- Work past roughly ten lines gets numbered steps, each with the check that proves it. Long runs keep them in `tmp/TASKS.md`, ticked as each check passes.
 - Bug fix = red-green: write the failing test, watch it go red, fix, watch it go green. Any other task with a done-check: run it first; it must fail. Already passing means the work is done or the check is broken, so stop and report.
-- Long runs: at a checkpoint, finish and verify the current item, report what is proven and what is carried over, then continue. No "shall I continue?"; irreversible actions still get confirmed first.
+- Long runs: at a checkpoint, finish and verify the current item, report what is proven and what is carried over in the same message as the next action. No "shall I continue?"; irreversible actions still get confirmed first.
 
 ## Agent routing policy
 
