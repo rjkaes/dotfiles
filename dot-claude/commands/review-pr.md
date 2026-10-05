@@ -20,7 +20,7 @@ values for use in later steps.
 **Self-review detection:** Resolve the viewer login (`gh api user -q .login`)
 and the PR author (`gh pr view <n> --json author -q .author.login`). If they
 match, set `SELF_REVIEW=1`. GitHub forbids self-APPROVE and
-self-REQUEST_CHANGES; in Step 6 this forces `--event COMMENT` regardless of
+self-REQUEST_CHANGES; in Step 7 this forces `--event COMMENT` regardless of
 finding types. Note this in the review body.
 
 **Context enrichment** (note for the review body, do not block):
@@ -49,17 +49,17 @@ Grep `tmp/pr-diff.txt` to determine which specialized agents apply (do not load 
   blocks, inappropriate fallbacks, missing error propagation.
 - **`pr-review-toolkit:pr-test-analyzer`**: Always run. Identifies critical untested paths, edge
   case gaps, test quality issues.
-- **`security-scanning:security-auditor`**: Run when the diff touches authentication, authorization,
+- **`backend-development:backend-development-security-auditor`**: Run when the diff touches authentication, authorization,
   user input handling, database queries, cookie/session logic, crypto usage, or
   dependency files (`package.json`, `*.csproj`, `requirements.txt`, `go.mod`).
   Grep `tmp/pr-diff.txt` for: `req.body`, `req.params`, `req.query`, SQL strings, `eval`,
   `innerHTML`, `dangerouslySetInnerHTML`, auth middleware, `jwt`, `bcrypt`,
   `crypto`, `cookie`, `session`, `password`, `secret`, `token`.
-- **`backend-development:performance-engineer`**: Run when the diff touches database queries, ORM
+- **`backend-development:backend-development-performance-engineer`**: Run when the diff touches database queries, ORM
   calls, loops over collections, API endpoint handlers, caching logic, or adds
   new dependencies. Grep `tmp/pr-diff.txt` for: `.find(`, `.query(`, `SELECT`, `INSERT`,
   `.map(`, `.forEach(`, `cache`, `redis`, `paginate`, `limit`, `offset`.
-- **`backend-development:backend-architect`**: Run when the PR changes >10 files or >500 diff lines,
+- **`backend-development:backend-development-backend-architect`**: Run when the PR changes >10 files or >500 diff lines,
   or introduces new directories/modules/services. Checks layering violations,
   dependency direction, pattern consistency, and abstraction appropriateness.
   Marginal value when `performance-engineer` and `security-auditor` are both already running on the
@@ -101,7 +101,7 @@ Reduce to fewer roles when their *Skip when* conditions apply. Three Tier-1 role
 is a healthy floor; running all four unconditionally on a greenfield + well-spec'd PR
 produces ~30% duplicate findings.
 
-Each finding is scored 0-100 by a Haiku verification agent using this rubric:
+Each finding is scored 0-100 by a Sonnet verification agent using this rubric:
 - **0**: False positive, doesn't survive scrutiny, or pre-existing issue.
 - **25**: Might be real, but unverified. Stylistic issues not in CLAUDE.md.
 - **50**: Verified real, but a nitpick or unlikely in practice.
@@ -141,7 +141,7 @@ Blocking types: `issue`, `todo`, `chore`. Non-blocking: `praise`, `nitpick`, `su
 
 ## Step 4: Score Tier 2 findings
 
-For each Tier 2 finding, call the Task tool with `model: "haiku"` and
+For each Tier 2 finding, call the Task tool with `model: "sonnet"` and
 `subagent_type: "general-purpose"`. The agent receives: the finding text,
 relevant diff context, the applicable CLAUDE.md file paths, and the 0-100
 rubric below verbatim. It returns a single score.
@@ -173,7 +173,25 @@ Source agent attribution is preserved in the comment prefix.
 **TYPE conflicts:** When two agents disagree on `TYPE` for an overlapping finding,
 keep the higher severity (`issue` > `todo` > `suggestion` > `nitpick`).
 
-## Step 6: Post the review
+## Step 6: Final eligibility guard
+
+Before posting, re-check with a Haiku agent (Task tool, `model: "haiku"`,
+`subagent_type: "general-purpose"`) that:
+
+1. The PR is still open and not a draft.
+2. The viewer has not already submitted a review:
+   `gh pr view <n> --json reviews -q '[.reviews[] | select(.author.login == "<viewer>")] | length'`
+   returns 0.
+3. **No prior partial run left review comments behind:**
+   `gh api --paginate repos/<owner>/<repo>/pulls/<n>/comments --jq '[.[] | select(.user.login == "<viewer>")] | length'`
+   returns 0. If >0, abort and ask the user to confirm whether the prior
+   partial review should be kept or cleaned up first. Do not auto-delete.
+   (The script also enforces this via exit code 2 unless `--allow-duplicate`
+   is passed.)
+
+Resolve `<viewer>` via `gh api user -q .login`. If any check fails, do not post.
+
+## Step 7: Post the review
 
 Post the review using the `gh-pr-review-post` script.
 
@@ -235,24 +253,6 @@ The script derives the verdict from finding types (REQUEST_CHANGES if any `issue
 
 The script appends out-of-hunk findings to the review body and prints a warning to stderr. Treat the warning as informational; do not retry.
 
-## Step 7: Final eligibility guard
-
-Before posting, re-check with a Haiku agent (Task tool, `model: "haiku"`,
-`subagent_type: "general-purpose"`) that:
-
-1. The PR is still open and not a draft.
-2. The viewer has not already submitted a review:
-   `gh pr view <n> --json reviews -q '[.reviews[] | select(.author.login == "<viewer>")] | length'`
-   returns 0.
-3. **No prior partial run left review comments behind:**
-   `gh api --paginate repos/<owner>/<repo>/pulls/<n>/comments --jq '[.[] | select(.user.login == "<viewer>")] | length'`
-   returns 0. If >0, abort and ask the user to confirm whether the prior
-   partial review should be kept or cleaned up first. Do not auto-delete.
-   (The script also enforces this via exit code 2 unless `--allow-duplicate`
-   is passed.)
-
-Resolve `<viewer>` via `gh api user -q .login`. If any check fails, do not post.
-
 ## Agent selection guidance
 
 Drop or condition the following on observed low unique signal:
@@ -262,11 +262,11 @@ Drop or condition the following on observed low unique signal:
 | `tier1:shallow-bug-scan` | Diff has a design spec in `docs/`; `tier1:comment-compliance` will catch divergences with higher confidence |
 | `tier1:git-history` | >70% of the diff is newly-added files |
 | `pr-review-toolkit:type-design-analyzer` | A sibling `CLAUDE.md` already documents the type-design choices |
-| `backend-development:backend-architect` | Feature additions inside an existing pattern, when `performance-engineer` and `security-auditor` are both already running |
+| `backend-development:backend-development-backend-architect` | Feature additions inside an existing pattern, when `performance-engineer` and `security-auditor` are both already running |
 
 High-signal agents to keep almost unconditionally:
 - `tier1:prior-pr-comments` — only source for "this was flagged before, still not fixed" findings.
 - `tier1:comment-compliance` — only source for spec / code / CLAUDE.md divergences.
 - `pr-review-toolkit:comment-analyzer` — for any PR adding spec or CLAUDE.md docs.
-- `security-scanning:security-auditor`, `backend-development:performance-engineer` — when their Step 2 grep triggers fire.
+- `backend-development:backend-development-security-auditor`, `backend-development:backend-development-performance-engineer` — when their Step 2 grep triggers fire.
 - `pr-review-toolkit:silent-failure-hunter`, `pr-review-toolkit:pr-test-analyzer` — the "always run" defaults are correct.
