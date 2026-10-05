@@ -1,12 +1,11 @@
 ---
 description: Perform a ruthless, multi-perspective code review of jj change `@-` or git `HEAD`.
-allowed-tools: Bash(jj show:*), Bash(jj log:*), Bash(jj diff:*), Bash(jj file annotate:*), Bash(jj root:*), Bash(git show:*), Bash(git --no-pager show:*), Bash(git blame:*), Bash(git log:*), Bash(git diff:*), Bash(git rev-parse:*), Bash(git symbolic-ref:*), Task, Read, Read(//tmp/brutal-review-context-*), Edit(//tmp/brutal-review-context-*), Grep, Glob, LSP
+allowed-tools: Bash(jj show:*), Bash(jj log:*), Bash(jj diff:*), Bash(jj file annotate:*), Bash(jj root:*), Bash(git show:*), Bash(git --no-pager show:*), Bash(git blame:*), Bash(git log:*), Bash(git diff:*), Bash(git rev-parse:*), Bash(git symbolic-ref:*), Task, Read, Read(tmp/brutal-review-context-*), Edit(tmp/brutal-review-context-*), Grep, Glob, LSP
 ---
 
 Perform a ruthless, brutal, in-depth, extremely critical code review of the most recent change (jj `@-` or git `HEAD`).
 
 Agent assumptions (applies to all agents and subagents):
-- All tools are functional and will work without error. Do not test tools or make exploratory calls.
 - Only call a tool if it is required to complete the task. Every tool call should have a clear purpose.
 - All tests have already been run and passed.
 - The entire codebase has already been linted and formatted and is clean.
@@ -76,18 +75,18 @@ The main agent MUST gather all context first. Subagents do NOT inherit the main 
    git rev-parse --short HEAD
    ```
 
-   Use the Write tool to save the context block to `/tmp/brutal-review-context-<ID>.md` (e.g., `/tmp/brutal-review-context-abc123.md`). This allows subagents to read the context without the main agent needing to copy the entire block into each subagent prompt, significantly reducing token consumption. Using the change/commit ID in the filename allows multiple reviews to run in parallel without conflicts.
+   Use the Write tool to save the context block to `<tmp-dir>/brutal-review-context-<ID>.md` (absolute path, where `<tmp-dir>` is `<repo-root>/tmp` and the root comes from `git rev-parse --show-toplevel`; e.g., `<tmp-dir>/brutal-review-context-abc123.md`). This allows subagents to read the context without the main agent needing to copy the entire block into each subagent prompt, significantly reducing token consumption. Using the change/commit ID in the filename allows multiple reviews to run in parallel without conflicts.
 
    The file should be structured with clear section headers so subagents can quickly locate relevant information.
 
 ## Step 3: Conduct Exhaustive Multi-Perspective Review
 Examine every aspect of the change with extreme scrutiny, launching subagents using the Task tool to review the changes from the perspective of multiple different specialists. The categories are below. Each reviewer subagent should report each concern and question with a confidence score from 0 to 100.
 
-**CRITICAL**: Subagents do NOT inherit your context. Instead, instruct each subagent to read the context from `/tmp/brutal-review-context-<ID>.md` (using the ID you obtained in Step 2) as their first action. This avoids duplicating the full context in each subagent prompt while still providing complete information.
+**CRITICAL**: Subagents do NOT inherit your context. Instead, instruct each subagent to read the context from the absolute path `<tmp-dir>/brutal-review-context-<ID>.md` (using the ID you obtained in Step 2; write that absolute path into each subagent prompt) as their first action. This avoids duplicating the full context in each subagent prompt while still providing complete information.
 
 Launch all four subagents in parallel (in a single message with multiple Task tool calls) to maximize efficiency.
 
-Each subagent should be started using the Task tool with `model: opus` and the following prompt template. Replace `[PERSPECTIVE-SPECIFIC INSTRUCTIONS]` with the perspective details below:
+Each subagent should be started using the Task tool with `model: sonnet` and the following prompt template. Replace `[PERSPECTIVE-SPECIFIC INSTRUCTIONS]` with the perspective details below:
 
 ```
 You are an elite code reviewer with decades of experience in systems programming, database internals, and distributed systems. You have an uncompromising eye for quality and zero tolerance for mediocrity. Your reviews are legendary for their thoroughness and brutal honesty—you find bugs others miss, question assumptions others accept, and demand excellence where others settle for "good enough."
@@ -98,7 +97,7 @@ Your mission is to perform ruthless, in-depth code reviews. You do not soften fe
 [PERSPECTIVE-SPECIFIC INSTRUCTIONS]
 
 ## Context
-**FIRST ACTION**: Use the Read tool to read `/tmp/brutal-review-context-<ID>.md`. This file contains all the context gathered by the main agent, including:
+**FIRST ACTION**: Use the Read tool to read `<tmp-dir>/brutal-review-context-<ID>.md` (substitute the absolute path from the main agent). This file contains all the context gathered by the main agent, including:
 - The full diff being reviewed
 - The commit stack context
 - Relevant excerpts from related files (callers, dependencies, etc.)
@@ -116,7 +115,7 @@ Review the change from your specific perspective. For each finding:
 ```
 
 ### Perspective 1: Core Logic (use for `[PERSPECTIVE-SPECIFIC INSTRUCTIONS]`)
-This subagent takes the perspective of a genius architect, deeply considering:
+This subagent takes the perspective of a genius architect. Review for:
 
 **Logic & Correctness**
 - Is the algorithm correct? Prove it or find the bug.
@@ -130,7 +129,7 @@ This subagent takes the perspective of a genius architect, deeply considering:
 - Will this be maintainable in 6 months?
 
 ### Perspective 2: Reliability & Testing (use for `[PERSPECTIVE-SPECIFIC INSTRUCTIONS]`)
-This subagent takes the perspective of a reliability engineer with a breaker mindset, deeply considering:
+This subagent takes the perspective of a reliability engineer with a breaker mindset. Review for:
 
 **Testing**
 - Are there tests? Are they comprehensive?
@@ -150,7 +149,7 @@ This subagent takes the perspective of a reliability engineer with a breaker min
 - Are there any potential points of failure that need to be addressed?
 
 ### Perspective 3: Clean Campground (use for `[PERSPECTIVE-SPECIFIC INSTRUCTIONS]`)
-This subagent takes the perspective of a yak-shaving, nit-picking stickler for cleanliness and maintainability, deeply considering:
+This subagent takes the perspective of a yak-shaving, nit-picking stickler for cleanliness and maintainability. Review for:
 
 **Code Quality & Style**
 - Is the code readable to someone unfamiliar with it?
@@ -166,7 +165,7 @@ This subagent takes the perspective of a yak-shaving, nit-picking stickler for c
 - Would a new team member understand this code?
 
 ### Perspective 4: Performance (use for `[PERSPECTIVE-SPECIFIC INSTRUCTIONS]`)
-This subagent takes the perspective of a performance engineer and optimizer, deeply considering:
+This subagent takes the perspective of a performance engineer and optimizer. Review for:
 
 **Performance & Resources**
 - Are there allocations in hot paths? Unnecessary clones?
@@ -203,6 +202,7 @@ After collecting findings from all subagents, you must analyze and synthesize th
 - Holistically combine related issues into single findings
 - Number combined findings sequentially so they can be referred to unambiguously
 - Suggest overall improvements
+- Before accepting a finding, open its cited file and line and confirm the claim. Findings you cannot confirm go in a final "Could not confirm" section, with where you looked, instead of being dropped silently
 - Filter out irrelevant findings and false positives
 - Most importantly, report these new synthesized findings in the same format as the original findings, plus new sequential numbers:
   - Specific file, line, snippet

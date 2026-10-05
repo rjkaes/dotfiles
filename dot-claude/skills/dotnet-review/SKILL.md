@@ -1,12 +1,11 @@
 ---
 description: Review C#/.NET code — "review dotnet", "review c#", "code review .net", "dotnet review"
-allowed-tools: Bash(git diff:*), Bash(git --no-pager diff:*), Bash(git log:*), Bash(git --no-pager log:*), Bash(git show:*), Bash(git --no-pager show:*), Bash(git rev-parse:*), Bash(git symbolic-ref:*), Bash(git diff-tree:*), Task, Read, Read(/tmp/dotnet-review-*), Write(/tmp/dotnet-review-*), Edit(/tmp/dotnet-review-*), Grep, Glob, LSP
+allowed-tools: Bash(git diff:*), Bash(git --no-pager diff:*), Bash(git log:*), Bash(git --no-pager log:*), Bash(git show:*), Bash(git --no-pager show:*), Bash(git rev-parse:*), Bash(git symbolic-ref:*), Bash(git diff-tree:*), Task, Read, Read(tmp/dotnet-review-*), Edit(tmp/dotnet-review-*), Grep, Glob, LSP
 ---
 
 Perform an in-depth, .NET-specific code review. Produces an ordered action plan with concrete code fixes.
 
 Agent assumptions (applies to all agents and subagents):
-- All tools are functional and will work without error. Do not test tools or make exploratory calls.
 - Only call a tool if it is required to complete the task. Every tool call should have a clear purpose.
 - All tests have already been run and passed. The codebase builds cleanly.
 
@@ -65,7 +64,7 @@ Generate a unique ID:
 git rev-parse --short HEAD
 ```
 
-Use the Write tool to save the context to `/tmp/dotnet-review-context-<ID>.md` with these sections:
+Use the Write tool to save the context to `<tmp-dir>/dotnet-review-context-<ID>.md` (absolute path, where `<tmp-dir>` is `<repo-root>/tmp` and the root comes from `git rev-parse --show-toplevel`) with these sections:
 
 ```markdown
 # .NET Code Review Context
@@ -89,7 +88,7 @@ Use the Write tool to save the context to `/tmp/dotnet-review-context-<ID>.md` w
 
 ## Step 3: Launch 5 Parallel Review Subagents
 
-Launch all five subagents in a single message using the Task tool with `model: opus`. Each subagent must read `/tmp/dotnet-review-context-<ID>.md` as its first action.
+Launch all five subagents in a single message using the Task tool with `model: sonnet`. Each subagent must read `<tmp-dir>/dotnet-review-context-<ID>.md` as its first action; pass the absolute path in each subagent prompt.
 
 Use this prompt template for each, replacing `[PERSPECTIVE]` with the perspective-specific instructions below:
 
@@ -100,7 +99,7 @@ You are an expert .NET code reviewer specializing in C# and the modern .NET ecos
 [PERSPECTIVE]
 
 ## Context
-**FIRST ACTION**: Use the Read tool to read `/tmp/dotnet-review-context-<ID>.md`. This contains:
+**FIRST ACTION**: Use the Read tool to read `<tmp-dir>/dotnet-review-context-<ID>.md` (substitute the absolute path from the main agent). This contains:
 - The scope and diff being reviewed
 - Project conventions and active analyzers (DO NOT flag issues already caught by configured analyzers)
 - Full file contents for all affected files
@@ -119,7 +118,7 @@ Skip issues that the project's configured analyzers already enforce (listed in t
 
 ### Perspective 1: Security
 
-Deeply consider:
+Check for:
 
 - **OWASP Top 10**: injection (SQL, command, LDAP, header), XSS, CSRF, insecure deserialization, broken access control
 - **Authorization & Authentication**: missing `[Authorize]`, IDOR vulnerabilities, role/policy checks, JWT validation gaps, insecure token storage
@@ -130,7 +129,7 @@ Deeply consider:
 
 ### Perspective 2: Performance & Memory
 
-Deeply consider:
+Check for:
 
 - **Async/Await correctness**: missing `ConfigureAwait`, sync-over-async (`Task.Result`, `.Wait()`, `.GetAwaiter().GetResult()`), async void, fire-and-forget without error handling
 - **CancellationToken propagation**: tokens accepted but not passed to downstream calls, missing `CancellationToken` parameters on async APIs
@@ -143,7 +142,7 @@ Deeply consider:
 
 ### Perspective 3: Reliability & Error Handling
 
-Deeply consider:
+Check for:
 
 - **Exception safety**: catching `Exception` broadly, swallowing exceptions, throwing from `finally`, `async void` swallowing exceptions
 - **Null handling**: missing null checks on external input, nullable reference type warnings suppressed without justification, null-forgiving operator (the ! postfix) used carelessly
@@ -154,7 +153,7 @@ Deeply consider:
 
 ### Perspective 4: Architecture & Code Quality
 
-Deeply consider:
+Check for:
 
 - **SOLID principles**: single responsibility violations, interface segregation, dependency inversion (concrete dependencies instead of abstractions)
 - **Naming & visibility**: types/methods more visible than necessary (`public` when `internal` suffices), unclear names, inconsistent naming conventions
@@ -166,7 +165,7 @@ Deeply consider:
 
 ### Perspective 5: Correctness & Logic
 
-Deeply consider:
+Check for:
 
 - **Logic errors**: wrong conditionals, inverted boolean checks, off-by-one errors, incorrect operator precedence, short-circuit evaluation surprises
 - **LINQ semantics**: `FirstOrDefault` vs `Single` (silently returns default vs throws on missing/multiple), `Any` vs `All` with negation, wrong predicate logic, unexpected `default` for value types, deferred execution causing stale results
@@ -181,7 +180,7 @@ Deeply consider:
 After all subagents return:
 
 1. **Merge overlapping findings** — if multiple perspectives flagged the same issue, combine them into one finding with the highest severity
-2. **Discard false positives** — remove findings with confidence < 30
+2. **Verify and filter** — before accepting a finding, open its cited file:line and confirm the claim. Findings you cannot confirm, or with confidence < 30, go in a final "Could not confirm" section with where you looked, instead of being dropped silently
 3. **Remove analyzer-covered issues** — if the project conventions section lists an analyzer that catches this exact issue (by rule ID), drop it
 4. **Resolve conflicts** — if two perspectives disagree (e.g. "extract method" vs "keep inline"), use judgment based on project conventions
 
@@ -222,7 +221,7 @@ Be direct and specific. Every finding must have a concrete fix — never say "co
 Do not:
 - Flag style issues that configured analyzers already catch
 - Add empty praise or soften criticism
-- Report theoretical issues with confidence < 30
+- Report theoretical issues with confidence < 30 as findings (list them under "Could not confirm")
 - Suggest over-engineering (unnecessary abstractions, premature optimization)
 
 Do:
