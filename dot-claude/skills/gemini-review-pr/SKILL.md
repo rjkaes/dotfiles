@@ -7,7 +7,7 @@ description: Use when asked to review a GitHub PR with Gemini, get a second opin
 
 ## Overview
 
-Consult Google Gemini Pro as an adversarial second-opinion reviewer of a GitHub pull request. You supply a PR URL or number; the skill gathers the PR metadata and full branch diff, assembles a combined adversarial-review + security-audit prompt biased at Claude's statistical blind spots, dispatches the `gemini-consultant` subagent, and integrates the findings with proposed actions.
+Consult Google Gemini Pro as an adversarial second-opinion reviewer of a GitHub pull request. You supply a PR URL or number; the skill gathers the PR metadata and full branch diff, assembles a combined adversarial-review + security-audit prompt biased at Claude's statistical blind spots, dispatches the `gemini-consultant` subagent, and verifies the findings against the cited code and reports them.
 
 This is the PR-scoped sibling of `consult-gemini`. Where `consult-gemini` reviews an arbitrary file set for an arbitrary question, this skill's input is exactly one PR and the deliverable is exactly a full-diff review.
 
@@ -26,7 +26,7 @@ This is the PR-scoped sibling of `consult-gemini`. Where `consult-gemini` review
 
 ## Workflow
 
-This skill owns argument parsing, gathering, prompt assembly, and dispatch. The `gemini-consultant` subagent owns Bash execution, `ask-gemini` invocation, and verbatim relay. File/diff bytes never enter this skill's context — paths are passed to the subagent, which lists them for Gemini to read via its own `read_file` tool.
+This skill owns argument parsing, gathering, prompt assembly, and dispatch. The `gemini-consultant` subagent owns Bash execution, `ask-gemini` invocation, and verbatim relay. The skill doesn't pre-load files or the diff; only paths go to the subagent, which lists them for Gemini to read via its own `read_file` tool.
 
 ### 1. Parse the argument
 
@@ -74,10 +74,7 @@ Use the `Agent` tool with `subagent_type: "gemini-consultant"`. Tell the subagen
 
 ### 6. Integrate findings
 
-Do not relay raw findings without a proposed action, scaled to severity:
-- **Critical/Blocking** → explicitly propose creating a sub-task per issue.
-- **Single architectural blocker** → offer a design decision or ADR.
-- **Batch of medium/minor** → offer to implement directly or fold into a follow-up commit.
+Verify each finding by opening its cited file:line in the saved diff (`tmp/pr-<n>.diff`) and mark it Confirmed, Refuted, or Could not confirm (say where you looked). Report in this order: anything needing the user's decision first; then confirmed findings, each with one recommended next step; then the "Could not confirm" list. Don't implement unless asked.
 
 ## Prompt Template
 
@@ -131,6 +128,6 @@ For deeper context, read these changed source files in full: <explicit list of s
 - **Listing working-tree paths when HEAD ≠ PR head.** Gemini reads stale files and reviews the wrong code. Feed only `tmp/pr-<n>.diff` unless the PR branch is checked out.
 - **Inline or heredoc `ask-gemini` prompt.** The template is multiline, so either triggers a permission prompt the subagent cannot answer. Write the prompt to a `tmp/` file and redirect it on stdin.
 - **`cat`-ing files into the prompt.** Wastes context and defeats Gemini's `read_file`. Pass paths only.
-- **Relaying findings without actions.** Always propose next steps scaled to severity (§6).
+- **Accepting findings unverified.** Open each cited file:line and mark it Confirmed, Refuted, or Could not confirm (§6).
 - **Omitting the change paraphrase.** Without intent, Gemini reviews syntax, not intent-vs-implementation.
 - **>3 debate rounds.** Gemini drifts in later rounds; start a fresh session for new scope.

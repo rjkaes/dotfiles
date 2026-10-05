@@ -35,7 +35,7 @@ The Claude+Gemini pair already covers ~91% of a 5-model debate ceiling (10/15 vs
 
 ## Workflow
 
-This skill owns: scope clarification, prompt assembly, file validation, Task dispatch, and output presentation. The `gemini-consultant` subagent owns: Bash execution, exit-code handling, timeouts, and verbatim relay. File contents never enter this skill's context — only paths are passed to the subagent, which lists them in the prompt for Gemini to read via its `read_file` tool.
+This skill owns: scope clarification, prompt assembly, file validation, Task dispatch, and output presentation. The `gemini-consultant` subagent owns: Bash execution, exit-code handling, timeouts, and verbatim relay. The skill doesn't pre-load files; only paths go to the subagent, which lists them in the prompt for Gemini to read via its `read_file` tool. Step 4 opens cited lines only to verify findings.
 
 1. **Clarify scope.** User's invocation argument: `$ARGUMENTS`. If non-empty, treat it as the question and proceed directly to step 3. If empty, confirm the question and the set of files, paths, or topics to include — ask one focused clarifying question if the request is ambiguous.
 
@@ -43,7 +43,7 @@ This skill owns: scope clarification, prompt assembly, file validation, Task dis
 
 3. **Dispatch `gemini-consultant`.** Use `Task` with `subagent_type: "gemini-consultant"`, passing the assembled prompt with file paths listed inside the prompt string. Tell the subagent to `cd` to the project root before running `ask-gemini` so that relative paths in the prompt resolve correctly. The subagent writes the prompt to a `tmp/` file and runs `ask-gemini < tmp/<prompt-file>` as a **single-line Bash command** — never the prompt inline, never a heredoc (the permission layer prompts on them, and a subagent cannot answer). Gemini reads files via its own `read_file` tool — list paths in the prompt, do not `cat` them. If `Task` cannot resolve `gemini-consultant`, verify `~/.claude/agents/gemini-consultant.md` exists. For a follow-up consultation on the same context, tell the subagent to use `--resume latest` rather than starting a fresh session.
 
-4. **Integrate findings.** Based on Gemini's output, propose concrete next actions scaled to severity and volume: blocking/critical issues — **explicitly suggest creating a new sub-task for each issue found**; single architectural blocker — offer a design decision or ADR; list of medium/minor fixes — offer to implement directly or batch into a PR. Do not relay findings without a proposed action.
+4. **Integrate findings.** Verify each finding by opening its cited file:line (Read/Grep) and mark it Confirmed, Refuted, or Could not confirm (say where you looked). Report in this order: anything needing the user's decision first; then confirmed findings, each with one recommended next step; then the "Could not confirm" list. Don't implement fixes unless the user asked.
 
 ## Prompt templates
 
