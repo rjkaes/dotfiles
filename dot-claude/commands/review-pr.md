@@ -83,7 +83,7 @@ Tier 1 and Tier 2 are independent. Launch them concurrently.
 Precompute the CLAUDE.md file list once (root `CLAUDE.md` plus any `CLAUDE.md`
 in directories containing changed files), then launch 4 parallel Task-tool calls
 (not Skill tool) with `subagent_type: "general-purpose"` and `model: "sonnet"`.
-Pass `$ARGUMENTS` (PR URL), the path `tmp/pr-diff.txt`, and the CLAUDE.md file paths to
+Pass `$ARGUMENTS` (PR URL), the path `tmp/pr-diff.txt`, the CLAUDE.md file paths, and the finding format (see Tier 2 below) to
 every agent. Each agent reads the diff from that file. Each agent performs one role:
 
 1. Shallow bug scan of the diff only (high-signal, ignore linter-catchable issues).
@@ -131,7 +131,7 @@ FILE: <path relative to repo root>
 LINES: <start>-<end>            # use single number, e.g. "42", for one-line findings
 SIDE: RIGHT | LEFT              # default RIGHT; LEFT only for findings on removed lines
 TYPE: praise | nitpick | suggestion | issue | todo | question | thought | chore | note
-CONFIDENCE: <0-100>             # used for filtering only; NOT sent to the script
+CONFIDENCE: <0-100>             # used for filtering only; not sent to the script
 SOURCE: <agent qualified name>  # e.g. pr-review-toolkit:silent-failure-hunter
 DESCRIPTION: <single-line summary, no newlines>
 DETAIL: <multi-line elaboration ok>
@@ -139,12 +139,12 @@ DETAIL: <multi-line elaboration ok>
 
 Blocking types: `issue`, `todo`, `chore`. Non-blocking: `praise`, `nitpick`, `suggestion`, `question`, `thought`, `note`. Tier-1 and Tier-2 agents may emit any of these; Step 5 calibration may promote between types.
 
-## Step 4: Score Tier 2 findings
+## Step 4: Score findings
 
-For each Tier 2 finding, call the Task tool with `model: "sonnet"` and
+For each Tier 1 and Tier 2 finding, call the Task tool with `model: "sonnet"` and
 `subagent_type: "general-purpose"`. The agent receives: the finding text,
 relevant diff context, the applicable CLAUDE.md file paths, and the 0-100
-rubric below verbatim. It returns a single score.
+rubric above (Step 3, Tier 1) verbatim. It returns a single score.
 
 Filter at 80+.
 
@@ -163,7 +163,7 @@ injection flagged by `silent-failure-hunter`, `security-auditor`, `performance-e
 `suggestion` to `issue` and pick the report with the most concrete remediation as the canonical
 version. Drop the others rather than posting four near-identical comments on the same lines.
 **True deduplication:** Only drop a finding if another finding targets the exact
-same file, overlapping line range, AND describes the same root cause (not merely
+same file, overlapping line range, and describes the same root cause (not merely
 the same location). When in doubt, keep both.
 
 **Grouping:** Organize the final findings list by file path, then by severity
