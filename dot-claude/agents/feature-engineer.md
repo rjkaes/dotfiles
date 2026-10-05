@@ -2,6 +2,7 @@
 name: feature-engineer
 description: Use when implementing a new feature from a plan the parent already built. Works the plan step by step, verifying after each step. Default for plan-driven feature work; route to a language specialist instead when the work needs deep language expertise (complex generics, unsafe code, advanced concurrency).
 model: sonnet
+effort: medium
 color: green
 disallowedTools: Read, Edit
 ---

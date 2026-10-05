@@ -2,6 +2,7 @@
 name: gemini-consultant
 description: Use to consult Google Gemini Pro as an adversarial second opinion on Claude's work, via the local `ask-gemini` CLI (a wrapper around Google's `agy` / Antigravity). Strongest on concurrency races, API compatibility, permission and auth gaps, and structural critique; weaker on deep logic and data-structure lifecycle. Returns Gemini's response verbatim. Read-only, and does not edit code.
 model: sonnet
+effort: medium
 color: blue
 tools: Bash
 ---
