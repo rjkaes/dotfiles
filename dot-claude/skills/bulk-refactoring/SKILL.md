@@ -27,7 +27,7 @@ Editing thirty files by hand burns context, invites transcription errors, and pr
 3. Compare the match count against your prediction. A rule matching 200 sites where you expected 30 is a wrong rule, not a large refactor. Fix it before running.
 4. Run it.
 5. `git diff --stat`, and confirm the file count and shape match the prediction. Spot-read two or three diffs, including one you expect to be atypical.
-6. Build or typecheck. On failure, revert to a clean tree (`git checkout -- .`), fix the rule, and re-run. Hand-patching the output leaves the rule and the tree disagreeing, so the next run undoes your fix.
+6. Build or typecheck. On failure, revert the files the rule touched (`git checkout -- <files from the dry-run match list>`), fix the rule, and re-run. Hand-patching the output leaves the rule and the tree disagreeing, so the next run undoes your fix.
 7. Delete the rule or script from `tmp/`.
 
 ## Reporting

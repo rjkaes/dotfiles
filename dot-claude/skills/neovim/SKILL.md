@@ -233,10 +233,18 @@ When files are edited externally (e.g. by Claude Code tools), Neovim's LSP
 diagnostics can become stale — showing warnings for old line numbers or
 already-fixed issues. To refresh:
 
-1. **Reload the buffer and save** — this forces the LSP to re-analyze:
+1. **Reload the buffer from disk** — this forces the LSP to re-analyze. First
+   check for unsaved edits; if the result is `true`, stop and ask the user,
+   because reloading would discard their work:
 
 ```bash
-result=$(nvim --server "$NVIM" --remote-expr 'execute("lua vim.api.nvim_buf_call(BUFNR, function() vim.cmd(\"edit! | write\") end)")') && echo "$result" | grep -v '^Warning: Using NVIM_APPNAME='
+result=$(nvim --server "$NVIM" --remote-expr 'luaeval("vim.bo[BUFNR].modified")') && echo "$result" | grep -v '^Warning: Using NVIM_APPNAME='
+```
+
+   If it is `false`, reload (no `!`, no `write`):
+
+```bash
+result=$(nvim --server "$NVIM" --remote-expr 'execute("lua vim.api.nvim_buf_call(BUFNR, function() vim.cmd(\"edit\") end)")') && echo "$result" | grep -v '^Warning: Using NVIM_APPNAME='
 ```
 
 2. **Restart the LSP** — if diagnostics are still stale after reloading:
