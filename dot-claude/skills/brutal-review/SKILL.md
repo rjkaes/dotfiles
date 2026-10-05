@@ -28,8 +28,8 @@ jj show --git --no-pager -r @-
 git show HEAD
 ```
 
-## Step 2: Gather All Context (BEFORE launching any subagents)
-The main agent MUST gather all context first. Subagents do NOT inherit the main agent's context—they start fresh. Therefore, you must:
+## Step 2: Gather All Context (before launching any subagents)
+The main agent gathers all context first. Subagents don't inherit the main agent's context—they start fresh. Therefore, you must:
 
 1. **Get the change stack context**:
 
@@ -82,7 +82,7 @@ The main agent MUST gather all context first. Subagents do NOT inherit the main 
 ## Step 3: Conduct Exhaustive Multi-Perspective Review
 Examine every aspect of the change with extreme scrutiny, launching subagents using the Task tool to review the changes from the perspective of multiple different specialists. The categories are below. Each reviewer subagent should report each concern and question with a confidence score from 0 to 100.
 
-**CRITICAL**: Subagents do NOT inherit your context. Instead, instruct each subagent to read the context from the absolute path `<tmp-dir>/brutal-review-context-<ID>.md` (using the ID you obtained in Step 2; write that absolute path into each subagent prompt) as their first action. This avoids duplicating the full context in each subagent prompt while still providing complete information.
+Subagents don't inherit your context, so instruct each subagent to read the context from the absolute path `<tmp-dir>/brutal-review-context-<ID>.md` (using the ID you obtained in Step 2; write that absolute path into each subagent prompt) as their first action. This avoids duplicating the full context in each subagent prompt while still providing complete information.
 
 Launch all four subagents in parallel (in a single message with multiple Task tool calls) to maximize efficiency.
 
@@ -97,13 +97,13 @@ Your mission is to perform ruthless, in-depth code reviews. You do not soften fe
 [PERSPECTIVE-SPECIFIC INSTRUCTIONS]
 
 ## Context
-**FIRST ACTION**: Use the Read tool to read `<tmp-dir>/brutal-review-context-<ID>.md` (substitute the absolute path from the main agent). This file contains all the context gathered by the main agent, including:
+First, use the Read tool to read `<tmp-dir>/brutal-review-context-<ID>.md` (substitute the absolute path from the main agent). This file contains all the context gathered by the main agent, including:
 - The full diff being reviewed
 - The commit stack context
 - Relevant excerpts from related files (callers, dependencies, etc.)
 - Any architectural patterns or conventions discovered
 
-Use this as your primary source—you should NOT need to re-read files unless you need to examine something not included in the context file.
+Use this as your primary source—you shouldn't need to re-read files unless you need to examine something not included in the context file.
 
 ## Your Task
 Review the change from your specific perspective. For each finding:
@@ -140,7 +140,7 @@ This subagent takes the perspective of a reliability engineer with a breaker min
 **Error Handling & Edge Cases**
 - What happens with null/empty inputs? Boundary values? Maximum sizes?
 - Are errors handled appropriately or silently swallowed?
-- For Rust code: Is there any `unwrap()` in production paths? This is FORBIDDEN.
+- For Rust code: Is there any `unwrap()` in production paths? This is not allowed.
 - Are panic paths possible? Document them or eliminate them.
 
 **Reliability**
@@ -180,7 +180,7 @@ Each subagent should deliver a brief, concise list of problems, questions, conce
 
 Every finding should be categorized as CRITICAL, MAJOR, MINOR, or NIT.
 
-**CRITICAL** - Must fix before merge. Bugs, data corruption risks, security issues, FORBIDDEN patterns (unwrap in production, panic in library code).
+**CRITICAL** - Must fix before merge. Bugs, data corruption risks, security issues, forbidden patterns (unwrap in production, panic in library code).
 
 **MAJOR** - Should fix. Significant design issues, missing error handling, performance problems, inadequate testing.
 

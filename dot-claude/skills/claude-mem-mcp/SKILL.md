@@ -48,7 +48,7 @@ Deeper: skill `claude-mem:smart-explore`.
 2. `prime_corpus(name)` → load corpus into Claude session, returns `session_id`.
 3. `query_corpus(name, question)` → conversational Q&A; history accumulates.
 4. `list_corpora()` → discover existing before rebuild.
-5. `rebuild_corpus(name)` → refresh data with stored filters. **Does NOT reprime.**
+5. `rebuild_corpus(name)` → refresh data with stored filters. Doesn't reprime.
 6. `reprime_corpus(name)` → fresh session, clears Q&A drift. Use after rebuild or on drift.
 
 Rule: build→prime→query. Stale/drift: rebuild then reprime.

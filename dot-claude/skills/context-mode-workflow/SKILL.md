@@ -26,7 +26,7 @@ If `ctx_*` unavailable: no-op, use standard Bash/Read/WebFetch.
 
 ## Rule 1: Batch First
 
-First move on any non-trivial task: ONE `ctx_batch_execute`.
+First move on any non-trivial task: one `ctx_batch_execute`.
 
 - `commands[]` — `{label, command}`. `label` = FTS5 chunk title; be descriptive.
 - `queries[]` — 5–8 queries covering everything. **Only shot**: ctx_search throttles after ~8 calls / 60s.
@@ -63,7 +63,7 @@ Multi-page docs: fetch each with distinct `source`, then one batched search.
 
 ## Rule 5: ctx_execute is Read-Only
 
-`ctx_execute` / `ctx_execute_file` = **analysis, not authorship**. Never use them (or Bash heredocs, `echo >`, `cat <<EOF`) to create/modify files. `Write` for new, `Edit` for changes. Absolute.
+`ctx_execute` / `ctx_execute_file` = **analysis, not authorship**. Never use them (or Bash heredocs, `echo >`, `cat <<EOF`) to create/modify files. `Write` for new, `Edit` for changes.
 
 ## Anti-patterns (hook redirects)
 

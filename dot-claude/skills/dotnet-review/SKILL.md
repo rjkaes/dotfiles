@@ -28,7 +28,7 @@ Store the resolved scope description and the list of affected `.cs` files for la
 
 ## Step 2: Gather Context
 
-Before launching any subagents, the main agent MUST gather all context. Subagents do NOT inherit the main agent's context — they start fresh.
+Before launching any subagents, the main agent gathers all context. Subagents don't inherit the main agent's context — they start fresh.
 
 ### 2a: Discover Project Conventions
 
@@ -43,7 +43,7 @@ Search the repository for convention/configuration files and read any that exist
 
 Extract from these:
 - **Coding standards** (naming, visibility, style rules)
-- **Active analyzers** and their severity overrides — subagents should NOT flag issues that configured analyzers already catch at build time
+- **Active analyzers** and their severity overrides — subagents shouldn't flag issues that configured analyzers already catch at build time
 - **Framework choices** (e.g. FastEndpoints, MediatR, EF Core, Dapper)
 - **Testing conventions** (framework, assertion library, naming patterns)
 
@@ -99,9 +99,9 @@ You are an expert .NET code reviewer specializing in C# and the modern .NET ecos
 [PERSPECTIVE]
 
 ## Context
-**FIRST ACTION**: Use the Read tool to read `<tmp-dir>/dotnet-review-context-<ID>.md` (substitute the absolute path from the main agent). This contains:
+First, use the Read tool to read `<tmp-dir>/dotnet-review-context-<ID>.md` (substitute the absolute path from the main agent). This contains:
 - The scope and diff being reviewed
-- Project conventions and active analyzers (DO NOT flag issues already caught by configured analyzers)
+- Project conventions and active analyzers (don't flag issues already caught by configured analyzers)
 - Full file contents for all affected files
 - Related code (callers, interfaces, tests)
 

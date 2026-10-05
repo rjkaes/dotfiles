@@ -62,7 +62,7 @@ git rev-parse HEAD   # vs headRefOid from step 2
 ```
 
 - **HEAD == headRefOid:** the working tree matches the PR. List changed **source** file paths (skip lock files and pure-doc noise; keep tests) so Gemini can read whole files for richer context in addition to the diff.
-- **HEAD != headRefOid:** do NOT list working-tree paths for full reads — they are stale and would mislead Gemini. Feed only `tmp/pr-<n>.diff`. Optionally offer to `gh pr checkout <n>` first (mutates the working tree — confirm with the user before running).
+- **HEAD != headRefOid:** don't list working-tree paths for full reads — they are stale and would mislead Gemini. Feed only `tmp/pr-<n>.diff`. Optionally offer to `gh pr checkout <n>` first (mutates the working tree — confirm with the user before running).
 
 ### 4. Assemble the prompt
 
