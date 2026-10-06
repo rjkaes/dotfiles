@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+# Deny publishing or writing text that names Gemini or Antigravity: commit
+# messages, PR/issue/review text, code comments, docs. A finding stands on its
+# own merit; naming the tool that produced it is attribution the user does not
+# want in the repo or on GitHub.
+#
+# Bash: acts only on publish commands, then scans the command text plus files
+# fed in as message text. Write-class tools: scans the new text unless the path
+# is under ~/.claude/ (agent and skill definitions name it legitimately) or has
+# a tmp/ segment (scratch drafts; publishing one is caught at the Bash layer).
+# Fails open, silently, on malformed input.
+#
+# ponytail: text heuristic, not a shell parse. Misses message text fed by other
+# means (variables, `$(<file)`, a file written earlier in the chain, a `cd`
+# before a relative path). Upgrade path: a real shell parser.
+
+needle='gemini|antigravity'
+
+deny() {
+  /opt/homebrew/bin/jq -nc --arg verb "$1" '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("no-gemini-guard: this " + $verb + " text naming Gemini or Antigravity. Remove the mention; state the finding on its own merit, without attributing it to a reviewer, model, or tool.")}}'
+  exit 0
+}
+
+# Line 1 mode, line 2 cwd, rest the text to scan. Mode "skip" covers unmatched
+# tools and exempt paths.
+{
+  IFS= read -r mode
+  IFS= read -r cwd
+  text=$(cat)
+} < <(/opt/homebrew/bin/jq -r --arg home "$HOME" '
+  (.tool_name // "") as $tool
+  | (.tool_input.file_path // .tool_input.notebook_path // "") as $path
+  | if $tool == "Bash" then
+      "bash", (.cwd // ""), (.tool_input.command // "")
+    elif ($tool | test("^(Write|Edit|MultiEdit|NotebookEdit)$|^mcp__.*trueline_edit$")) then
+      if ($path | startswith($home + "/.claude/")) or (("/" + $path) | contains("/tmp/")) then
+        "skip"
+      else
+        "edit", (.cwd // ""),
+        ([.tool_input | (.content?, .new_string?, .new_source?, (.edits[]? | (.new_string?, .content?))) | strings] | join("\n"))
+      end
+    else
+      "skip"
+    end
+' 2>/dev/null)
+
+if [[ $mode == edit ]]; then
+  grep -qiE "$needle" <<<"$text" && deny writes
+  exit 0
+fi
+[[ $mode == bash ]] || exit 0
+
+# A path argument: quoted, or bare up to a shell metacharacter.
+val=$'("[^"]*"|\'[^\']*\'|[^[:space:];&|<>()`"\']+)'
+
+# Fast path: anything that is not a publish command exits before any file I/O.
+git_re=$'(^|[^A-Za-z0-9_.-])git([[:space:]]+-[Cc][[:space:]]+'"$val"$')*[[:space:]]+(commit|tag|notes)([^A-Za-z0-9_-]|$)'
+gh_re='(^|[^A-Za-z0-9_.-])gh[[:space:]]+(pr[[:space:]]+(create|edit|comment|review|merge|close|reopen)|issue[[:space:]]+(create|edit|comment|close|reopen)|release[[:space:]]+(create|edit)|gist[[:space:]]+(create|edit)|api)([^A-Za-z0-9_-]|$)'
+post_re='(^|[^A-Za-z0-9_.-])gh-pr-review-post([^A-Za-z0-9_-]|$)'
+[[ $text =~ $git_re || $text =~ $gh_re || $text =~ $post_re ]] || exit 0
+
+grep -qiE "$needle" <<<"$text" && deny publishes
+
+# -F/--file/--body-file/--input/--summary-file, value is a path (or key=@path).
+flag_re='(^|[[:space:]])(-F|--file|--body-file|--input|--summary-file)(=|[[:space:]]+)'"$val"
+# gh api -f/--field key=@path.
+field_re=$'(^|[[:space:]])(-f|--field|--raw-field)(=|[[:space:]]+)["\']?[^[:space:]="\']+=@'"$val"
+# `< path`, never `<<` heredocs or `<<<` here-strings.
+redir_re='(^|[^<])<[[:space:]]*'"$val"
+# $(cat path) and `cat path`.
+cat_re=$'(\\$\\(|`)[[:space:]]*cat[[:space:]]+'"$val"
+
+paths=
+# collect <regex> <capture-group>: append that group of every match to $paths.
+collect() {
+  local rest=$text m
+  while [[ $rest =~ $1 ]]; do
+    paths+=${BASH_REMATCH[$2]}$'\n'
+    m=${BASH_REMATCH[0]}
+    rest=${rest#*"$m"}
+  done
+}
+collect "$flag_re" 4
+collect "$field_re" 4
+collect "$redir_re" 2
+collect "$cat_re" 2
+
+cwd=${cwd:-$PWD}
+while IFS= read -r p; do
+  p=${p//\"/}
+  p=${p//\'/}
+  [[ $p == *=@* ]] && p=${p#*=@}
+  [[ -z $p || $p == - ]] && continue
+  [[ $p == \~/* ]] && p=$HOME/${p#\~/}
+  [[ $p == /* ]] || p=$cwd/$p
+  [[ -f $p ]] && grep -qiE "$needle" -- "$p" && deny publishes
+done <<<"$paths"
+
+exit 0

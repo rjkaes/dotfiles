@@ -10,11 +10,13 @@
       "mcp__plugin:context-mode:context-mode__*",
       "mcp__plugin_trueline-mcp_mcp__*",
       "mcp__plugin_trueline-mcp_trueline__*",
-      "Bash(gh pr view:*)",
-      "Bash(gh pr list:*)",
-      "Bash(gh run view:*)",
-      "Bash(gh issue create:*)",
       "Bash(gh issue close:*)",
+      "Bash(gh issue create:*)",
+      "Bash(gh pr comment *)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh-pr-review-post *)",
       "Bash(dotnet restore:*)",
       "Bash(dotnet build:*)",
       "Bash(dotnet test:*)"
@@ -163,6 +165,15 @@
           {
             "type": "command",
             "command": "/Users/rjk/.claude/hooks/sleep-guard"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit|mcp__.*trueline_edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/no-gemini-guard"
           }
         ]
       }

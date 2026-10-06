@@ -26,6 +26,7 @@ Things you cannot discover from the repo, several of which override defaults you
 - Work past roughly ten lines gets numbered steps, each with the check that proves it. Long runs keep them in `tmp/TASKS.md`, ticked as each check passes.
 - Bug fix = red-green: write the failing test, watch it go red, fix, watch it go green. Any other task with a done-check: run it first; it must fail. Already passing means the work is done or the check is broken, so stop and report.
 - Long runs: at a checkpoint, finish and verify the current item, report what is proven and what is carried over in the same message as the next action. No "shall I continue?"; irreversible actions still get confirmed first.
+- Never name Gemini, Antigravity, `ask-gemini`, or `gemini-consultant` in anything that leaves this machine or lands in a repo: commit messages, PR bodies, issues, GitHub or review comments (including a findings `source` field), code comments, docs. State a finding on its own merit; don't attribute it to a reviewer or model. `no-gemini-guard` enforces this.
 
 ## Agent routing policy
 
