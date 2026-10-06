@@ -7,7 +7,7 @@ Things you cannot discover from the repo, several of which override defaults you
 - Before committing, `git diff --cached --stat` must list only your changes: subagents share the index unless dispatched with `isolation: "worktree"`. `git commit -- <paths>` guarantees it for whole files. One plan step per commit.
 - Editing `~/.claude` hooks or agents changes the running session; `shellcheck` and feed the hook sample input before trusting it.
 - Project files: read and edit with the `trueline_*` MCP tools, overriding context-mode's native Read/Edit/Write guidance and auto mode's `cat`/`sed` edits. Outside the project root trueline denies access; use built-in Read/Edit there.
-- Auto memory is off; durable knowledge lives in version-controlled docs, rewritten in place when the truth changes. Your preferences → `~/.claude/CLAUDE.md`; a repo's conventions and gotchas → its `CLAUDE.md`; decisions and their why → `docs/decisions/`; specs and contracts → `docs/<area>.md`, listed in the repo `CLAUDE.md` with the condition for reading it.
+- Auto memory is off; durable knowledge lives in version-controlled docs, rewritten in place when the truth changes and staged with the change it describes (`docs-gate` asks once on a code-only commit; an identical retry passes). Your preferences → `~/.claude/CLAUDE.md`; a repo's conventions and gotchas → its `CLAUDE.md`; decisions and their why → `docs/decisions/`; specs and contracts → `docs/<area>.md`, listed in the repo `CLAUDE.md` with the condition for reading it.
 
 ## Preferences
 

@@ -1,0 +1,75 @@
+#!/opt/homebrew/bin/dash
+
+# Ask once, at commit time, whether a code-only commit should also update
+# docs. One moment of reflection, not a hard block: the first attempt for a
+# given pending file set is denied, an identical retry passes. The key is a
+# hash of the sorted file set, stored in <git-dir>/docs-gate (per worktree), so
+# staging anything new re-arms the gate.
+#
+# PreToolUse fires before the command runs, so `git add` earlier in the same
+# command has not happened yet. The pending set is therefore: staged files,
+# tracked changes vs HEAD (covers -a and `-- paths`), and untracked files named
+# in the command (or all of them for `git add -A|--all|.`). Substring match on
+# the path or an ancestor dir is a heuristic, not a shell parse.
+# Rejected: git pre-commit hooks (they fire for the user's own commits too)
+# and a Stop hook (too late to fold docs into the commit).
+# Fails open: no repo, no HEAD (initial commit), or no commit in the command.
+
+export LC_ALL=C
+git=/opt/homebrew/bin/git
+jq=/opt/homebrew/bin/jq
+
+input=$(cat)
+cmd=$(printf '%s' "$input" | $jq -r '.tool_input.command // empty' 2>/dev/null)
+cwd=$(printf '%s' "$input" | $jq -r '.cwd // empty' 2>/dev/null)
+[ -n "$cmd" ] || exit 0
+
+val='("[^"]*"|'"'"'[^'"'"']*'"'"'|[^[:space:];&|<>()`"'"'"']+)'
+commit_re='(^|[^A-Za-z0-9_.-])git([[:space:]]+-[Cc][[:space:]]+'"$val"')*[[:space:]]+commit([^A-Za-z0-9_-]|$)'
+inv=$(printf '%s\n' "$cmd" | grep -oE "$commit_re" | head -n 1)
+[ -n "$inv" ] || exit 0
+
+dir=$(printf '%s\n' "$inv" | grep -oE "[[:space:]]-C[[:space:]]+$val" | head -n 1 | sed -E "s/^[[:space:]]+-C[[:space:]]+//; s/^[\"']//; s/[\"']\$//")
+[ -n "$dir" ] || dir=$cwd
+[ -n "$dir" ] || dir=$PWD
+if [ -n "$cwd" ]; then cd "$cwd" 2>/dev/null || exit 0; fi
+cd "$dir" 2>/dev/null || exit 0
+
+$git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
+$git rev-parse --verify -q HEAD >/dev/null 2>&1 || exit 0
+
+files=$( {
+  $git diff --cached --name-only
+  $git diff HEAD --name-only
+  if printf '%s\n' "$cmd" | grep -qE 'git[[:space:]]+add[[:space:]]+(-A|--all|\.)([[:space:];&|]|$)'; then
+    $git ls-files --others --exclude-standard
+  else
+    $git ls-files --others --exclude-standard | while IFS= read -r p; do
+      q=$p
+      while :; do
+        case $cmd in *"$q"*) printf '%s\n' "$p"; break ;; esac
+        case $q in */*) q=${q%/*} ;; *) break ;; esac
+      done
+    done
+  fi
+} | sed '/^$/d' | sort -u )
+[ -n "$files" ] || exit 0
+
+code=
+docs=
+while IFS= read -r f; do
+  case $f in
+    *.md|docs/*|*/docs/*) docs=1 ;;
+    *) code=1 ;;
+  esac
+done <<EOT
+$files
+EOT
+[ -n "$code" ] && [ -z "$docs" ] || exit 0
+
+key=$(printf '%s\n' "$files" | $git hash-object --stdin)
+state=$($git rev-parse --absolute-git-dir)/docs-gate
+[ "$(cat "$state" 2>/dev/null)" = "$key" ] && exit 0
+printf '%s\n' "$key" >"$state"
+
+exec $jq -nc '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"docs-gate: this commit changes code and no docs (*.md, docs/). If it changes a decision, contract, constraint, or gotcha, update the doc that owns it in place and stage it with this commit. If no doc applies, re-run the same commit; the gate passes an unchanged file set on retry."}}'

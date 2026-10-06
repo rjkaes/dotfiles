@@ -1,0 +1,84 @@
+#!/opt/homebrew/bin/dash
+
+# Tests for docs-gate. Throwaway repos live under the repo's tmp/ because a
+# hook denies /tmp.
+
+here=/Users/rjk/SynologyDrive/Drive/dotfiles/dot-claude
+hook=$here/hooks/docs-gate
+root=$(mktemp -d "$here/tmp/docs-gate.XXXXXX") || exit 1
+trap 'rm -rf "$root"' EXIT
+# Keep git discovery inside $root so the non-repo dirs stay non-repos.
+GIT_CEILING_DIRECTORIES=$root
+export GIT_CEILING_DIRECTORIES
+fail=0
+n=0
+
+check() { # name, expected (deny|none), actual output
+  if [ "$2" = deny ]; then
+    printf '%s' "$3" | /opt/homebrew/bin/jq -e '.hookSpecificOutput.permissionDecision=="deny"' >/dev/null 2>&1 && r=PASS || r=FAIL
+  else
+    [ -z "$3" ] && r=PASS || r=FAIL
+  fi
+  [ "$r" = PASS ] || fail=1
+  echo "$r $1"
+}
+
+# run <cwd> <command>
+run() {
+  /opt/homebrew/bin/jq -nc --arg c "$2" --arg d "$1" '{tool_name:"Bash",cwd:$d,tool_input:{command:$c}}' | "$hook"
+}
+
+newrepo() {
+  n=$((n + 1))
+  repo=$root/r$n
+  mkdir -p "$repo/src"
+  git -C "$repo" init -q
+  git -C "$repo" config user.email t@example.com
+  git -C "$repo" config user.name t
+  echo 'x = 1' >"$repo/src/app.py"
+  echo '# app' >"$repo/README.md"
+  git -C "$repo" add -A
+  git -C "$repo" commit -qm base
+}
+
+newrepo
+check a none "$(run "$repo" 'git status')"
+
+newrepo
+echo 'x = 2' >"$repo/src/app.py"; git -C "$repo" add src/app.py
+out=$(run "$repo" 'git commit -m "fix rounding"')
+check b-first deny "$out"
+check k-json deny "$out"
+check b-retry none "$(run "$repo" 'git commit -m "fix rounding"')"
+echo 'y = 1' >"$repo/src/extra.py"; git -C "$repo" add src/extra.py
+check j-key-changed deny "$(run "$repo" 'git commit -m "fix rounding"')"
+
+newrepo
+echo 'x = 2' >"$repo/src/app.py"; echo more >>"$repo/README.md"
+git -C "$repo" add -A
+check c none "$(run "$repo" 'git commit -m x')"
+
+newrepo
+echo more >>"$repo/README.md"
+check d none "$(run "$repo" 'git commit -am x')"
+
+newrepo
+echo 'n = 1' >"$repo/src/new_invoice.py"
+check e deny "$(run "$repo" 'git add src/new_invoice.py && git commit -m x')"
+
+newrepo
+mkdir "$repo/docs"; echo '# d' >"$repo/docs/design.md"; echo 'n = 1' >"$repo/src/new_invoice.py"
+check f none "$(run "$repo" 'git add docs/design.md src/new_invoice.py && git commit -m x')"
+
+newrepo
+echo 'x = 2' >"$repo/src/app.py"; git -C "$repo" add src/app.py
+mkdir "$root/plain"
+check g deny "$(run "$root/plain" "git -C \"$repo\" commit -m x")"
+
+newrepo
+echo 'x = 2' >"$repo/src/app.py"
+check h deny "$(run "$repo" 'git commit -m x -- src/app.py')"
+
+check i none "$(run "$root/plain" 'git commit -m x')"
+
+exit $fail
