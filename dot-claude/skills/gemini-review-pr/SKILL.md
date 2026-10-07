@@ -26,7 +26,7 @@ This is the PR-scoped sibling of `consult-gemini`. Where `consult-gemini` review
 
 ## Workflow
 
-This skill owns argument parsing, gathering, prompt assembly, and dispatch. The `gemini-consultant` subagent owns Bash execution, `ask-gemini` invocation, and verbatim relay. The skill doesn't pre-load files or the diff; only paths go to the subagent, which lists them for Gemini to read via its own `read_file` tool.
+This skill owns argument parsing, gathering, prompt assembly, and dispatch. The `gemini-consultant` subagent owns Bash execution, `ask-gemini` invocation, and capturing Gemini's stdout verbatim to `tmp/consult-<short-slug>.md`. The skill doesn't pre-load files or the diff; only paths go to the subagent, which lists them for Gemini to read via its own `read_file` tool.
 
 ### 1. Parse the argument
 
@@ -70,11 +70,11 @@ Fill the template below from the PR metadata. Keep it a single logical prompt st
 
 ### 5. Dispatch `gemini-consultant`
 
-Use the `Agent` tool with `subagent_type: "gemini-consultant"`. Tell the subagent to `cd` to the project root, write the prompt to `tmp/gemini-pr-<n>-prompt.txt` (Write tool), and run `ask-gemini < tmp/gemini-pr-<n>-prompt.txt` as a **single-line** Bash command — never the prompt inline, never a heredoc (the permission layer prompts on them). The subagent relays Gemini's output verbatim. For a follow-up round on the same PR, tell it to use `--resume latest`.
+Use the `Agent` tool with `subagent_type: "gemini-consultant"`. Tell the subagent to `cd` to the project root, write the prompt to `tmp/gemini-pr-<n>-prompt.txt` (Write tool), and run `ask-gemini < tmp/gemini-pr-<n>-prompt.txt` as a **single-line** Bash command — never the prompt inline, never a heredoc (the permission layer prompts on them). The hand-back is the capture path plus the `Summary:` line and each finding's heading line, verbatim; it does not contain the full output. For a follow-up round on the same PR, tell it to use `--resume latest`.
 
 ### 6. Integrate findings
 
-Verify each finding by opening its cited file:line in the saved diff (`tmp/pr-<n>.diff`) and mark it Confirmed, Refuted, or Could not confirm (say where you looked). Report in this order: anything needing the user's decision first; then confirmed findings, each with one recommended next step; then the "Could not confirm" list. Don't implement unless asked.
+Read a finding's full section from the capture (by heading line range) only when you need its detail. Verify each finding by opening its cited file:line in the saved diff (`tmp/pr-<n>.diff`) and mark it Confirmed, Refuted, or Could not confirm (say where you looked). Report in this order: anything needing the user's decision first; then confirmed findings, each with one recommended next step; then the "Could not confirm" list. When presenting, point the user to the capture file and list the finding headings instead of pasting the whole output. Don't implement unless asked.
 
 ## Prompt Template
 
@@ -95,7 +95,7 @@ Rules (mandatory):
   3. If you agree with Claude on a point, explain WHY with the specific supporting code evidence — never bare "agreed".
   4. Distinguish root cause from contributing factor.
 
-Deliverable: one record per finding, most-severe first, using exactly this schema (skip trivial style nits unless they signal a systemic pattern):
+Deliverable: open with one `Summary: <finding count, highest severity>` line (a count, not a conclusion, so rule 2 still holds), then one record per finding, most-severe first, each under its own `###` heading, using exactly this schema (skip trivial style nits unless they signal a systemic pattern):
 
   ### Finding <n> — <Critical|High|Medium|Low>
   - **Category:** <security|correctness|concurrency|performance|migration|structure>

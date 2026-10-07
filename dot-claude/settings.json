@@ -186,6 +186,25 @@
             "command": "/Users/rjk/.claude/hooks/no-gemini-guard"
           }
         ]
+      },
+      {
+        "matcher": "SubagentHandback",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/handback-size-guard"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/handback-size-guard"
+          }
+        ]
       }
     ],
     "SessionEnd": []

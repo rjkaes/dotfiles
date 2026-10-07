@@ -1,0 +1,64 @@
+#!/opt/homebrew/bin/dash
+
+# Tests for handback-size-guard. Throwaway state lives under the repo's
+# tmp/ because a hook denies /tmp.
+
+here=/Users/rjk/SynologyDrive/Drive/dotfiles/dot-claude
+hook=$here/hooks/handback-size-guard
+root=$(mktemp -d "$here/tmp/handback-size-guard.XXXXXX") || exit 1
+trap 'rm -rf "$root"' EXIT
+# Isolate the hook's loop-guard counters.
+TMPDIR=$root
+export TMPDIR
+fail=0
+
+jq=/opt/homebrew/bin/jq
+
+check() { # name, expected (deny|block|none), actual output
+  case "$2" in
+    deny) printf '%s' "$3" | $jq -e '.hookSpecificOutput.permissionDecision=="deny"' >/dev/null 2>&1 && r=PASS || r=FAIL ;;
+    block) printf '%s' "$3" | $jq -e '.decision=="block" and (.reason|length>0)' >/dev/null 2>&1 && r=PASS || r=FAIL ;;
+    *) [ -z "$3" ] && r=PASS || r=FAIL ;;
+  esac
+  [ "$r" = PASS ] || fail=1
+  echo "$r $1"
+}
+
+text() { head -c "$1" /dev/zero | tr '\0' x; }
+
+# handback <agent_id> <chars>
+handback() {
+  # shellcheck disable=SC2016 # jq program, not shell expansion
+  $jq -nc --arg a "$1" --arg m "$(text "$2")" \
+    '{hook_event_name:"PreToolUse",session_id:"s1",agent_id:$a,tool_name:"SubagentHandback",tool_input:{message:$m}}' | "$hook"
+}
+
+# stop <agent_id> <chars> <transcript>
+stop() {
+  # shellcheck disable=SC2016
+  $jq -nc --arg a "$1" --arg m "$(text "$2")" --arg t "$3" \
+    '{hook_event_name:"SubagentStop",session_id:"s1",agent_id:$a,last_assistant_message:$m,agent_transcript_path:$t}' | "$hook"
+}
+
+check a-at-cap none "$(handback ag-a 8000)"
+
+out=$(handback ag-b 8001)
+check b-over deny "$out"
+printf '%s' "$out" | grep -q 8001 && printf '%s' "$out" | grep -q 'tmp/' && r=PASS || r=FAIL
+[ "$r" = PASS ] || fail=1
+echo "$r b-reason-has-count-and-tmp"
+
+handback ag-b 8001 >/dev/null
+check c-third-allowed none "$(handback ag-b 8001)"
+check d-other-agent deny "$(handback ag-d 8001)"
+
+plain=$root/plain.jsonl
+echo '{"type":"assistant","message":{"content":[{"type":"text","text":"hi"}]}}' >"$plain"
+check e-stop-over block "$(stop ag-e 9000 "$plain")"
+
+sent=$root/sent.jsonl
+echo '{"type":"assistant","message":{"content":[{"type":"tool_use","name":"SubagentHandback","input":{"message":"done"}}]}}' >"$sent"
+check f-stop-already-sent none "$(stop ag-f 9000 "$sent")"
+check g-stop-short none "$(stop ag-g 100 "$plain")"
+
+exit $fail
