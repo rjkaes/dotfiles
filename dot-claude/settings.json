@@ -1,5 +1,6 @@
 {
   "respectGitignore": true,
+  "bashOutputMaxChars": 10000,
   "cleanupPeriodDays": 30,
   "includeGitInstructions": true,
   "permissions": {
