@@ -1,5 +1,8 @@
 {
   "respectGitignore": true,
+  "env": {
+    "PONYTAIL_SUBAGENT_MATCHER": "^(?!(explore|spec-reviewer|technical-writer|.*-consultant|claude-code-guide|statusline-setup|comment-analyzer)$)"
+  },
   "bashOutputMaxChars": 10000,
   "deniedMcpServers": [
     { "serverName": "claude.ai Intuit QuickBooks" },
