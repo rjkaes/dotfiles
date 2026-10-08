@@ -48,6 +48,33 @@ const SKILL_DIRS = [
   "claude-plugins-official/superpowers/*/skills/requesting-code-review",
   // mattpocock writing-for-agents covers skills and CLAUDE.md edits.
   "claude-plugins-official/superpowers/*/skills/writing-skills",
+  // backend-development knowledge skills: 0 model invocations in 60 days. They
+  // reference only each other, so hiding all 9 breaks nothing.
+  "claude-code-workflows/backend-development/*/skills/api-design-principles",
+  "claude-code-workflows/backend-development/*/skills/architecture-patterns",
+  "claude-code-workflows/backend-development/*/skills/cqrs-implementation",
+  "claude-code-workflows/backend-development/*/skills/event-store-design",
+  "claude-code-workflows/backend-development/*/skills/microservices-patterns",
+  "claude-code-workflows/backend-development/*/skills/projection-patterns",
+  "claude-code-workflows/backend-development/*/skills/saga-orchestration",
+  "claude-code-workflows/backend-development/*/skills/temporal-python-testing",
+  "claude-code-workflows/backend-development/*/skills/workflow-orchestration-patterns",
+  // context-mode user commands: slash commands only; nothing invokes them
+  // through the Skill tool. skills/context-mode stays listed.
+  "context-mode/context-mode/*/skills/ctx-doctor",
+  "context-mode/context-mode/*/skills/ctx-index",
+  "context-mode/context-mode/*/skills/ctx-insight",
+  "context-mode/context-mode/*/skills/ctx-purge",
+  "context-mode/context-mode/*/skills/ctx-search",
+  "context-mode/context-mode/*/skills/ctx-stats",
+  "context-mode/context-mode/*/skills/ctx-upgrade",
+  // superpowers' SessionStart hook already injects its body; no Claude Code
+  // skill invokes it.
+  "claude-plugins-official/superpowers/*/skills/using-superpowers",
+  // Deliberately not hidden: mattpocock prototype, research, codebase-design,
+  // code-review, wizard (ask-matt, wayfinder, implement, tdd name them);
+  // governor and trueline-mcp skills load via --plugin-dir from
+  // ~/src/opensource, outside plugins/cache.
 ];
 
 const KEY = "disable-model-invocation: true";
