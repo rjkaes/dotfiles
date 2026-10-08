@@ -1,6 +1,8 @@
 {
   "respectGitignore": true,
   "env": {
+    "CLAUDE_CODE_DISABLE_WORKFLOWS": "1",
+    "CLAUDE_CODE_DISABLE_CRON": "1",
     "PONYTAIL_SUBAGENT_MATCHER": "^(?!(explore|spec-reviewer|technical-writer|.*-consultant|claude-code-guide|statusline-setup|comment-analyzer)$)"
   },
   "bashOutputMaxChars": 10000,
