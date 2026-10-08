@@ -45,9 +45,9 @@ Use the base branch retrieved earlier in this step.
 
 Grep `tmp/pr-diff.txt` to determine which specialized agents apply (do not load the full diff into context):
 
-- **`pr-review-toolkit:silent-failure-hunter`**: Always run. Catches swallowed errors, empty catch
+- **`silent-failure-hunter`**: Always run. Catches swallowed errors, empty catch
   blocks, inappropriate fallbacks, missing error propagation.
-- **`pr-review-toolkit:pr-test-analyzer`**: Always run. Identifies critical untested paths, edge
+- **`pr-test-analyzer`**: Always run. Identifies critical untested paths, edge
   case gaps, test quality issues.
 - **`backend-development:backend-development-security-auditor`**: Run when the diff touches authentication, authorization,
   user input handling, database queries, cookie/session logic, crypto usage, or
@@ -65,10 +65,10 @@ Grep `tmp/pr-diff.txt` to determine which specialized agents apply (do not load 
   Marginal value when `performance-engineer` and `security-auditor` are both already running on the
   same diff — its top findings often duplicate theirs. Worth keeping for genuinely new abstractions
   or new sub-services; consider skipping for feature additions inside an existing pattern.
-- **`pr-review-toolkit:comment-analyzer`**: Run when the diff adds or modifies docstrings, JSDoc,
+- **`comment-analyzer`**: Run when the diff adds or modifies docstrings, JSDoc,
   XML doc comments (`///`), or README/documentation files. Catches stale
   comments, inaccurate parameter descriptions, misleading explanations.
-- **`pr-review-toolkit:type-design-analyzer`**: Run only if the diff adds or modifies type/interface
+- **`type-design-analyzer`**: Run only if the diff adds or modifies type/interface
   definitions. Skip if the file under review explicitly documents type-design choices in a sibling
   CLAUDE.md (e.g. a section that says monetary fields stay as `string` or `T`/`F` flags pass through
   unmodified). This agent tends to flag intentional primitive-obsession that overrides those docs,
@@ -114,7 +114,7 @@ Filter at 80+.
 ### Tier 2: Specialized Dimensions
 
 For each applicable agent (from Step 2), call the Task tool with
-`subagent_type: "<qualified-name>"` (e.g. `pr-review-toolkit:silent-failure-hunter`),
+`subagent_type: "<qualified-name>"` (e.g. `silent-failure-hunter`),
 `model: "sonnet"`, and a prompt containing:
 
 - Path to `tmp/pr-diff.txt` (agents read this file directly; orchestrator does not pass diff inline).
@@ -132,7 +132,7 @@ LINES: <start>-<end>            # use single number, e.g. "42", for one-line fin
 SIDE: RIGHT | LEFT              # default RIGHT; LEFT only for findings on removed lines
 TYPE: praise | nitpick | suggestion | issue | todo | question | thought | chore | note
 CONFIDENCE: <0-100>             # used for filtering only; not sent to the script
-SOURCE: <agent qualified name>  # e.g. pr-review-toolkit:silent-failure-hunter
+SOURCE: <agent qualified name>  # e.g. silent-failure-hunter
 DESCRIPTION: <single-line summary, no newlines>
 DETAIL: <multi-line elaboration ok>
 ```
@@ -261,12 +261,12 @@ Drop or condition the following on observed low unique signal:
 |-------|----------------|
 | `tier1:shallow-bug-scan` | Diff has a design spec in `docs/`; `tier1:comment-compliance` will catch divergences with higher confidence |
 | `tier1:git-history` | >70% of the diff is newly-added files |
-| `pr-review-toolkit:type-design-analyzer` | A sibling `CLAUDE.md` already documents the type-design choices |
+| `type-design-analyzer` | A sibling `CLAUDE.md` already documents the type-design choices |
 | `backend-development:backend-development-backend-architect` | Feature additions inside an existing pattern, when `performance-engineer` and `security-auditor` are both already running |
 
 High-signal agents to keep almost unconditionally:
 - `tier1:prior-pr-comments` — only source for "this was flagged before, still not fixed" findings.
 - `tier1:comment-compliance` — only source for spec / code / CLAUDE.md divergences.
-- `pr-review-toolkit:comment-analyzer` — for any PR adding spec or CLAUDE.md docs.
+- `comment-analyzer` — for any PR adding spec or CLAUDE.md docs.
 - `backend-development:backend-development-security-auditor`, `backend-development:backend-development-performance-engineer` — when their Step 2 grep triggers fire.
-- `pr-review-toolkit:silent-failure-hunter`, `pr-review-toolkit:pr-test-analyzer` — the "always run" defaults are correct.
+- `silent-failure-hunter`, `pr-test-analyzer` — the "always run" defaults are correct.
