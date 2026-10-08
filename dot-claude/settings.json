@@ -57,6 +57,10 @@
   "model": "opus[1m]",
   "skillOverrides": {
     "neovim": "off",
+    "dataviz": "off",
+    "claude-api": "off",
+    "plugin-authoring": "off",
+    "workflow-authoring": "off",
     "context-mode-workflow": "off",
     "claude-mem-mcp": "off",
     "brutal-review": "off",
