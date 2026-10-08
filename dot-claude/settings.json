@@ -107,6 +107,10 @@
           {
             "type": "command",
             "command": "/Users/rjk/.claude/hooks/terse-drop-reminder.mjs"
+          },
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/ponytail-short-instructions.mjs"
           }
         ]
       },
