@@ -5,6 +5,7 @@
     "CLAUDE_CODE_DISABLE_CRON": "1",
     "PONYTAIL_SUBAGENT_MATCHER": "^(?!(explore|spec-reviewer|technical-writer|.*-consultant|claude-code-guide|statusline-setup|comment-analyzer)$)"
   },
+  "skillListingMaxDescChars": 200,
   "bashOutputMaxChars": 10000,
   "deniedMcpServers": [
     { "serverName": "claude.ai Intuit QuickBooks" },
