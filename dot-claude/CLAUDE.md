@@ -29,6 +29,25 @@ Things you cannot discover from the repo, several of which override defaults you
 - Long runs: at a checkpoint, finish and verify the current item, report what is proven and what is carried over in the same message as the next action. No "shall I continue?"; irreversible actions still get confirmed first.
 - Never name Gemini, Antigravity, `ask-gemini`, or `gemini-consultant` in anything that leaves this machine or lands in a repo: commit messages, PR bodies, issues, GitHub or review comments (including a findings `source` field), code comments, docs. State a finding on its own merit; don't attribute it to a reviewer or model. `no-gemini-guard` enforces this.
 
+## Specs and plans
+
+The reader is a developer deciding whether the spec or plan is wrong. The review section comes first. Everything the implementing agent needs goes in a final `## Implementation appendix`.
+
+Review section, in this order:
+1. Bottom line (BLUF): what changes and why, three sentences at most.
+2. Context: current behavior as checkable facts, each with `file:line`.
+3. Decisions: "We will X because Y. Rejected Z because W." One entry for each choice the code will lock in.
+4. Assumptions and open questions. Mark each unresolved one `[NEEDS CLARIFICATION: question]`.
+5. Behavior change: what changes for existing callers, data and users, and what stays the same.
+6. Non-goals: reasonable goals left out on purpose.
+7. Risks: what would make this wrong, each with its mitigation.
+8. Checks: each goal paired with the observable test that proves it.
+9. Plans only: steps, one line each, naming the change and its check.
+
+The review section fits in about 100 lines. Over 100 means the change is too big for one spec, so propose a split. Code appears there only when the code is the decision: a signature, a schema, a migration.
+
+The appendix holds file paths, full code, exact commands, checkbox steps, and skill banners such as "For agentic workers". Skill templates such as superpowers writing-plans fill the appendix. Their Goal and Architecture fields feed the bottom line.
+
 ## Agent routing policy
 
 - Feature work from a plan → `feature-engineer`
