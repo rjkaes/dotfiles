@@ -42,3 +42,4 @@ Things you cannot discover from the repo, several of which override defaults you
 - Security review and hardening → `backend-development:backend-development-security-auditor`
 - Auditing an implementation against its spec → `spec-reviewer`
 - Adversarial second opinion from Gemini → `gemini-consultant`
+- Exact edits, fixups, and run-and-report from a fully written instruction → `mechanical-editor` (pinned to haiku; omit `model`)
