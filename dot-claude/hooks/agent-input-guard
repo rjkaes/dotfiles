@@ -4,7 +4,8 @@
 # Enforces these CLAUDE.md agent routing rules, checked in this order:
 #   1. subagent_type must be a non-empty string.
 #   2. model must be set. Unset inherits the parent session's model (Opus),
-#      which bypasses the ESCALATION: rule.
+#      which bypasses the ESCALATION: rule. Exception: mechanical-editor,
+#      whose frontmatter pins haiku.
 #   3. model must be 'sonnet', 'haiku', or 'opus'. Anything else (notably
 #      'fable') is denied outright.
 #   4. opus needs an 'ESCALATION:' justification line in the prompt.
@@ -28,9 +29,12 @@ exec /opt/homebrew/bin/jq -c '
   .tool_input |
   if (.subagent_type // "") == "" then
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"CLAUDE.md agent routing: subagent_type must be set, never blank. Pick a specialized agent or \"general-purpose\"."}}
+  # Unset model falls back to the frontmatter pin, haiku.
+  elif .subagent_type == "mechanical-editor" and (.model // "") == "" then
+    empty
   # Unset model inherits the parent session Opus, bypassing the ESCALATION: rule.
   elif (.model // "") == "" then
-    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"set model explicitly: sonnet by default, haiku for purely mechanical work, opus only with an ESCALATION: line."}}
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"set model explicitly: sonnet by default, haiku for purely mechanical work, opus only with an ESCALATION: line. mechanical-editor alone needs no model; it is pinned to haiku."}}
   elif (.model | IN("sonnet", "haiku", "opus") | not) then
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("subagent model must be sonnet, haiku, or opus (opus needs an ESCALATION: line); not " + (.model | @json) + ".")}}
   elif .model == "opus" and ((.prompt // "") | test("(^|\n)[ \t]*ESCALATION:[ \t]*\\S") | not) then
