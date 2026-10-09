@@ -5,7 +5,8 @@
 #   1. subagent_type must be a non-empty string.
 #   2. model must be set. Unset inherits the parent session's model (Opus),
 #      which bypasses the ESCALATION: rule. Exception: mechanical-editor,
-#      whose frontmatter pins haiku.
+#      whose frontmatter pins haiku; an explicit model other than haiku is
+#      denied for it.
 #   3. model must be 'sonnet', 'haiku', or 'opus'. Anything else (notably
 #      'fable') is denied outright.
 #   4. opus needs an 'ESCALATION:' justification line in the prompt.
@@ -32,6 +33,9 @@ exec /opt/homebrew/bin/jq -c '
   # Unset model falls back to the frontmatter pin, haiku.
   elif .subagent_type == "mechanical-editor" and (.model // "") == "" then
     empty
+  # An explicit model overrides the frontmatter pin, so only haiku may pass.
+  elif .subagent_type == "mechanical-editor" and .model != "haiku" then
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"mechanical-editor is pinned to haiku; an explicit model overrides the pin. Omit model or pass haiku, or use another agent for work that needs sonnet or opus."}}
   # Unset model inherits the parent session Opus, bypassing the ESCALATION: rule.
   elif (.model // "") == "" then
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"set model explicitly: sonnet by default, haiku for purely mechanical work, opus only with an ESCALATION: line. mechanical-editor alone needs no model; it is pinned to haiku."}}

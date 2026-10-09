@@ -1,0 +1,39 @@
+#!/opt/homebrew/bin/dash
+
+# Tests for agent-input-guard.
+
+here=/Users/rjk/SynologyDrive/Drive/dotfiles/dot-claude
+hook=$here/hooks/agent-input-guard
+jq=/opt/homebrew/bin/jq
+fail=0
+
+check() { # name, expected (deny|none), actual output
+  case "$2" in
+    deny) printf '%s' "$3" | $jq -e '.hookSpecificOutput.permissionDecision=="deny"' >/dev/null 2>&1 && r=PASS || r=FAIL ;;
+    *) [ -z "$3" ] && r=PASS || r=FAIL ;;
+  esac
+  [ "$r" = PASS ] || fail=1
+  echo "$r $1"
+}
+
+# dispatch <subagent_type> <model|""> <prompt>
+dispatch() {
+  # shellcheck disable=SC2016 # jq program, not shell expansion
+  $jq -nc --arg t "$1" --arg m "$2" --arg p "$3" \
+    '{tool_input:({subagent_type:$t,prompt:$p} + (if $m == "" then {} else {model:$m} end))}' | "$hook"
+}
+
+check "blank subagent_type denied" deny "$(dispatch "" sonnet "x")"
+check "unset model denied" deny "$(dispatch general-purpose "" "x")"
+check "fable denied" deny "$(dispatch general-purpose fable "x")"
+check "opus without ESCALATION denied" deny "$(dispatch general-purpose opus "x")"
+check "opus with ESCALATION allowed" none "$(dispatch general-purpose opus "$(printf 'ESCALATION: sonnet failed')")"
+check "sonnet allowed" none "$(dispatch general-purpose sonnet "x")"
+check "feature-engineer without contract denied" deny "$(dispatch feature-engineer sonnet "x")"
+check "feature-engineer with contract allowed" none "$(dispatch feature-engineer sonnet "$(printf 'Validation: make test, green\nNon-goals: none')")"
+check "mechanical-editor unset model allowed" none "$(dispatch mechanical-editor "" "x")"
+check "mechanical-editor haiku allowed" none "$(dispatch mechanical-editor haiku "x")"
+check "mechanical-editor sonnet denied" deny "$(dispatch mechanical-editor sonnet "x")"
+check "mechanical-editor opus with ESCALATION denied" deny "$(dispatch mechanical-editor opus "$(printf 'ESCALATION: sonnet failed')")"
+
+exit $fail
