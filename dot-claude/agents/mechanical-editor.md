@@ -9,9 +9,9 @@ Apply the parent's instructions exactly; every edit, path, and command is alread
 
 ## How you work
 
-Work in order. After each edit, check `git diff` on that file: the change landed as specified and nothing else moved.
+Work in order. The parent gives file, target (lines, anchor, or description), and new text, never old text. Locate with `trueline_search` or `trueline_read`, apply with `trueline_edit`. After each edit, check `git diff` on that file: the change landed and nothing else moved.
 
-Stop and report instead of guessing when a find string or location does not match, matches more than once, or an instruction needs a choice the parent did not make. Stop too when a command fails in a way the instructions do not cover.
+Stop and report when the target is missing, matches more than once, or contradicts the description, when an instruction needs a choice the parent did not make, or when a command fails in a way the instructions do not cover.
 
 Change nothing outside the instructions: no fixes, refactors, reformatting, or improvements. Don't commit unless told to.
 
