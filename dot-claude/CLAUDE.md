@@ -1,17 +1,16 @@
 ## Harness gotchas
 
-- Temp files: `tmp/`, not `/tmp` (`tmp-path-guard` denies `/tmp`).
+- Bash temp files: `tmp/`, not `/tmp` (`tmp-path-guard` covers only Write/Edit).
 - `diff.mnemonicPrefix` on: diffs show `i/ w/ c/`, not `a/ b/`. Tracked files: `git mv`. Other repos: `git -C <path>`, not `cd`.
 - Pre-commit: `git diff --cached --stat` lists only your changes (subagents share the index unless `isolation: "worktree"`); `git commit -- <paths>` ensures it for whole files. One plan step per commit.
 - Editing `~/.claude` hooks/agents changes the live session: `shellcheck` and feed sample input first.
 - Never use built in `Read`/`Edit`; use `trueline_read`/`trueline_edit`. Outside project root trueline denies access; use built-in `Read`/`Edit` there.
-- Auto memory off. Knowledge lives in versioned docs, rewritten in place, staged with the change (`docs-gate` asks once on code-only commit; identical retry passes). Preferences → `~/.claude/CLAUDE.md`; repo conventions/gotchas → its `CLAUDE.md`; decisions+why → `docs/decisions/`; specs/contracts → `docs/<area>.md`, listed in repo `CLAUDE.md` with read condition.
+- Auto memory off. Knowledge lives in versioned docs, rewritten in place, staged with the change. Preferences → `~/.claude/CLAUDE.md`; repo conventions/gotchas → its `CLAUDE.md`; decisions+why → `docs/decisions/`; specs/contracts → `docs/<area>.md`, listed in repo `CLAUDE.md` with read condition.
 
 ## Preferences
 
 - Ground claims in opened code, docs, or search results; trace the real path (env var names do not reveal auth, API shape, or config semantics). Mark unconfirmed items and where you looked.
 - Comments: fewest words; carry the *why* (rule, constraint, rejected alternative), above the block. Note omitted code; TODO for deferred nuance.
-- Blunt: name flaws, disagree when warranted, no praise.
 - Commits: fewest words; conventional title <50 chars, body wrapped at 72; explain trade-offs the diff hides.
 - Realistic names everywhere; not `foo`, `bar`, `temp`, `data`.
 - "Parse, don't validate": typed wrapper at a module or API boundary over bare `string`/`int`. Validate at boundaries; trust internal callers.
@@ -22,9 +21,8 @@
 - Suspect XY problem: ask the underlying goal first.
 - Multi-file change: name files and edits, then proceed. Ask first for new directories or >2 new abstraction layers.
 - Work over ~10 lines: numbered steps, each with its check. Long runs keep them in `tmp/TASKS.md`, ticked per passing check.
-- Bug fix = red-green: failing test, see red, fix, see green. Other tasks with a done-check: run it first; it must fail. Already passing = done or check broken; stop and report.
 - Long runs: at a checkpoint, finish and verify the current item, report what is proven and what is carried over in the same message as the next action. No "shall I continue?"; irreversible actions still get confirmed first.
-- Never name Gemini, Antigravity, `ask-gemini`, or `gemini-consultant` in anything leaving this machine or landing in a repo (commits, PR bodies, issues, GitHub/review comments incl. findings `source` field, code comments, docs). State findings on merit; never attribute to a reviewer/model. `no-gemini-guard` enforces.
+- State findings on merit; never attribute them to a reviewer or model in anything leaving this machine or landing in a repo (commits, PR bodies, issues, review comments incl. findings `source` field, code comments, docs).
 
 ## Specs and plans
 
@@ -56,4 +54,4 @@ Review ≤~100 lines; over → propose split. Code only when it is the decision 
 | Security review | `backend-development:backend-development-security-auditor` |
 | Audit vs spec | `spec-reviewer` |
 | Adversarial second opinion from Gemini | `gemini-consultant` |
-| Exact edits, fixups, run-and-report from a full instruction | `mechanical-editor` (pinned to haiku; omit `model`) |
+| Exact edits, fixups, run-and-report from a full instruction | `mechanical-editor` |
