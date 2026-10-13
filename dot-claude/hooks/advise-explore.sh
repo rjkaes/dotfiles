@@ -81,7 +81,7 @@ fi
 # race past the sentinel check above.
 touch "$notified_file"
 
-advisory="Advisory: heavy exploratory tool use detected (${reason}). For broad codebase exploration or open-ended research, dispatch the Explore subagent — it returns curated excerpts rather than dumping whole files into Opus's context. Use direct Read/Grep when you already know the target; switch to Explore for reconnaissance. Per CLAUDE.md: more than 3 exploratory queries warrants an Explore dispatch. (This advisory fires once per session.)"
+advisory="Advisory: heavy exploration (${reason}). Broad exploration or open-ended research goes to the Explore subagent (returns excerpts, not whole files). Known target: direct Read/Grep. CLAUDE.md: more than 3 exploratory queries warrants Explore. Fires once per session."
 
 jq -n \
   --arg ctx "$advisory" \

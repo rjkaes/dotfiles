@@ -43,7 +43,7 @@ count=$(cat "$count_file" 2>/dev/null || echo 0)
 [ "$count" -lt 2 ] || exit 0
 echo $((count + 1)) >"$count_file"
 
-reason="Hand-back is $len characters; the cap is $cap. Keep the result, key facts with file:line, and open questions; drop methodology. If you can write files, move longer detail to a file under tmp/ and give its path."
+reason="Hand-back $len characters, cap $cap. Keep result, file:line facts, open questions. Put longer detail in a tmp/ file (if you can write files) and cite its path."
 
 if [ "$event" = PreToolUse ]; then
     jq -nc --arg r "$reason" '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:$r}}'

@@ -6,7 +6,7 @@
 exec /opt/homebrew/bin/jq -c '
   .tool_input.file_path // empty |
   if startswith("/tmp/") or . == "/tmp"
-  then {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"Use project-local tmp/ for intermediate files, not /tmp/ (CLAUDE.md general best practices)."}}
+  then {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"Use project-local tmp/, not /tmp/."}}
   else empty
   end
 '

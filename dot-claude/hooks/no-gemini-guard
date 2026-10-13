@@ -18,7 +18,7 @@
 needle='gemini|antigravity'
 
 deny() {
-  /opt/homebrew/bin/jq -nc --arg verb "$1" '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("no-gemini-guard: this " + $verb + " text naming Gemini or Antigravity. Remove the mention; state the finding on its own merit, without attributing it to a reviewer, model, or tool.")}}'
+  /opt/homebrew/bin/jq -nc --arg verb "$1" '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("no-gemini-guard: this " + $verb + " text naming Gemini or Antigravity. Remove it. State findings on merit, no attribution.")}}'
   exit 0
 }
 

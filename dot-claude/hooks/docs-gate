@@ -72,4 +72,4 @@ state=$($git rev-parse --absolute-git-dir)/docs-gate
 [ "$(cat "$state" 2>/dev/null)" = "$key" ] && exit 0
 printf '%s\n' "$key" >"$state"
 
-exec $jq -nc '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"docs-gate: this commit changes code and no docs (*.md, docs/). If it changes a decision, contract, constraint, or gotcha, update the doc that owns it in place and stage it with this commit. If no doc applies, re-run the same commit; the gate passes an unchanged file set on retry."}}'
+exec $jq -nc '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"docs-gate: code changed, no docs (*.md, docs/). If a decision, contract, constraint, or gotcha changed, stage an in-place update to its owning doc. Otherwise re-run the same commit; an unchanged file set passes."}}'

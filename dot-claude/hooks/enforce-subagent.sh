@@ -123,7 +123,7 @@ jq -n \
   '{
     hookSpecificOutput: {
       hookEventName: "PreToolUse",
-      additionalContext: ("Delegate: " + $reason + " since the last prompt or dispatch. Hand the rest of this change to a subagent per the CLAUDE.md routing, listing the files touched so far, or SendMessage the agent that produced it.")
+      additionalContext: ("Delegate: " + $reason + " since the last prompt or dispatch. Hand the rest to a subagent per CLAUDE.md routing, naming files touched, or SendMessage its producer.")
     }
   }'
 

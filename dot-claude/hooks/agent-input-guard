@@ -29,26 +29,26 @@
 exec /opt/homebrew/bin/jq -c '
   .tool_input |
   if (.subagent_type // "") == "" then
-    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"CLAUDE.md agent routing: subagent_type must be set, never blank. Pick a specialized agent or \"general-purpose\"."}}
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"CLAUDE.md routing: set subagent_type (specialized agent or \"general-purpose\")."}}
   # Unset model falls back to the frontmatter pin, haiku.
   elif .subagent_type == "mechanical-editor" and (.model // "") == "" then
     empty
   # An explicit model overrides the frontmatter pin, so only haiku may pass.
   elif .subagent_type == "mechanical-editor" and .model != "haiku" then
-    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"mechanical-editor is pinned to haiku; an explicit model overrides the pin. Omit model or pass haiku, or use another agent for work that needs sonnet or opus."}}
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"mechanical-editor is pinned to haiku; an explicit model overrides the pin. Omit model or pass haiku; use another agent for sonnet or opus."}}
   # Unset model inherits the parent session Opus, bypassing the ESCALATION: rule.
   elif (.model // "") == "" then
-    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"set model explicitly: sonnet by default, haiku for purely mechanical work, opus only with an ESCALATION: line. mechanical-editor alone needs no model; it is pinned to haiku."}}
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"set model: sonnet default, haiku for mechanical work, opus only with an ESCALATION: line. mechanical-editor needs none (pinned to haiku)."}}
   elif (.model | IN("sonnet", "haiku", "opus") | not) then
-    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("subagent model must be sonnet, haiku, or opus (opus needs an ESCALATION: line); not " + (.model | @json) + ".")}}
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("model must be sonnet, haiku, or opus (opus needs an ESCALATION: line); not " + (.model | @json) + ".")}}
   elif .model == "opus" and ((.prompt // "") | test("(^|\n)[ \t]*ESCALATION:[ \t]*\\S") | not) then
-    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"model=opus requires an ESCALATION: line in the dispatch prompt explaining why sonnet is insufficient (or that a sonnet attempt already failed). Add a line starting with \"ESCALATION:\" followed by the justification, or dispatch with model=sonnet."}}
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"model=opus needs a prompt line \"ESCALATION: <why sonnet is insufficient or failed>\". Else use model=sonnet."}}
   elif (.subagent_type | IN("feature-engineer", "refactor-engineer", "database-architect")) then
     [ (if ((.prompt // "") | test("(^|\n)[ \t]*Validation:[ \t]*\\S")) then empty else "Validation: (exact command + expected result)" end),
       (if ((.prompt // "") | test("(^|\n)[ \t]*Non-goals:[ \t]*\\S")) then empty else "Non-goals:" end) ] as $missing |
     if ($missing | length) == 0 then empty
     else
-      {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("brief contract: " + .subagent_type + " prompt is missing (each on its own line, with text after the colon): " + ($missing | join("; ")))}}
+      {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("brief contract: " + .subagent_type + " prompt lacks (own line, text after colon): " + ($missing | join("; ")))}}
     end
   else empty
   end
