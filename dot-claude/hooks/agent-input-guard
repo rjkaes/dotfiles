@@ -4,9 +4,11 @@
 # Enforces these CLAUDE.md agent routing rules, checked in this order:
 #   1. subagent_type must be a non-empty string.
 #   2. model must be set. Unset inherits the parent session's model (Opus),
-#      which bypasses the ESCALATION: rule. Exception: mechanical-editor,
-#      whose frontmatter pins haiku; an explicit model other than haiku is
-#      denied for it.
+#      which bypasses the ESCALATION: rule. Exception: an agent whose
+#      frontmatter sets model: sonnet|haiku|opus (project or user agents dir)
+#      runs on that pin, which then gets rules 3-5 as if passed explicitly.
+#      An explicit model overrides the pin; for mechanical-editor only haiku
+#      passes.
 #   3. model must be 'sonnet', 'haiku', or 'opus'. Anything else (notably
 #      'fable') is denied outright.
 #   4. opus needs an 'ESCALATION:' justification line in the prompt.
@@ -26,8 +28,23 @@
 # in JSON strings (e.g. raw newlines in the prompt field). jq requires valid
 # JSON. If hook payloads ever contain unescaped control characters, revert to Python.
 
-exec /opt/homebrew/bin/jq -c '
+input=$(cat)
+name=$(printf '%s' "$input" | /opt/homebrew/bin/jq -r '.tool_input.subagent_type // ""')
+pin=
+# Name check blocks path traversal; plugin agents (plugin:name) are not looked up.
+case "$name" in
+  ''|*[!A-Za-z0-9_-]*) ;;
+  *)
+    for dir in "${CLAUDE_PROJECT_DIR:-.}/.claude/agents" "$HOME/.claude/agents"; do
+      [ -f "$dir/$name.md" ] || continue
+      pin=$(/usr/bin/perl -ne 'if (/^---\s*$/) { exit if $s++; next } if ($s && /^model:\s*(sonnet|haiku|opus)\s*$/) { print $1; exit }' "$dir/$name.md")
+      break
+    done ;;
+esac
+
+printf '%s' "$input" | /opt/homebrew/bin/jq -c --arg pin "$pin" '
   .tool_input |
+  (if (.model // "") == "" then .model = $pin else . end) |
   if (.subagent_type // "") == "" then
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"CLAUDE.md routing: set subagent_type (specialized agent or \"general-purpose\")."}}
   # Unset model falls back to the frontmatter pin, haiku.
@@ -38,7 +55,7 @@ exec /opt/homebrew/bin/jq -c '
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"mechanical-editor is pinned to haiku; an explicit model overrides the pin. Omit model or pass haiku; use another agent for sonnet or opus."}}
   # Unset model inherits the parent session Opus, bypassing the ESCALATION: rule.
   elif (.model // "") == "" then
-    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"set model: sonnet default, haiku for mechanical work, opus only with an ESCALATION: line. mechanical-editor needs none (pinned to haiku)."}}
+    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"set model: sonnet default, haiku for mechanical work, opus only with an ESCALATION: line. Agents whose frontmatter sets model: need none."}}
   elif (.model | IN("sonnet", "haiku", "opus") | not) then
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:("model must be sonnet, haiku, or opus (opus needs an ESCALATION: line); not " + (.model | @json) + ".")}}
   elif .model == "opus" and ((.prompt // "") | test("(^|\n)[ \t]*ESCALATION:[ \t]*\\S") | not) then

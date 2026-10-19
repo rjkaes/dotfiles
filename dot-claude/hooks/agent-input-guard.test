@@ -36,4 +36,14 @@ check "mechanical-editor haiku allowed" none "$(dispatch mechanical-editor haiku
 check "mechanical-editor sonnet denied" deny "$(dispatch mechanical-editor sonnet "x")"
 check "mechanical-editor opus with ESCALATION denied" deny "$(dispatch mechanical-editor opus "$(printf 'ESCALATION: sonnet failed')")"
 
+# Agents whose frontmatter pins a model: unset model runs on the pin.
+check "pinned haiku agent (gemini-consultant) unset model allowed" none "$(dispatch gemini-consultant "" "x")"
+fixture=$(mktemp -d "$here/tmp/guard.XXXXXX")
+mkdir -p "$fixture/.claude/agents"
+printf -- "---\nname: pinned-opus\nmodel: opus\n---\n" > "$fixture/.claude/agents/pinned-opus.md"
+export CLAUDE_PROJECT_DIR=$fixture
+check "pinned opus agent unset model needs ESCALATION" deny "$(dispatch pinned-opus "" "x")"
+check "pinned opus agent unset model with ESCALATION allowed" none "$(dispatch pinned-opus "" "$(printf 'ESCALATION: sonnet failed')")"
+rm -rf "$fixture"
+
 exit $fail
