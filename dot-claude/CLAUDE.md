@@ -21,7 +21,6 @@
 - "Look deeper" = prior pass treated symptoms; find the root cause.
 - Suspect XY problem: ask the underlying goal first.
 - Multi-file change: name files and edits, then proceed. Ask first for new directories or >2 new abstraction layers.
-- Work over ~10 lines: numbered steps, each with its check. Long runs keep them in `tmp/TASKS.md`, ticked per passing check.
 - Long runs: at a checkpoint, finish and verify the current item, report what is proven and what is carried over in the same message as the next action. No "shall I continue?"; irreversible actions still get confirmed first.
 - State findings on merit; never attribute them to a reviewer or model in anything leaving this machine or landing in a repo (commits, PR bodies, issues, review comments incl. findings `source` field, code comments, docs).
 
