@@ -7,8 +7,7 @@
 #      which bypasses the ESCALATION: rule. Exception: an agent whose
 #      frontmatter sets model: sonnet|haiku|opus (project or user agents dir)
 #      runs on that pin, which then gets rules 3-5 as if passed explicitly.
-#      An explicit model overrides the pin; for mechanical-editor only haiku
-#      passes.
+#      An explicit model overrides the pin.
 #   3. model must be 'sonnet', 'haiku', or 'opus'. Anything else (notably
 #      'fable') is denied outright.
 #   4. opus needs an 'ESCALATION:' justification line in the prompt.
@@ -47,12 +46,6 @@ printf '%s' "$input" | /opt/homebrew/bin/jq -c --arg pin "$pin" '
   (if (.model // "") == "" then .model = $pin else . end) |
   if (.subagent_type // "") == "" then
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"CLAUDE.md routing: set subagent_type (specialized agent or \"general-purpose\")."}}
-  # Unset model falls back to the frontmatter pin, haiku.
-  elif .subagent_type == "mechanical-editor" and (.model // "") == "" then
-    empty
-  # An explicit model overrides the frontmatter pin, so only haiku may pass.
-  elif .subagent_type == "mechanical-editor" and .model != "haiku" then
-    {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"mechanical-editor is pinned to haiku; an explicit model overrides the pin. Omit model or pass haiku; use another agent for sonnet or opus."}}
   # Unset model inherits the parent session Opus, bypassing the ESCALATION: rule.
   elif (.model // "") == "" then
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"set model: sonnet default, haiku for mechanical work, opus only with an ESCALATION: line. Agents whose frontmatter sets model: need none."}}

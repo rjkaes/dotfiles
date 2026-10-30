@@ -31,10 +31,6 @@ check "opus with ESCALATION allowed" none "$(dispatch general-purpose opus "$(pr
 check "sonnet allowed" none "$(dispatch general-purpose sonnet "x")"
 check "feature-engineer without contract denied" deny "$(dispatch feature-engineer sonnet "x")"
 check "feature-engineer with contract allowed" none "$(dispatch feature-engineer sonnet "$(printf 'Validation: make test, green\nNon-goals: none')")"
-check "mechanical-editor unset model allowed" none "$(dispatch mechanical-editor "" "x")"
-check "mechanical-editor haiku allowed" none "$(dispatch mechanical-editor haiku "x")"
-check "mechanical-editor sonnet denied" deny "$(dispatch mechanical-editor sonnet "x")"
-check "mechanical-editor opus with ESCALATION denied" deny "$(dispatch mechanical-editor opus "$(printf 'ESCALATION: sonnet failed')")"
 
 # Agents whose frontmatter pins a model: unset model runs on the pin.
 check "pinned haiku agent (gemini-consultant) unset model allowed" none "$(dispatch gemini-consultant "" "x")"

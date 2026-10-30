@@ -54,6 +54,3 @@ Review ≤~100 lines; over → propose split. Code only when it is the decision 
 | Security review | `backend-development:backend-development-security-auditor` |
 | Audit vs spec | `spec-reviewer` |
 | Adversarial second opinion from Gemini | `gemini-consultant` |
-| Exact edits, fixups, run-and-report from a full instruction | `mechanical-editor` |
-
-`mechanical-editor` prompts: file, target (lines, anchor, or description), new text. Never old text; the agent finds the target itself.
