@@ -4,7 +4,6 @@
 - `diff.mnemonicPrefix` on: diffs show `i/ w/ c/`, not `a/ b/`. Tracked files: `git mv`. Other repos: `git -C <path>`, not `cd`.
 - Pre-commit: `git diff --cached --stat` lists only your changes (subagents share the index unless `isolation: "worktree"`); `git commit -- <paths>` ensures it for whole files. One plan step per commit.
 - Editing `~/.claude` hooks/agents changes the live session: `shellcheck` and feed sample input first.
-- Never use built in `Read`/`Edit`; use `trueline_read`/`trueline_edit`. Outside project root trueline denies access; use built-in `Read`/`Edit` there.
 - Auto memory off. Knowledge lives in versioned docs, rewritten in place, staged with the change. Preferences → `~/.claude/CLAUDE.md`; repo conventions/gotchas → its `CLAUDE.md`; decisions+why → `docs/decisions/`; specs/contracts → `docs/<area>.md`, listed in repo `CLAUDE.md` with read condition.
 
 ## Preferences
