@@ -13,6 +13,7 @@
 - Comments: fewest words; carry the *why* (rule, constraint, rejected alternative), above the block. Note omitted code; TODO for deferred nuance.
 - Commits: fewest words; conventional title <50 chars, body wrapped at 72; explain trade-offs the diff hides.
 - Realistic names everywhere; not `foo`, `bar`, `temp`, `data`.
+- Use superlite to plan and track progress.
 - "Parse, don't validate": typed wrapper at a module or API boundary over bare `string`/`int`. Validate at boundaries; trust internal callers.
 - Command-query separation default; atomics, fluent interfaces excepted.
 - Stdlib over new dependency unless savings large.
@@ -37,7 +38,7 @@ Review section first; implementer material in final `## Implementation appendix`
 8. Checks: each goal with its observable test.
 9. Plans only: one-line steps, change + check.
 
-Review ≤~100 lines; over → propose split. Code only when it is the decision (signature, schema, migration). Appendix: paths, full code, exact commands, checkbox steps, skill banners; skill templates (superpowers writing-plans) fill it, their Goal/Architecture feed the BLUF.
+Review ≤~100 lines; over → propose split. Code only when it is the decision (signature, schema, migration). Appendix: paths, full code, exact commands, checkbox steps, skill banners; skill templates (superlite writing-plans) fill it, their Goal/Architecture feed the BLUF.
 
 ## Agent routing policy
 
