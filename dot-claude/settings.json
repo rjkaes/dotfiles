@@ -1,27 +1,12 @@
 {
   "respectGitignore": true,
+  "cleanupPeriodDays": 30,
+  "skillListingMaxDescChars": 200,
   "env": {
     "CLAUDE_CODE_DISABLE_WORKFLOWS": "1",
     "CLAUDE_CODE_DISABLE_CRON": "1",
     "PONYTAIL_SUBAGENT_MATCHER": "^(?!(explore|spec-reviewer|technical-writer|.*-consultant|claude-code-guide|statusline-setup|comment-analyzer)$)"
   },
-  "skillListingMaxDescChars": 200,
-  "bashOutputMaxChars": 10000,
-  "deniedMcpServers": [
-    { "serverName": "claude.ai Intuit QuickBooks" },
-    { "serverName": "claude.ai Gmail" },
-    { "serverName": "claude.ai Claude Docs" },
-    { "serverName": "claude.ai Adobe for creativity" },
-    { "serverName": "claude.ai Microsoft 365" },
-    { "serverName": "claude.ai WordPress.com" },
-    { "serverName": "claude.ai monday.com" },
-    { "serverName": "claude.ai Apollo.io" },
-    { "serverName": "claude.ai ZoomInfo" },
-    { "serverName": "claude.ai ClickUp" },
-    { "serverName": "claude.ai Canva" },
-    { "serverName": "claude.ai Miro" }
-  ],
-  "cleanupPeriodDays": 30,
   "includeGitInstructions": true,
   "permissions": {
     "allow": [
@@ -71,6 +56,44 @@
     "claude-mem-mcp": "off",
     "brutal-review": "off"
   },
+  "deniedMcpServers": [
+    {
+      "serverName": "claude.ai Intuit QuickBooks"
+    },
+    {
+      "serverName": "claude.ai Gmail"
+    },
+    {
+      "serverName": "claude.ai Claude Docs"
+    },
+    {
+      "serverName": "claude.ai Adobe for creativity"
+    },
+    {
+      "serverName": "claude.ai Microsoft 365"
+    },
+    {
+      "serverName": "claude.ai WordPress.com"
+    },
+    {
+      "serverName": "claude.ai monday.com"
+    },
+    {
+      "serverName": "claude.ai Apollo.io"
+    },
+    {
+      "serverName": "claude.ai ZoomInfo"
+    },
+    {
+      "serverName": "claude.ai ClickUp"
+    },
+    {
+      "serverName": "claude.ai Canva"
+    },
+    {
+      "serverName": "claude.ai Miro"
+    }
+  ],
   "hooks": {
     "SessionStart": [
       {
@@ -219,6 +242,7 @@
     "SessionEnd": []
   },
   "workflowKeywordTriggerEnabled": false,
+  "bashOutputMaxChars": 10000,
   "statusLine": {
     "type": "command",
     "command": "bash $HOME/.claude/statusline-command.sh"
@@ -235,9 +259,8 @@
     "pr-review-toolkit@claude-plugins-official": false,
     "rust-analyzer-lsp@claude-plugins-official": false,
     "security-guidance@claude-plugins-official": false,
-    "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "ast-grep@ast-grep-marketplace": true,
+    "ast-grep@ast-grep-marketplace": false,
     "csharp-lsp@claude-plugins-official": true,
     "agent-orchestration@claude-code-workflows": false,
     "agent-teams@claude-code-workflows": false,
@@ -270,6 +293,10 @@
     "javascript-typescript@claude-code-workflows": false,
     "context-mode@context-mode": true,
     "mattpocock-skills@claude-plugins-official": true,
+    "terse@terse": true,
+    "superlite@superlite-dev": true,
+    "ponytail@synced": false,
+    "claude-agent-map@superlite-dev": true,
     "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
@@ -313,6 +340,18 @@
       "source": {
         "source": "github",
         "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "terse": {
+      "source": {
+        "source": "github",
+        "repo": "lowenbjer/claude-terse"
+      }
+    },
+    "superlite-dev": {
+      "source": {
+        "source": "github",
+        "repo": "iha2/superlite"
       }
     }
   },
@@ -362,7 +401,16 @@
       "dotnet test:*"
     ]
   },
+  "awaySummaryEnabled": false,
   "showClearContextOnPlanAccept": true,
+  "pluginConfigs": {
+    "ponytail@ponytail": {
+      "options": {
+        "ledger": false,
+        "sendNames": true
+      }
+    }
+  },
   "tui": "fullscreen",
   "autoMemoryEnabled": false,
   "autoDreamEnabled": false,
@@ -370,5 +418,43 @@
   "preferredNotifChannel": "terminal_bell",
   "skipAutoPermissionPrompt": true,
   "useAutoModeDuringPlan": true,
-  "awaySummaryEnabled": false
+  "autoMode": {
+    "allow": [
+      "$defaults",
+      "Bash(pwsh scripts/verify.ps1:*)",
+      "Bash(pwsh scripts/check.ps1:*)",
+      "Bash(pwsh scripts/verify-receipt.ps1:*)"
+    ],
+    "soft_deny": [
+      "$defaults",
+      "Bash(pwsh scripts/query-logs.ps1 * -Slot prod*)"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: Scotlynn (GitHub org inferred from remote `github.com:Scotlynn/northstar.git`)",
+      "**Cloud provider(s)**: Azure (inferred from CI secret names: AZURE_API_PUBLISH_PROFILE, AZURE_CLIENT_ID, AZURE_SUBSCRIPTION_ID, AZURE_TENANT_ID, AZURE_WEBAPP_PUBLISH_PROFILE)",
+      "**Repository visibility**: unverified — gh query not queryable here (nonessential traffic disabled or policy-restricted); treat as possibly public per shipped-default guidance until confirmed",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: CI secrets referenced by name only (AUTOMERGE_APP_PRIVATE_KEY, AZURE_API_PUBLISH_PROFILE, AZURE_CLIENT_ID, AZURE_SUBSCRIPTION_ID, AZURE_TENANT_ID, AZURE_WEBAPP_PUBLISH_PROFILE, CLAUDE_CODE_OAUTH_TOKEN, DB_MIGRATION_CONNECTION_STRING, GITHUB_TOKEN) — values not seen, treat as secret handles not credentials",
+      "**Default / protected branches**: default branch `main` on Scotlynn/northstar; protection/ruleset status not queryable here (gh capability failure) — treat `main` as protected pending confirmation",
+      "**CI/CD deploy targets**: Azure Web App (inferred from AZURE_WEBAPP_PUBLISH_PROFILE / AZURE_API_PUBLISH_PROFILE secret names); slots referenced in docs include prod/stage/blue (`scripts/query-logs.ps1 -Slot prod|stage|blue`)",
+      "**Network posture**: None configured",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine with open internet",
+      "**Source control**: Scotlynn/northstar (github.com:Scotlynn/northstar.git) and its remote(s) only — as scoped by Trusted repo and Repository visibility entries above",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: Application Insights workspace queried via `scripts/query-logs.ps1` (App api|web, Slot prod|stage|blue) — internal observability endpoint for this repo only",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: `docs/integration-secrets.md` (integration secrets doc); `docs/superpowers/specs/2026-07-08-hierarchical-rbac-design.md` and the `docs/superpowers/plans/2026-07-*-rbac-slice1-*.md` series (RBAC design/cutover plans) — share only with engineers on this repo cleared for RBAC/security design review",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace/host/container with `prod` or `production` as a whole word/segment, including the `prod` deploy slot referenced by `scripts/query-logs.ps1 -Slot prod`",
+      "**Protected deployment namespaces / environments**: `prod` / `production` slots and namespaces (e.g. the `-Slot prod` App Insights target, Azure Web App production slot) — per Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development (.NET/Blazor monorepo, NorthStar)",
+      "**Trusted repo**: this repo's working directory (/Users/rjk/src/scotlynn/worktrees/northstar/pr-1040-feature-facilities-maintenance-manager-assignment, a worktree) and its remote github.com:Scotlynn/northstar.git — visibility unverified, treat as possibly public for publication purposes until confirmed",
+      "**Org-specific CLIs**: None configured",
+      "routine under this repo's `scripts/` and `.claude/` prefixes (verify.ps1, check.ps1, mutate.ps1, query-logs.ps1, check-diff-coverage.ps1, lint-pr-body.ps1, profile.ps1) are project-standard tooling, not external CLIs"
+    ]
+  }
 }
