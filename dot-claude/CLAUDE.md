@@ -15,7 +15,7 @@
 - Comments: fewest words; carry the *why* (rule, constraint, rejected alternative), above the block. Note omitted code; TODO for deferred nuance.
 - Commits: fewest words; conventional title <50 chars, body wrapped at 72; explain trade-offs the diff hides.
 - Realistic names everywhere; not `foo`, `bar`, `temp`, `data`.
-- "Parse, don't validate": typed wrapper at a module or API boundary over bare `string`/`int`. Validate at boundaries; trust internal callers.
+- "Parse, don't validate": typed wrapper at a module or API boundary over bare `string`/`int`. Validate at boundaries; trust internal callers. Inside a fix, smallest diff wins; typed wrappers apply to new boundaries.
 - Command-query separation default; atomics, fluent interfaces excepted.
 - Stdlib over new dependency unless savings large.
 - Smallest diff: no drive-by reformatting, renaming, reordering, helper extraction, added error handling. If the change outgrows the task, stop and suggest the rest.
