@@ -7,12 +7,10 @@
 # system appearance, replacing WezTerm's window-config-reloaded handler.
 theme = light:wormbytes-light,dark:wormbytes-dark
 
-# Fonts. Ghostty falls back to Apple Color Emoji automatically on macOS, but
-# it is listed explicitly to mirror the WezTerm fallback list. There is no
-# equivalent for use_cap_height_to_scale_fallback_fonts.
+# Fonts.
 font-family = Maple Mono Normal NL NF
-font-family = Apple Color Emoji
 font-size = 17
+font-thicken = false
 
 # No ligatures (WezTerm harfbuzz_features calt=0/clig=0/liga=0).
 font-feature = -calt,-clig,-liga,-dlig
@@ -43,9 +41,7 @@ mouse-hide-while-typing = true
 # the Dock icon, and `audio` plays the file at bell-audio-path. Audio is used
 # instead of `system` because the macOS system alert bell is unreliable in
 # Ghostty (often silent); `no-system` suppresses that path entirely.
-bell-features = title,attention,audio,no-system
-bell-audio-path = /System/Library/Sounds/Glass.aiff
-bell-audio-volume = 0.5
+bell-features = title,no-system
 
 # window-colorspace is deliberately left at the default `srgb`. Ghostty always
 # sets the layer to Display P3 and converts sRGB colors into it in the shader,
