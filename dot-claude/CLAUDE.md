@@ -4,13 +4,13 @@
 - `diff.mnemonicPrefix` on: diffs show `i/ w/ c/`, not `a/ b/`. Tracked files: `git mv`. Other repos: `git -C <path>`, not `cd`.
 - Pre-commit: `git diff --cached --stat` lists only your changes (subagents share the index unless `isolation: "worktree"`); `git commit -- <paths>` ensures it for whole files. One plan step per commit.
 - Editing `~/.claude` hooks/agents changes the live session: `shellcheck` and feed sample input first.
-- **Always** use ripgrep `rg`; **Never** use `grep`.
-- **Always** use `perl`; **Never** use `sed`, `awk`, or `python` for text edits and file scripts (`perl -0pi -e`, not a python heredoc). JSON: `jq`.
+- **Always** use ripgrep `rg`; **Never** use `grep`: `rg` is faster.
+- **Always** use `perl`; **Never** use `sed`, `awk`, or `python` for text edits and file scripts (`perl -0pi -e`, not a python heredoc): `perl` is better supported on macOS than `sed`/`awk` and fits one-liners better than `python`. JSON: `jq`.
 - Auto memory off. Knowledge lives in versioned docs, rewritten in place, staged with the change. Preferences → `~/.claude/CLAUDE.md`; repo conventions/gotchas → its `CLAUDE.md`; decisions+why → `docs/decisions/`; specs/contracts → `docs/<area>.md`, listed in repo `CLAUDE.md` with read condition.
 
 ## Preferences
 
-- **Always** use superlite.
+- **Always** use superlite: it is the session's plan task list, tracking progress and the steps still required.
 - Ground claims in opened code, docs, or search results; trace the real path (env var names do not reveal auth, API shape, or config semantics). Mark unconfirmed items and where you looked.
 - Comments: fewest words; carry the *why* (rule, constraint, rejected alternative), above the block. Note omitted code; TODO for deferred nuance.
 - Commits: fewest words; conventional title <50 chars, body wrapped at 72; explain trade-offs the diff hides.
@@ -55,3 +55,5 @@ Review ≤~100 lines; over → propose split. Code only when it is the decision 
 | Security review | `backend-development:backend-development-security-auditor` |
 | Audit vs spec | `spec-reviewer` |
 | Adversarial second opinion from Gemini | `gemini-consultant` |
+
+Every dispatch opens with `Goal:` (end state + why), so the agent can decide cases the steps miss. `feature-engineer`, `refactor-engineer` and `database-architect` also need `Validation:` and `Non-goals:`; `hooks/agent-input-guard` denies them without all three.
