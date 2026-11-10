@@ -5,6 +5,8 @@ description: Use when context-mode MCP tools (ctx_batch_execute, ctx_execute, ct
 
 # Context-Mode Workflow
 
+Goal: raw output stays in the sandbox and only the answer enters context, so long sessions keep their context for the work.
+
 ## Core Principle
 
 Raw tool output floods context. Context-mode sandboxes raw data, auto-indexes large output into SQLite FTS5, returns only what you search for. **Program the analysis; don't compute in-context.** One script replaces ten tool calls.

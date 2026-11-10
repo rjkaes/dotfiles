@@ -3,7 +3,9 @@ description: Review C#/.NET code — "review dotnet", "review c#", "code review 
 allowed-tools: Bash(git diff:*), Bash(git --no-pager diff:*), Bash(git log:*), Bash(git --no-pager log:*), Bash(git show:*), Bash(git --no-pager show:*), Bash(git rev-parse:*), Bash(git symbolic-ref:*), Bash(git diff-tree:*), Task, Read, Read(tmp/dotnet-review-*), Edit(tmp/dotnet-review-*), Grep, Glob, LSP
 ---
 
-Perform an in-depth, .NET-specific code review. Produces an ordered action plan with concrete code fixes.
+Perform an in-depth, .NET-specific code review.
+
+Goal: an ordered action plan of the defects that matter in production .NET code, each with corrected code, so the author fixes the worst first.
 
 Agent assumptions (applies to all agents and subagents):
 - Only call a tool if it is required to complete the task. Every tool call should have a clear purpose.

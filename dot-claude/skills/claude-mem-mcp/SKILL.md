@@ -5,7 +5,9 @@ description: Router and cheat-sheet for claude-mem MCP tools (prefix mcp__plugin
 
 # claude-mem MCP router
 
-Cheat-sheet for 11 tools under `mcp__plugin_claude-mem_mcp-search__*`, grouped into 3 workflows. For authoritative in-session refresher, call `__IMPORTANT` once per session.
+Goal: recall past decisions and map unfamiliar code at about a tenth of the token cost of full dumps and full Reads.
+
+Cheat-sheet for 13 tools under `mcp__plugin_claude-mem_mcp-search__*`, grouped into 3 workflows. For authoritative in-session refresher, call `__IMPORTANT` once per session.
 
 ## When to use
 

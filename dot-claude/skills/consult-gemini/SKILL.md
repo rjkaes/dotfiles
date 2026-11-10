@@ -4,6 +4,8 @@ allowed-tools: Task, Read, Grep, Glob, Bash(which gemini), Bash(gemini --version
 argument-hint: [question]
 ---
 
+Goal: findings that Claude's own pass missed, from Gemini's independent read, so the user weighs two views before acting.
+
 ## When to use
 
 Trigger phrases and patterns:

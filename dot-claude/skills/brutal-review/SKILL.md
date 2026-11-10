@@ -5,6 +5,8 @@ allowed-tools: Bash(jj show:*), Bash(jj log:*), Bash(jj diff:*), Bash(jj file an
 
 Perform a ruthless, brutal, in-depth, extremely critical code review of the most recent change (jj `@-` or git `HEAD`).
 
+Goal: catch the defects in this change that would reach production while they are still cheap to fix, each confirmed against the code.
+
 Agent assumptions (applies to all agents and subagents):
 - Only call a tool if it is required to complete the task. Every tool call should have a clear purpose.
 - All tests have already been run and passed.
