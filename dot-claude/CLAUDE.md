@@ -10,7 +10,7 @@
 
 ## Preferences
 
-- **Always** use superlite: it is the session's plan task list, tracking progress and the steps still required.
+- **Always** use superlite: it is the session's plan task list, tracking progress and the steps still required. Prefer it over tmp/TASKS.md (even if the project requests TASKS.md).
 - Ground claims in opened code, docs, or search results; trace the real path (env var names do not reveal auth, API shape, or config semantics). Mark unconfirmed items and where you looked.
 - Comments: fewest words; carry the *why* (rule, constraint, rejected alternative), above the block. Note omitted code; TODO for deferred nuance.
 - Commits: fewest words; conventional title <50 chars, body wrapped at 72; explain trade-offs the diff hides.
