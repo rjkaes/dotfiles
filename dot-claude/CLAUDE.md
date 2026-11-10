@@ -4,16 +4,17 @@
 - `diff.mnemonicPrefix` on: diffs show `i/ w/ c/`, not `a/ b/`. Tracked files: `git mv`. Other repos: `git -C <path>`, not `cd`.
 - Pre-commit: `git diff --cached --stat` lists only your changes (subagents share the index unless `isolation: "worktree"`); `git commit -- <paths>` ensures it for whole files. One plan step per commit.
 - Editing `~/.claude` hooks/agents changes the live session: `shellcheck` and feed sample input first.
-- Use `perl` instead of `sed` or `awk`.
+- **Always** use ripgrep `rg`; **Never** use `grep`.
+- **Always** use `perl`; **Never** use `sed`, `awk`, or `python` for text edits and file scripts (`perl -0pi -e`, not a python heredoc). JSON: `jq`.
 - Auto memory off. Knowledge lives in versioned docs, rewritten in place, staged with the change. Preferences → `~/.claude/CLAUDE.md`; repo conventions/gotchas → its `CLAUDE.md`; decisions+why → `docs/decisions/`; specs/contracts → `docs/<area>.md`, listed in repo `CLAUDE.md` with read condition.
 
 ## Preferences
 
+- **Always** use superlite.
 - Ground claims in opened code, docs, or search results; trace the real path (env var names do not reveal auth, API shape, or config semantics). Mark unconfirmed items and where you looked.
 - Comments: fewest words; carry the *why* (rule, constraint, rejected alternative), above the block. Note omitted code; TODO for deferred nuance.
 - Commits: fewest words; conventional title <50 chars, body wrapped at 72; explain trade-offs the diff hides.
 - Realistic names everywhere; not `foo`, `bar`, `temp`, `data`.
-- Use superlite to plan and track progress.
 - "Parse, don't validate": typed wrapper at a module or API boundary over bare `string`/`int`. Validate at boundaries; trust internal callers.
 - Command-query separation default; atomics, fluent interfaces excepted.
 - Stdlib over new dependency unless savings large.
