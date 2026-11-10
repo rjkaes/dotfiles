@@ -30,7 +30,8 @@ check "opus without ESCALATION denied" deny "$(dispatch general-purpose opus "x"
 check "opus with ESCALATION allowed" none "$(dispatch general-purpose opus "$(printf 'ESCALATION: sonnet failed')")"
 check "sonnet allowed" none "$(dispatch general-purpose sonnet "x")"
 check "feature-engineer without contract denied" deny "$(dispatch feature-engineer sonnet "x")"
-check "feature-engineer with contract allowed" none "$(dispatch feature-engineer sonnet "$(printf 'Validation: make test, green\nNon-goals: none')")"
+check "feature-engineer without Goal denied" deny "$(dispatch feature-engineer sonnet "$(printf 'Validation: make test, green\nNon-goals: none')")"
+check "feature-engineer with contract allowed" none "$(dispatch feature-engineer sonnet "$(printf 'Goal: parser accepts ISO dates, because imports fail\nValidation: make test, green\nNon-goals: none')")"
 
 # Agents whose frontmatter pins a model: unset model runs on the pin.
 check "pinned haiku agent (gemini-consultant) unset model allowed" none "$(dispatch gemini-consultant "" "x")"

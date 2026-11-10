@@ -12,8 +12,9 @@
 #      'fable') is denied outright.
 #   4. opus needs an 'ESCALATION:' justification line in the prompt.
 #   5. Implementation agents (feature-engineer, refactor-engineer,
-#      database-architect) need 'Validation:' and 'Non-goals:' lines in the
-#      prompt, each with text after the colon.
+#      database-architect) need 'Goal:', 'Validation:' and 'Non-goals:' lines
+#      in the prompt, each with text after the colon. Goal: carries the end
+#      state and why, so the agent can decide cases the steps do not cover.
 #
 # Subagents may delegate, under exactly these same rules. A strict
 # equal-or-lesser-strength check against the caller's own model is not
@@ -54,7 +55,8 @@ printf '%s' "$input" | /opt/homebrew/bin/jq -c --arg pin "$pin" '
   elif .model == "opus" and ((.prompt // "") | test("(^|\n)[ \t]*ESCALATION:[ \t]*\\S") | not) then
     {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"model=opus needs a prompt line \"ESCALATION: <why sonnet is insufficient or failed>\". Else use model=sonnet."}}
   elif (.subagent_type | IN("feature-engineer", "refactor-engineer", "database-architect")) then
-    [ (if ((.prompt // "") | test("(^|\n)[ \t]*Validation:[ \t]*\\S")) then empty else "Validation: (exact command + expected result)" end),
+    [ (if ((.prompt // "") | test("(^|\n)[ \t]*Goal:[ \t]*\\S")) then empty else "Goal: (end state + why)" end),
+      (if ((.prompt // "") | test("(^|\n)[ \t]*Validation:[ \t]*\\S")) then empty else "Validation: (exact command + expected result)" end),
       (if ((.prompt // "") | test("(^|\n)[ \t]*Non-goals:[ \t]*\\S")) then empty else "Non-goals:" end) ] as $missing |
     if ($missing | length) == 0 then empty
     else
