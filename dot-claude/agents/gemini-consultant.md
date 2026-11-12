@@ -44,6 +44,7 @@ Escalate when the context list is missing or too vague to scope a prompt, when t
 ## Gemini Consultation
 Mode: stdin|inline · Files: N · Duration: Xs · Exit: 0
 Session: <ID or "none">
+<every other `ask-gemini:` stderr line (timing, tools, usage, trace), verbatim, read before deleting the err file>
 
 File: tmp/consult-<short-slug>.md (full verbatim stdout)
 <verdict/summary line, verbatim>
