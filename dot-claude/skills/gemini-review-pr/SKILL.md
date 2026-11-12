@@ -1,6 +1,6 @@
 ---
 name: gemini-review-pr
-description: Use when asked to review a GitHub PR with Gemini, get a second opinion or adversarial review of a pull request or branch diff, or when invoked via /gemini-review-pr <PR-url-or-number>. Supply a PR URL or number and Gemini reviews the full branch diff for security, performance, quality, and correctness.
+description: Use when asked to review a GitHub PR with Gemini, get a second opinion or adversarial review of a pull request or branch diff, the same review of the current git branch before a PR exists (no argument), or when invoked via /gemini-review-pr <PR-url-or-number>. Supply a PR URL or number and Gemini reviews the full branch diff for security, performance, quality, and correctness.
 ---
 
 # Gemini Review PR
@@ -17,10 +17,11 @@ This is the PR-scoped sibling of `consult-gemini`. Where `consult-gemini` review
 
 - "review PR 496 with gemini", "gemini review this PR", "second opinion on PR #123"
 - `/gemini-review-pr <url-or-number>`
+- "review my branch", "second opinion on my branch", no argument: branch mode (§1a), for finished work with no PR yet.
 - Before merging a substantial PR, to catch what Claude's own review misses.
 
 **When NOT to use:**
-- Reviewing uncommitted working-tree changes with no PR → use `consult-gemini` or a project review skill.
+- Changes made directly on the default branch, so branch mode has no base to diff against → use `consult-gemini` or a project review skill.
 - Small targeted questions Claude can answer alone → answer directly.
 - Deep logic bugs / data-structure lifecycle bugs → Claude outperforms Gemini alone; don't burn the call.
 
@@ -34,7 +35,17 @@ Accept either form:
 - **Full URL:** `https://github.com/<owner>/<repo>/pull/<n>` → extract `<owner>/<repo>` and `<n>`.
 - **Bare number** (`496` or `#496`) → use the current repo (`gh repo view --json nameWithOwner -q .nameWithOwner`).
 
-If the argument is empty, ask once for the PR URL or number, then proceed.
+If the argument is empty or `branch`, use branch mode (§1a) in place of steps 2 and 3.
+
+### 1a. Branch mode: gather the current branch
+
+Branch mode reviews committed and uncommitted changes on the current branch against its merge base with the default branch. Run every command from `git rev-parse --show-toplevel`, since `git diff` prints root-relative paths.
+
+- Base: `git symbolic-ref --short refs/remotes/origin/HEAD` (e.g. `origin/main`). Current branch equals the base's branch: stop and say so.
+- Slug: `branch-<current branch, "/" replaced by "-">`. Every `pr-<n>` path in steps 4 to 6 becomes `<slug>`, e.g. `tmp/branch-fix-login.diff`.
+- Intent: `git log --format='%s%n%n%b' <base>..HEAD`. Paraphrase it for the template's summary, and replace `PR #<n> "<title>" on <repo>` with `branch <branch> (diff against <base>, uncommitted changes included) on <repo>`.
+- Diff: `git diff --merge-base <base> > tmp/<slug>.diff`. Untracked files are absent; `git add -N <path>` adds them to the diff without staging content.
+- Files to inline: `git diff --merge-base <base> --name-only --diff-filter=d`. The working tree is the reviewed code, so step 3 is always "HEAD == headRefOid".
 
 ### 2. Gather PR metadata + diff
 
