@@ -1,6 +1,6 @@
 ---
-name: gemini-review-pr
-description: Use when asked to review a GitHub PR with Gemini, get a second opinion or adversarial review of a pull request or branch diff, the same review of the current git branch before a PR exists (no argument), or when invoked via /gemini-review-pr <PR-url-or-number>. Supply a PR URL or number and Gemini reviews the full branch diff for security, performance, quality, and correctness.
+name: gemini-review
+description: Use when asked to review a GitHub PR with Gemini, get a second opinion or adversarial review of a pull request or branch diff, the same review of the current git branch before a PR exists (no argument), or when invoked via /gemini-review <PR-url-or-number>. Supply a PR URL or number and Gemini reviews the full branch diff for security, performance, quality, and correctness.
 ---
 
 # Gemini Review PR
@@ -16,7 +16,7 @@ This is the PR-scoped sibling of `consult-gemini`. Where `consult-gemini` review
 ## When to Use
 
 - "review PR 496 with gemini", "gemini review this PR", "second opinion on PR #123"
-- `/gemini-review-pr <url-or-number>`
+- `/gemini-review <url-or-number>`
 - "review my branch", "second opinion on my branch", no argument: branch mode (§1a), for finished work with no PR yet.
 - Before merging a substantial PR, to catch what Claude's own review misses.
 

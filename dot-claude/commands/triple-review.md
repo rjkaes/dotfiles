@@ -1,5 +1,5 @@
 ---
-description: Run /gemini-review-pr, /code-review low and /ponytail:ponytail-review on one PR, then report one verified list
+description: Run /gemini-review, /code-review low and /ponytail:ponytail-review on one PR, then report one verified list
 argument-hint: <pr-number>
 ---
 
@@ -19,7 +19,7 @@ The report lists every finding at every severity. The user picks what gets fixed
 Send three Agent calls in one message: `subagent_type: claude`, `model: sonnet`.
 Each prompt names one skill for the sub-agent to invoke with the Skill tool:
 
-- `gemini-review-pr` with args `$ARGUMENTS`.
+- `gemini-review` with args `$ARGUMENTS`.
   In its review prompt, replace "skip trivial style nits unless they signal a systemic pattern" with "report style nits as Low".
 - `code-review` with args `low`. Scope: `git diff origin/<base>...HEAD` for PR #$ARGUMENTS.
 - `ponytail:ponytail-review` with args `PR #$ARGUMENTS`.
