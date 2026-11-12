@@ -26,7 +26,7 @@ This is the PR-scoped sibling of `consult-gemini`. Where `consult-gemini` review
 
 ## Workflow
 
-This skill owns argument parsing, gathering, prompt assembly, and dispatch. The `gemini-consultant` subagent owns Bash execution, `ask-gemini` invocation, capturing Gemini's stdout verbatim to `tmp/consult-pr-<n>.md`, and extracting its JSON object to `tmp/consult-pr-<n>.json`. The skill doesn't pre-load files or the diff; only paths go to the subagent, which lists them for Gemini to read via its own `read_file` tool.
+This skill owns argument parsing, gathering, prompt assembly, and dispatch. The `gemini-consultant` subagent owns Bash execution, `ask-gemini` invocation, capturing Gemini's stdout verbatim to `tmp/consult-pr-<n>.md`, and extracting its JSON object to `tmp/consult-pr-<n>.json`. The skill appends the full diff and, when the PR head is checked out, the full text of each changed file, so Gemini starts with every hunk and its surrounding code. Each tool call costs a model round trip, and Gemini pages files 60 to 150 lines per `read_file`: on a 15-file PR, inlining plus the template's tool-use rules cut model calls from 43-67 to 5-18 and time from 492-609 s to about 408 s. The rest is thinking: Flash Medium spends 35k to 55k thinking tokens per review (5 to 7 minutes) whatever the scope, so splitting one review into parallel narrower runs does not shorten it (measured: each part took 262-405 s).
 
 ### 1. Parse the argument
 
@@ -61,16 +61,16 @@ Compare local HEAD to the PR head:
 git rev-parse HEAD   # vs headRefOid from step 2
 ```
 
-- **HEAD == headRefOid:** the working tree matches the PR. List changed **source** file paths (skip lock files and pure-doc noise; keep tests) so Gemini can read whole files for richer context in addition to the diff.
+- **HEAD == headRefOid:** the working tree matches the PR. Inline the changed **source** and test files in step 4 (skip lock files, generated migrations and pure-doc noise), so Gemini reads each hunk with its whole file and spends no tool calls on them.
 - **HEAD != headRefOid:** don't list working-tree paths for full reads — they are stale and would mislead Gemini. Feed only `tmp/pr-<n>.diff`. Optionally offer to `gh pr checkout <n>` first (mutates the working tree — confirm with the user before running).
 
 ### 4. Assemble the prompt
 
-Fill the template below from the PR metadata. Keep it a single logical prompt string. Name the concrete change (from the PR title/body) so Gemini reviews intent-vs-implementation, not just syntax.
+Fill the template below from the PR metadata. Keep it a single logical prompt string. Write it with the Write tool to `tmp/gemini-pr-<n>-prompt.txt`, then append the diff with one Bash line: `cat tmp/pr-<n>.diff >> tmp/gemini-pr-<n>-prompt.txt`. Over 200 KB of diff, skip the append and keep the template's read-the-file line for `tmp/pr-<n>.diff`; a lock file or generated migration is the usual cause. When HEAD matches the PR head, then append the changed files in one Bash line: `for f in <paths>; do printf '\n=== FILE %s ===\n' "$f"; cat "$f"; done >> tmp/gemini-pr-<n>-prompt.txt`. Stop adding files once their text passes 300 KB, and list the rest as paths in the template's not-inlined line. Name the concrete change (from the PR title/body) so Gemini reviews intent-vs-implementation, not just syntax.
 
 ### 5. Dispatch `gemini-consultant`
 
-Use the `Agent` tool with `subagent_type: "gemini-consultant"`. Tell the subagent to `cd` to the project root, write the prompt to `tmp/gemini-pr-<n>-prompt.txt` (Write tool), use the slug `pr-<n>`, and run `ask-gemini < tmp/gemini-pr-<n>-prompt.txt` as a **single-line** Bash command — never the prompt inline, never a heredoc (the permission layer prompts on them). The prompt asks for JSON, so the hand-back is `tmp/consult-pr-<n>.json`, its finding count, the verdict, and one `severity file:line claim` line per finding. For a follow-up round on the same PR, tell it to use `--resume latest`.
+Use the `Agent` tool with `subagent_type: "gemini-consultant"`. Tell the subagent to `cd` to the project root, send the prompt file `tmp/gemini-pr-<n>-prompt.txt` unchanged (it already holds the diff, and the subagent must not rewrite it), use the slug `pr-<n>`, and run `ask-gemini < tmp/gemini-pr-<n>-prompt.txt` as a **single-line** Bash command — never the prompt inline, never a heredoc (the permission layer prompts on them). The prompt asks for JSON, so the hand-back is `tmp/consult-pr-<n>.json`, its finding count, the verdict, and one `severity file:line claim` line per finding. For a follow-up round on the same PR, tell it to use `--resume latest`.
 
 No Agent tool (you are a sub-agent, or the caller forbids it, as `/triple-review` does): read `~/.claude/agents/gemini-consultant.md` and run its steps yourself, JSON section included.
 
@@ -111,9 +111,18 @@ Deliverable: one JSON object and nothing else: no code fence, no prose. List fin
   ],
   "verdict": "<ship|block|ship-with-fixes>: <one sentence grounded in the findings>"}
 
-Primary artifact — read this first with your read_file tool: tmp/pr-<n>.diff (the full unified diff of the PR).
+Tool use: every tool call costs a full model round trip (about 5 s, and the whole context is resent each time).
+  - Read whole files: call read_file with no StartLine or EndLine. Never page through a file in slices.
+  - Decide every file you need first, then request all of them in ONE turn as parallel read_file calls. Make a second round only for a file the first round revealed.
+  - Never re-read a file. At most 10 tool calls in total.
+
+Primary artifact: the full unified diff of the PR, below the line "=== PR DIFF ===". It is complete; do not re-read it from disk.
+<IF the diff is over 200 KB, use this line in place of the one above and drop the "=== PR DIFF ===" marker:> Primary artifact — read this first with your read_file tool: tmp/pr-<n>.diff (the full unified diff of the PR).
 <IF working tree matches the PR head, ALSO append:>
-For deeper context, read these changed source files in full: <explicit list of source + test paths, one per line>.
+Changed files: their full current contents are appended at the end under "=== FILE <path> ===" headers. Do not read them with read_file: <explicit list of inlined source + test paths, one per line>.
+<IF changed files went past the 300 KB budget, ALSO append:> Changed files not inlined. Read one only when a finding depends on code the diff does not show: <paths, one per line>.
+
+=== PR DIFF ===
 ```
 
 ## Quick Reference
@@ -133,7 +142,8 @@ For deeper context, read these changed source files in full: <explicit list of s
 
 - **Listing working-tree paths when HEAD ≠ PR head.** Gemini reads stale files and reviews the wrong code. Feed only `tmp/pr-<n>.diff` unless the PR branch is checked out.
 - **Inline or heredoc `ask-gemini` prompt.** The template is multiline, so either triggers a permission prompt the subagent cannot answer. Write the prompt to a `tmp/` file and redirect it on stdin.
-- **`cat`-ing files into the prompt.** Wastes context and defeats Gemini's `read_file`. Pass paths only.
+- **Listing changed files as paths when the PR head is checked out.** Gemini pages each one 60 to 150 lines per call, one call per model round trip. Inline them (step 4); only files outside the change, or past the 300 KB budget, stay as paths.
+- **Picking Flash Low or `-e low` for speed.** It skips thinking (0 tokens) and finishes in 12 to 47 s, but on a re-review it returned "ship" while missing 3 of 4 confirmed findings, and on a small PR it missed the one confirmed bug. Flash Medium (the agy default) is the floor; Argon quota is limited.
 - **Accepting findings unverified.** Open each cited file:line and mark it Confirmed, Refuted, or Could not confirm (§6).
 - **Omitting the change paraphrase.** Without intent, Gemini reviews syntax, not intent-vs-implementation.
 - **>3 debate rounds.** Gemini drifts in later rounds; start a fresh session for new scope.

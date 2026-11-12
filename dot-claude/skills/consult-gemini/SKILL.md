@@ -55,6 +55,15 @@ All templates assume Claude has already produced an analysis or implementation. 
 2. **No verdict-first reasoning** — lead with evidence, conclude with verdict. Gemini's known failure mode is opening with a strong verdict and backfilling; this rule blocks it.
 3. **No empty agreement** — if Gemini agrees with Claude on a point, it must explain *why* (which evidence supports it), not just "agreed" or "good point".
 
+Every prompt also carries this block verbatim, before the file list. Each tool call is a model round trip, and without it Gemini pages files 60 to 150 lines per call (62 calls, 10 minutes, on one PR review):
+
+```
+Tool use: every tool call costs a full model round trip (about 5 s, and the whole context is resent each time).
+  - Read whole files: call read_file with no StartLine or EndLine. Never page through a file in slices.
+  - Decide every file you need first, then request all of them in ONE turn as parallel read_file calls. Make a second round only for a file the first round revealed.
+  - Never re-read a file. At most 10 tool calls in total.
+```
+
 Select the template that matches the user's goal:
 
 - Correctness, design, edge cases, broken behavior → **Adversarial code review**
