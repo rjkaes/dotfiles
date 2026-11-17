@@ -1,0 +1,14 @@
+#!/opt/homebrew/bin/dash
+
+# Deny every write to a TASKS.md (any dir, any case), even when a project asks for it.
+# CLAUDE.md: superlite is the plan task list; it outranks TASKS.md.
+# Bash: any command naming TASKS.md is denied, since shell writes (>, tee, perl -i)
+# can't be told from reads reliably; the Read tool still reads it.
+
+exec /opt/homebrew/bin/jq -c '
+  if ((.tool_input.file_path // "") | test("(^|/)TASKS\\.md$"; "i"))
+     or ((.tool_input.command // "") | test("TASKS\\.md"; "i"))
+  then {hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"Do not write TASKS.md (tmp/, .superlite/ or anywhere). Track progress and remaining steps in superlite (superlite-cli; /superlite:status shows it). Use the Read tool to read an existing one."}}
+  else empty
+  end
+'
