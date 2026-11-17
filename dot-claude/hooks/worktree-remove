@@ -1,0 +1,10 @@
+#!/bin/bash
+# WorktreeRemove: pair of worktree-create.
+# No --force: git refuses a dirty worktree, so uncommitted work survives.
+# branch -d keeps branches with unmerged commits.
+set -euo pipefail
+path=$(jq -r .worktree_path)
+main=$(dirname "$(git -C "$path" rev-parse --path-format=absolute --git-common-dir)")
+branch=$(git -C "$path" branch --show-current)
+git -C "$main" worktree remove "$path" >&2
+[ -n "$branch" ] && git -C "$main" branch -d "$branch" >&2 || true

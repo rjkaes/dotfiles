@@ -1,0 +1,12 @@
+#!/bin/bash
+# WorktreeCreate: put harness worktrees in ~/src/work/worktrees/<repo>/<name>.
+# Stdout is read as the worktree path, so git output goes to stderr.
+# worktree-* branch keeps superlite classifying it as a harness checkout.
+set -euo pipefail
+input=$(cat)
+name=$(jq -r .name <<<"$input")
+cwd=$(jq -r .cwd <<<"$input")
+common=$(git -C "$cwd" rev-parse --path-format=absolute --git-common-dir)
+dir="$HOME/src/work/worktrees/$(basename "$(dirname "$common")")/$name"
+git -C "$cwd" worktree add -b "worktree-$name" "$dir" HEAD >&2
+echo "$dir"

@@ -239,7 +239,27 @@
         ]
       }
     ],
-    "SessionEnd": []
+    "SessionEnd": [],
+    "WorktreeCreate": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/worktree-create"
+          }
+        ]
+      }
+    ],
+    "WorktreeRemove": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/rjk/.claude/hooks/worktree-remove"
+          }
+        ]
+      }
+    ]
   },
   "workflowKeywordTriggerEnabled": false,
   "bashOutputMaxChars": 10000,
