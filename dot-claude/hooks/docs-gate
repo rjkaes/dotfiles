@@ -72,4 +72,4 @@ state=$($git rev-parse --absolute-git-dir)/docs-gate
 [ "$(cat "$state" 2>/dev/null)" = "$key" ] && exit 0
 printf '%s\n' "$key" >"$state"
 
-exec $jq -nc '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"docs-gate: code changed, no docs (*.md, docs/). If a decision, contract, constraint, or gotcha changed, stage an in-place update to its owning doc. Otherwise re-run the same commit; an unchanged file set passes."}}'
+exec $jq -nc '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:"docs-gate: code changed, no docs (*.md, docs/). If a decision, contract, constraint, or gotcha changed, stage an in-place update to its owning doc. Test each line: would it help a reader who never saw this issue? State the rule as it holds now, plus why. Ticket IDs, dates, the bug story, and \"fixed X\" belong in the commit message. Otherwise re-run the same commit; an unchanged file set passes."}}'
