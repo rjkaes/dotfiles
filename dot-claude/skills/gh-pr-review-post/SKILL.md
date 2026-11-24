@@ -42,8 +42,13 @@ JSON array. Per object:
 | `description` | string | yes | single line; a newline is a hard validation error |
 | `detail` | string | no | multi-line elaboration, rendered below the header |
 
-Do not pre-prefix `description` with the type. The script renders
-`type: description`; prefixing yourself doubles it.
+Do not pre-prefix `description` with the type. The script renders a
+GitHub alert box per type (`issue` CAUTION, `todo`/`chore` WARNING,
+`suggestion`/`nitpick` TIP, others NOTE, `praise` none) headed
+`🔴 **issue (blocking):** description`, with `detail` inside the box;
+prefixing yourself doubles it. Write `detail` as plain markdown: the
+script adds the `> ` quoting, and a ```` ```suggestion ```` block inside
+still renders as a suggested change.
 
 Example:
 
@@ -127,7 +132,7 @@ stale, stop and ask the user whether to delete them; don't reach for `--allow-du
 
 **exit 1 with "outside diff hunks".** Only reachable with `--no-fallback`. By
 default such findings are silently demoted into an "Out-of-diff findings" section
-of the review body, one bullet each, with a warning on stderr. A finding is
+of the review body, one `file:line` heading plus alert box each, with a warning on stderr. A finding is
 in-hunk when its **end** `line` falls inside a hunk on the matching `side`; the
 script parses `@@` headers from `/pulls/N/files` to decide. If hunk fetching
 fails it proceeds without pre-validation and lets the API arbitrate.
